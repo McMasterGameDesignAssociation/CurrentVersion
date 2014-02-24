@@ -1,0 +1,58 @@
+#ifndef _WORLD_OBJECTS
+#define _WORLD_OBJECTS
+
+#include "COLLECTIONS.h"
+
+/*
+
+The object class is used to store the information that is
+contained in each object in the world, where objects
+are passive but the player can interact with them
+i.e. doors, security systems, shelves, etc.
+enum
+	direction{up, left, down, right] - This is used as a local type
+									   to track the direction of an
+									   object
+
+variables
+	unsigned int ID - ID is used to distinguish each object from each other
+	object::direction face - Face determines the direction
+							 the front of the object is facing
+	bool passThrough - This determines if the player will collide with
+					   the current object
+	string bitMapName - This determines the directory where every
+							  texture for each version of the object's
+							  sprite is located
+	string description - This will be used to describe the object in the
+						 logs
+*/
+class object
+{
+	private:
+		
+		unsigned int ID;
+		direction face;
+		bool passThrough;
+		string description;
+	
+	public:
+
+		//Modifiers
+		object(void);
+		void setObject(direction newFace, bool passable, string newBitMapName, string newDescription);
+		void changeID(unsigned int newID);
+		void changePassThrough(bool passable);
+		void changeFace(direction face);
+
+		//Accessors
+		int getID(void);
+		direction getFace(void);
+		bool getPassThrough(void);
+		string getBitMapName(void);
+		string getDescription(void);
+
+		//Logging function
+		void printLog(void);
+
+};
+#endif

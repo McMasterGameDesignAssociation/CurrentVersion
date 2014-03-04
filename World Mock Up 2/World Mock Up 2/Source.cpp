@@ -68,7 +68,7 @@ unsigned int initSize[2] = {1,1};
 world DAN(initSize, "world.txt");
 player PLAYER_ONE(DAN);
 bool pause = false;
-bool suspicious = false;
+//bool suspicious = false;
 
 /*
 Added by Ryan and needs to be built
@@ -76,10 +76,10 @@ into its own class
 */
 
 //NPC variables
-int detectionRange = 64 * 100;
+/*int detectionRange = 64 * 100;
 int frameCounter = 0;
 int randomNumNPC;
-int frameStop = 1000; //NPCs will update their direction in less frames if they hit a wall
+int frameStop = 1000; //NPCs will update their direction in less frames if they hit a wall*/
 //NPC variables
 
 renderer scene;
@@ -151,77 +151,12 @@ void display(void)
 	//Update the view port to maintain the camera on the player
 	updateViewPort(PLAYER_ONE);
 
-	/* (+) Drawing the NPCs
-        * this will draw the NPC's and make them chase the player
-        */
-       
-       //Added by Ryan
-       
+	
+    //Added by Ryan
+	DAN.updateNPCSet(PLAYER_ONE); // This is the NPC idler (it works :D)
  
-        /*
-        This for loop makes the NPCs move
-        */
-        for(unsigned int i = 0; i < DAN.actorSet.size(); i++)
-		{
-			double probabilities[4] = {1,1,1,1};
-            DAN.actorSet[i].updateMovement(DAN);
- 
-  			if(DAN.actorSet[i].isFacingPlayer(PLAYER_ONE) && suspicious) DAN.actorSet[i].increaseAlert();
-			else if(DAN.actorSet[i].getAlert() > 0) DAN.actorSet[i].decreaseAlert();
- 
-			DAN.actorSet[i].setMoving(true);
-            if(DAN.actorSet[i].getAlert() == 0) {
-		
-			//Scatter algorithm
-			int * seedy;
-			seedy = new int[0];
-			srand(time(NULL) * (int)&seedy[0]);
-			delete[] seedy;
-            randomNumNPC = rand()%100;
-            //In this situation, the NPCs are out of range. They patrol the area
-			//This should be migrated to the timer function
-			if(DAN.actorSet[i].getIsHittingWall() == false) frameStop = 1000;
-			else frameStop = 200;
- 
-			frameCounter++;
-                       
-			if(frameCounter > frameStop)
-			{
-				DAN.actorSet[i].changeDirection(probabilities);
-				frameCounter = 0;
-			}
-		}
-               
-		//Detect movement ends here
-        DAN.actorSet[i].setMoving(true);
-		if(DAN.actorSet[i].isFacingPlayer(PLAYER_ONE) && DAN.actorSet[i].getAlert() > 0)
-        { //if actor can see vector
-			DAN.actorSet[i].setMoving(true);
-			if(abs( (double) PLAYER_ONE.getPositionX() - DAN.actorSet[i].getPosition().x) > 32 || abs( (double) PLAYER_ONE.getPositionY() - DAN.actorSet[i].getPosition().y) > 32)
-			{ //if the actor is greater than 32 pixels away from the player (if it isn't, there is no need to move)
-				if( (abs( (double) PLAYER_ONE.getPositionX() - DAN.actorSet[i].getPosition().x) > abs( (double) PLAYER_ONE.getPositionY() - DAN.actorSet[i].getPosition().y)))
-				{ //if the x is further away than the y then move x. otherwise move in y.
-					if (DAN.actorSet[i].getPosition().x < PLAYER_ONE.getPositionX() + 32 )
-						DAN.actorSet[i].changeDirection(Right);
-					else if (DAN.actorSet[i].getPosition().x > PLAYER_ONE.getPositionX() - 32)
-						DAN.actorSet[i].changeDirection(Left);
-				}
-				else
-				{
-					if (DAN.actorSet[i].getPosition().y < PLAYER_ONE.getPositionY() + 32)
-						DAN.actorSet[i].changeDirection(Up);
-					else if (DAN.actorSet[i].getPosition().y > PLAYER_ONE.getPositionY() - 32)
-						DAN.actorSet[i].changeDirection(Down);
-				}
-				if(DAN.actorSet[i].getIsHittingWall() == true)
-					DAN.actorSet[i].incrementDirection();
-			}
-			else DAN.actorSet[i].setMoving(false);
-		}
-	}
  
 	scene.UpdateActorArrays(DAN);
-    /* (-) Drawing the NPCs */
 
 	//Never Forget the teture initialization
 	scene.render();
@@ -286,7 +221,7 @@ void main(int argc, char* argv[])
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
 
-		for (int i = 2; i < 5 + 2; i++){
+		for (int i = 2; i < 6; i++){
 			actor newActor(5*64,13*64, 4);
 			DAN.addActor(newActor);
 		}
@@ -337,7 +272,7 @@ void main(int argc, char* argv[])
         glutInitWindowSize(600,600);
         glutCreateWindow("Pure Kleptomania");
 		//Glew has to be initialized on a window for window basiss
-		glewInit();
+		//glewInit();
         
 		glutDisplayFunc(display);
         glutIdleFunc(idle);

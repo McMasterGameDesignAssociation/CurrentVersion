@@ -14,6 +14,13 @@ that contains only empty tiles, objects, and actors
 */
 world::world(unsigned int size[2], string worldFile)
 {
+	//Added by Ryan Davis. 
+	//NPC variable initializations
+	detectionRange = 64 * 100;
+	frameCounter = 0;
+	randomNumNPC = 0;
+	frameStop = 1000;
+
 	tileSet.clear();
 	objectSet.clear();
 	actorSet.clear();
@@ -360,6 +367,77 @@ void world::populateWorld(void)
 		//The map reads in from the top to the bottom
 		mapLocation[1]--;
 		mapLocation[0] = 0;
+	}
+}
+
+
+//Created by Ryan for the NPC 
+/* (+) NPC idler
+
+        /*
+        This for loop makes the NPCs move
+        */
+//Added by ryan davis 
+
+void world::updateNPCSet(player currentPlayer)
+{
+	for(unsigned int i = 0; i < actorSet.size(); i++)
+		{
+			double probabilities[4] = {1,1,1,1};
+            actorSet[i].updateMovement(*this);
+ 
+  			if(actorSet[i].isFacingPlayer(currentPlayer) && currentPlayer.getSuspicious()) actorSet[i].increaseAlert();
+			else if(actorSet[i].getAlert() > 0) actorSet[i].decreaseAlert();
+ 
+			actorSet[i].setMoving(true);
+            if(actorSet[i].getAlert() == 0) {
+		
+			//Scatter algorithm
+			int * seedy;
+			seedy = new int[0];
+			srand(time(NULL) * (int)&seedy[0]);
+			delete[] seedy;
+            randomNumNPC = rand()%100;
+            //In this situation, the NPCs are out of range. They patrol the area
+			//This should be migrated to the timer function
+			if(actorSet[i].getIsHittingWall() == false) frameStop = 1000;
+			else frameStop = 200;
+ 
+			frameCounter++;
+                       
+			if(frameCounter > frameStop)
+			{
+				actorSet[i].changeDirection(probabilities);
+				frameCounter = 0;
+			}
+		}
+               
+		//Detect movement ends here
+        actorSet[i].setMoving(true);
+		if(actorSet[i].isFacingPlayer(currentPlayer) && actorSet[i].getAlert() > 0)
+        { //if actor can see vector
+			actorSet[i].setMoving(true);
+			if(abs( (double) currentPlayer.getPositionX() - actorSet[i].getPosition().x) > 32 || abs( (double) currentPlayer.getPositionY() - actorSet[i].getPosition().y) > 32)
+			{ //if the actor is greater than 32 pixels away from the player (if it isn't, there is no need to move)
+				if( (abs( (double) currentPlayer.getPositionX() - actorSet[i].getPosition().x) > abs( (double) currentPlayer.getPositionY() - actorSet[i].getPosition().y)))
+				{ //if the x is further away than the y then move x. otherwise move in y.
+					if (actorSet[i].getPosition().x < currentPlayer.getPositionX() + 32 )
+						actorSet[i].changeDirection(Right);
+					else if (actorSet[i].getPosition().x > currentPlayer.getPositionX() - 32)
+						actorSet[i].changeDirection(Left);
+				}
+				else
+				{
+					if (actorSet[i].getPosition().y < currentPlayer.getPositionY() + 32)
+						actorSet[i].changeDirection(Up);
+					else if (actorSet[i].getPosition().y > currentPlayer.getPositionY() - 32)
+						actorSet[i].changeDirection(Down);
+				}
+				if(actorSet[i].getIsHittingWall() == true)
+					actorSet[i].incrementDirection();
+			}
+			else actorSet[i].setMoving(false);
+		}
 	}
 }
 

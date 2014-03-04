@@ -74,6 +74,13 @@ class world //: actor, player, object, tile
 		unsigned int dimensions[2];
 		unsigned int playerStartLocation[2];
 
+		//Added by ryan davis
+		//Temporary variables until timer is finished
+		int detectionRange;
+		int frameCounter;
+		int randomNumNPC;
+		int frameStop; //NPCs will update their direction in less frames if they hit a wall
+
 	public:
 
 		//The actor vector has been put into public temporarily for
@@ -128,6 +135,9 @@ class world //: actor, player, object, tile
 
 		int getTileSetSize(void);
 		int getObjectSetSize(void);
+
+		//Created by Ryan for the NPC 
+		void updateNPCSet(player currentPlayer);
 };
 
 #endif // !_WORLD

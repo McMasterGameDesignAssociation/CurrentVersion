@@ -29,6 +29,7 @@ private:
 	void updatePosition(void);
 	int speed;
 	int playerResolution;
+	bool suspicious;
 
 protected:
 
@@ -56,6 +57,9 @@ public:
 
 	int vertices[12];
 	double shadeVertices[18];
+	//added by ryan davis for suspicion
+	bool getSuspicious(void);
+	void setSuspicous(bool newSuspicion);
 };
 
 #endif

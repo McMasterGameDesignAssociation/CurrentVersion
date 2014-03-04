@@ -19,10 +19,18 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 player::player(void)
 {
+	//Added by Ryan Davis
+	//Player variable initializations
+	suspicious = false;
+
 }
 
 player::player(world map)
 {
+	//Added by Ryan Davis
+	//Player variable initializations
+	suspicious = false;
+
 	unsigned int* temp;
 	temp = map.getPlayerStart();
 	this -> position[0] = temp[0]*map.getResolution(), 
@@ -121,5 +129,9 @@ void player::changeDirection(int pos[2], int screenDim[2])
 		(pos[0] > 0 && pos[1] > 0 && pos[0] < pos[1]))
 		face = Down;
 }
+
+//Added by ryan davis for suspicion
+bool player::getSuspicious(void){return suspicious;}
+void player::setSuspicous(bool newSuspicion){suspicious = newSuspicion;}
 
 #endif

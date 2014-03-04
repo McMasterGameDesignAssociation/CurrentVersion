@@ -209,7 +209,7 @@ void image::writeReport(void)
 void image::addCharacter(void)
 {
 	double temp[2];
-	delete[] textureArray;
+	//delete[] textureArray;
 
 	textureArray = new double[12];
 

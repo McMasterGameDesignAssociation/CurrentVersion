@@ -12,7 +12,7 @@ outputs void
 This function clears all of the arrays and sets, and then builds a map
 that contains only empty tiles, objects, and actors
 */
-world::world(unsigned int size[2])
+world::world(unsigned int size[2], string worldFile)
 {
 	tileSet.clear();
 	objectSet.clear();
@@ -52,6 +52,7 @@ world::world(unsigned int size[2])
 	}
 	playerStartLocation[0] = dimensions[0] - 1;
 	playerStartLocation[1] = dimensions[1] - 1;
+	gameFile = new FileReader(worldFile);
 }
 
 tile world::getTile(unsigned int ID) {return tileSet.at(ID);}
@@ -337,6 +338,29 @@ and the determines if they have done the following things
 	-This means that the player has left the
 	field of vision of the Actor
 */ 
-void updateActorPositions(void) {}
+//void updateActorPositions(void) {}
+
+void world::populateWorld(void)
+{
+	vector<vector<int>> currentMap = gameFile -> getMap();
+	gameFile -> print2dIntVector(currentMap);
+
+	int n = 0;
+	//Quick modification this starts at 0, and the top runs down
+	//cause the reads in top to bottom and not bottom to top
+	unsigned int mapLocation[2] = {0,currentMap.size()};
+
+	for(int i = 0; i < currentMap.size(); i++)
+	{
+		for(int j = 0; j < currentMap.at(0).size(); j++)
+		{	
+			setTileLocation(mapLocation, currentMap.at(i).at(j));
+			mapLocation[0]++;
+		}
+		//The map reads in from the top to the bottom
+		mapLocation[1]--;
+		mapLocation[0] = 0;
+	}
+}
 
 #endif

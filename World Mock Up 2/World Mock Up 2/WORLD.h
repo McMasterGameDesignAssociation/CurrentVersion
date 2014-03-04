@@ -1,4 +1,19 @@
 /*
+COPYRIGHT BENJAMIN ISHERWOOD 25/02/2014
+THIS SOFTWARE IS INTENDED FOR OPEN SOURCE USE, REDISTRIBUTION
+IS ENCOURAGE
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/*
 
 _WORLD contains all of the basic data structures that will be used to control
 the basic function of the world that the game will be using
@@ -14,12 +29,13 @@ to manage there respective entity type
 #include "COLLECTIONS.h"
 
 using namespace std;
+
 class actor;
 class tile;
 class object;
 class player;
 class image;
-
+class FileReader;
 
 /*
 contains
@@ -40,10 +56,11 @@ game elements
 class world //: actor, player, object, tile
 {
 	private:
+		//Belongs to FileReader
+		FileReader* gameFile;
 
 		vector<tile> tileSet;
 		vector<object> objectSet;
-		vector<actor> actorSet;
 
 		string characterPNG;
 		string tilePNG;
@@ -59,7 +76,11 @@ class world //: actor, player, object, tile
 
 	public:
 
-		world(unsigned int size[2]);
+		//The actor vector has been put into public temporarily for
+		//The HDMI event this needs to be made private again once the movement
+		//update functions have been made correctly
+		vector<actor> actorSet;
+		world(unsigned int size[2], string worldFile);
 		void setTiles(vector<tile> newTileSet);
 		void setObjects(vector<object> newObjectSet);
 		void setActor(vector<actor> newActorSet);
@@ -79,6 +100,7 @@ class world //: actor, player, object, tile
 		void swapActor(actor newCharacter, unsigned int ID);
 		void changeResolution(int newResolution);
 		void updateActorPositions(void);
+		void populateWorld(void);
 
 		void printLog(void);
 		

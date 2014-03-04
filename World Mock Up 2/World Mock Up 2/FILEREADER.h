@@ -1,5 +1,5 @@
 /*
-COPYRIGHT BENJAMIN ISHERWOOD 25/02/2014
+COPYRIGHT COLE WILLISON 25/02/2014
 THIS SOFTWARE IS INTENDED FOR OPEN SOURCE USE, REDISTRIBUTION
 IS ENCOURAGE
 
@@ -12,23 +12,26 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.
 */
-#ifndef _ITEMS
-#define _ITEMS
+#ifndef FILE_READER
+#define FILE_READER
 
 #include "COLLECTIONS.h"
 
-class item
+using namespace std;
+class FileReader
 {
+public:
+	FileReader(string fileName);
+	vector<vector<int>> getMap(void);
+	int getX(void);
+	int getY(void);
+	void print2dIntVector(vector<vector<int>> vec2d);
 
 private:
-	unsigned int ID;
-	unsigned int value;
-	unsigned int cost;
-	itemType itemClass;
+	vector<int> removeSlashAndParse(string line);
+	vector<vector<int>> currentMap;
+	string fileName;
 
-public:
-	item(void);
-	item(unsigned int newID, unsigned int initValue, unsigned int initCost, itemType newType);
 };
 
 #endif

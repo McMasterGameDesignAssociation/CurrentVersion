@@ -1,3 +1,17 @@
+/*
+COPYRIGHT BENJAMIN ISHERWOOD 25/02/2014
+THIS SOFTWARE IS INTENDED FOR OPEN SOURCE USE, REDISTRIBUTION
+IS ENCOURAGE
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+OTHER DEALINGS IN THE SOFTWARE.
+*/
 #ifndef _RENDERER_METHODS
 #define _RENDERER_METHODS
 
@@ -18,7 +32,7 @@ renderer::~renderer(void)
 {
 	delete[] vertices;
 	delete[] colors;
-	delete[] playerArray;
+	//delete[] playerArray;
 	tempColors.clear();
 	tempVertices.clear();
 }
@@ -184,6 +198,7 @@ void renderer::render(void)
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
 
 	tileData.setupTexture();
 	tileData.enableSetUp();
@@ -201,17 +216,21 @@ void renderer::render(void)
 	glColorPointer(3, GL_DOUBLE, 0, *playerColors);
 	glTexCoordPointer(2, GL_DOUBLE, 0, playerData.textureArray);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	for(unsigned int i = 0; i < actorArrays.size(); i++)
 	{
-		characterData[i].setupTexture();
-		characterData[i].enableSetUp();
+		//characterData[i].setupTexture();
+		//characterData[i].enableSetUp();
 		glVertexPointer(2, GL_INT, 0, actorArrays.at(i));
 		glColorPointer(3, GL_DOUBLE, 0, actorColors.at(i));
-		glTexCoordPointer(2, GL_DOUBLE, 0, characterData[i].textureArray);
-		glDrawArrays(GL_TRIANGLES, 0, tempVertices.size());
-		characterData[i].disableSetUp();
+		//glTexCoordPointer(2, GL_DOUBLE, 0, characterData[i].textureArray);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		//characterData[i].disableSetUp();
 	}
+
+	glDisable(GL_TEXTURE_2D);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
@@ -226,6 +245,43 @@ void renderer::printPoint(unsigned int pos)
 	if(pos < tempVertices.size()) cout << tempVertices.at(pos)[0] << " x pos" 
 		<< endl << tempVertices.at(pos)[1] << " y pos" << endl;
 	else cout << "no point found" << endl;
+}
+
+void renderer::setupActorArrays(world map)
+{
+	int *temp;
+	double *tempDouble;
+	characterData = new image[map.actorSet.size()];
+	for(int i = 0; i < map.actorSet.size(); i++)
+	{
+		temp = new int[1];
+		//This is hardcoded and should be fixed later
+		characterData[i].changeName("Charactersforreal.png");
+		characterData[i].addCharacter();
+		tempDouble = new double[1];
+		actorArrays.push_back(temp);
+		actorColors.push_back(tempDouble);
+	}
+}
+
+void renderer::UpdateActorArrays(world map)
+{
+	for(int i = 0; i < map.actorSet.size()-1; i++)
+	{
+		actorArrays.at(i) = new int[12];
+		actorArrays.at(i)[0] = map.actorSet.at(i).getPosition().x-32, actorArrays.at(i)[1] = map.actorSet.at(i).getPosition().y-32,
+		actorArrays.at(i)[2] = map.actorSet.at(i).getPosition().x+32, actorArrays.at(i)[3] = map.actorSet.at(i).getPosition().y-32,
+		actorArrays.at(i)[4] = map.actorSet.at(i).getPosition().x-32, actorArrays.at(i)[5] = map.actorSet.at(i).getPosition().y+32,
+		actorArrays.at(i)[6] = map.actorSet.at(i).getPosition().x-32, actorArrays.at(i)[7] = map.actorSet.at(i).getPosition().y+32,
+		actorArrays.at(i)[8] = map.actorSet.at(i).getPosition().x+32, actorArrays.at(i)[9] = map.actorSet.at(i).getPosition().y+32,
+		actorArrays.at(i)[10] = map.actorSet.at(i).getPosition().x+32,actorArrays.at(i)[11] = map.actorSet.at(i).getPosition().y-32;
+		actorColors.at(i) = new double[18];
+		for(int j = 0; j < 18; j++)  
+		{
+			if(j % 3 == 1)actorColors.at(i)[j] = .9;
+			else actorColors.at(i)[j] = .0;
+		}
+	}
 }
 
 void renderer::setUpCharacters(unsigned int numberOfCharacters)  {this->characterData = new image[numberOfCharacters];}

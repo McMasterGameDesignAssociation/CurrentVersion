@@ -64,9 +64,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="FILEREADER.h" />
     <ClInclude Include="IMAGE.h" />
     <ClInclude Include="ITEM.h" />
     <ClInclude Include="KEYBOARD.h" />
+    <ClCompile Include="DTDMacros.cpp" />
+    <ClCompile Include="FILEREADER.cpp" />
     <ClCompile Include="IMAGE.cpp" />
     <ClCompile Include="ITEM.cpp" />
     <ClCompile Include="NPCHandler.cpp" />

@@ -45,6 +45,12 @@
     <ClCompile Include="ITEM.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="FILEREADER.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DTDMacros.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WORLD.h">
@@ -78,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ITEM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FILEREADER.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

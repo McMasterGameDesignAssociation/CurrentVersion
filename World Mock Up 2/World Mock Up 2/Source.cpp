@@ -1,4 +1,19 @@
 /*
+COPYRIGHT BENJAMIN ISHERWOOD 25/02/2014
+THIS SOFTWARE IS INTENDED FOR OPEN SOURCE USE, REDISTRIBUTION
+IS ENCOURAGE
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/*
 CURRENT VERSION ALPHA 0.01
 VERSION NOTES
 -Basic game operation (i.e. movement, basic collision detection)
@@ -50,11 +65,10 @@ int viewPortCenter[2] = {0,0};
 //These are just test constants and are pretty self
 //explanatory
 unsigned int initSize[2] = {1,1};
-world DAN(initSize);
+world DAN(initSize, "world.txt");
 player PLAYER_ONE(DAN);
 bool pause = false;
 bool suspicious = false;
-vector<actor> actorVector;
 
 /*
 Added by Ryan and needs to be built
@@ -127,9 +141,6 @@ void display(void)
 	glEnable(GL_DEPTH);
 	glEnable(GL_DEPTH_TEST);
 
-	//Never Forget the teture initialization
-	glEnable(GL_TEXTURE_2D);
-
 	//LoadIdentiry is used to clear all current transformations (only useful on start up
 	//since all movement is done by modifiying the draw and not by using transisitions)
 	glLoadIdentity();
@@ -150,21 +161,16 @@ void display(void)
         /*
         This for loop makes the NPCs move
         */
-		glPointSize(64);
-		glBegin(GL_POINTS);
-        for(unsigned int i = 0; i < actorVector.size(); i++)
+        for(unsigned int i = 0; i < DAN.actorSet.size(); i++)
 		{
 			double probabilities[4] = {1,1,1,1};
-            glColor3f(actorVector[i].getAlert(),0.3,0.7);
-               
-            glVertex2i(actorVector[i].getPosition().x, actorVector[i].getPosition().y);
-            actorVector[i].updateMovement(DAN);
+            DAN.actorSet[i].updateMovement(DAN);
  
-  			if(actorVector[i].isFacingPlayer(PLAYER_ONE) && suspicious) actorVector[i].increaseAlert();
-			else if(actorVector[i].getAlert() > 0) actorVector[i].decreaseAlert();
+  			if(DAN.actorSet[i].isFacingPlayer(PLAYER_ONE) && suspicious) DAN.actorSet[i].increaseAlert();
+			else if(DAN.actorSet[i].getAlert() > 0) DAN.actorSet[i].decreaseAlert();
  
-			actorVector[i].setMoving(true);
-            if(actorVector[i].getAlert() == 0) {
+			DAN.actorSet[i].setMoving(true);
+            if(DAN.actorSet[i].getAlert() == 0) {
 		
 			//Scatter algorithm
 			int * seedy;
@@ -174,50 +180,50 @@ void display(void)
             randomNumNPC = rand()%100;
             //In this situation, the NPCs are out of range. They patrol the area
 			//This should be migrated to the timer function
-			if(actorVector[i].getIsHittingWall() == false) frameStop = 1000;
+			if(DAN.actorSet[i].getIsHittingWall() == false) frameStop = 1000;
 			else frameStop = 200;
  
 			frameCounter++;
                        
 			if(frameCounter > frameStop)
 			{
-				actorVector[i].changeDirection(probabilities);
+				DAN.actorSet[i].changeDirection(probabilities);
 				frameCounter = 0;
 			}
 		}
                
 		//Detect movement ends here
-        actorVector[i].setMoving(true);
-		if(actorVector[i].isFacingPlayer(PLAYER_ONE) && actorVector[i].getAlert() > 0)
+        DAN.actorSet[i].setMoving(true);
+		if(DAN.actorSet[i].isFacingPlayer(PLAYER_ONE) && DAN.actorSet[i].getAlert() > 0)
         { //if actor can see vector
-			actorVector[i].setMoving(true);
-			if(abs( (double) PLAYER_ONE.getPositionX() - actorVector[i].getPosition().x) > 32 || abs( (double) PLAYER_ONE.getPositionY() - actorVector[i].getPosition().y) > 32)
+			DAN.actorSet[i].setMoving(true);
+			if(abs( (double) PLAYER_ONE.getPositionX() - DAN.actorSet[i].getPosition().x) > 32 || abs( (double) PLAYER_ONE.getPositionY() - DAN.actorSet[i].getPosition().y) > 32)
 			{ //if the actor is greater than 32 pixels away from the player (if it isn't, there is no need to move)
-				if( (abs( (double) PLAYER_ONE.getPositionX() - actorVector[i].getPosition().x) > abs( (double) PLAYER_ONE.getPositionY() - actorVector[i].getPosition().y)))
+				if( (abs( (double) PLAYER_ONE.getPositionX() - DAN.actorSet[i].getPosition().x) > abs( (double) PLAYER_ONE.getPositionY() - DAN.actorSet[i].getPosition().y)))
 				{ //if the x is further away than the y then move x. otherwise move in y.
-					if (actorVector[i].getPosition().x < PLAYER_ONE.getPositionX() + 32 )
-						actorVector[i].changeDirection(Right);
-					else if (actorVector[i].getPosition().x > PLAYER_ONE.getPositionX() - 32)
-						actorVector[i].changeDirection(Left);
+					if (DAN.actorSet[i].getPosition().x < PLAYER_ONE.getPositionX() + 32 )
+						DAN.actorSet[i].changeDirection(Right);
+					else if (DAN.actorSet[i].getPosition().x > PLAYER_ONE.getPositionX() - 32)
+						DAN.actorSet[i].changeDirection(Left);
 				}
 				else
 				{
-					if (actorVector[i].getPosition().y < PLAYER_ONE.getPositionY() + 32)
-						actorVector[i].changeDirection(Up);
-					else if (actorVector[i].getPosition().y > PLAYER_ONE.getPositionY() - 32)
-						actorVector[i].changeDirection(Down);
+					if (DAN.actorSet[i].getPosition().y < PLAYER_ONE.getPositionY() + 32)
+						DAN.actorSet[i].changeDirection(Up);
+					else if (DAN.actorSet[i].getPosition().y > PLAYER_ONE.getPositionY() - 32)
+						DAN.actorSet[i].changeDirection(Down);
 				}
-				if(actorVector[i].getIsHittingWall() == true)
-					actorVector[i].incrementDirection();
+				if(DAN.actorSet[i].getIsHittingWall() == true)
+					DAN.actorSet[i].incrementDirection();
 			}
-			else actorVector[i].setMoving(false);
+			else DAN.actorSet[i].setMoving(false);
 		}
 	}
  
- 
+	scene.UpdateActorArrays(DAN);
     /* (-) Drawing the NPCs */
-	glEnd();
 
+	//Never Forget the teture initialization
 	scene.render();
 
 	glutPostRedisplay();
@@ -263,57 +269,6 @@ as to allow a 4 bit shift to each character to make the file
 unreadable outside of the game program
 
 */
-void populateWorld(unsigned int txtFileSize[])
-{
-        string fname = "world.txt";
-        string line;
-		char* currentChar;
-		currentChar = new char[0];
-        ifstream infile;
-
-        unsigned int lineNum = 0;
-		int n = 0;
-
-        unsigned int size[] = {0, txtFileSize[1]};
-
-        infile.open(fname);
-
-        while(!infile.eof())
-        {
-
-                getline(infile,line);
-
-                cout<<endl;
-
-                for (size_t i = 0; i < line.size(); i++)
-                {
-
-					switch(line[i])
-					{
-						case '9': n++;
-						case '8': n++;
-						case '7': n++;
-						case '6': n++;
-						case '5': n++;
-						case '4': n++;
-						case '3': n++;
-						case '2': n++;
-						case '1': n++;
-								  break;
-						default: n = 0;
-						break;
-					}
-					cout << n;
-                    DAN.setTileLocation(size, n);
-					n = 0;
-                    size[0]++;
-                }
-                size[0] = 0;
-                size[1]--;
-        }
-
-infile.close();
-}
 
 /*
 Obligatory main function
@@ -328,14 +283,15 @@ void main(int argc, char* argv[])
 		resetKeys();
 
 		/*(+) NPC stuff 
-		*This will initialize all the actors and push them into actorVector
+		*This will initialize all the actors and push them into DAN.actorSet
 		*/
 
 		for (int i = 2; i < 5 + 2; i++){
 			actor newActor(5*64,13*64, 4);
 			DAN.addActor(newActor);
 		}
-		actorVector = DAN.getActorSet();
+		DAN.actorSet = DAN.getActorSet();
+		scene.setupActorArrays(DAN);
 		//(-) NPC stuff //
 
 		scene.setUpCharacters(7);
@@ -352,7 +308,6 @@ void main(int argc, char* argv[])
         PLAYER_ONE = greg;
 
         block.changeDescription("HOORAY");
-
 
         DAN.changeDimension(txtFileSize);
 
@@ -373,7 +328,7 @@ void main(int argc, char* argv[])
 
 		DAN.printLog();
 
-        populateWorld(txtFileSize);
+        DAN.populateWorld();
 
 		scene.worldToArray(DAN);
 		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE, DAN);
@@ -381,7 +336,10 @@ void main(int argc, char* argv[])
         glutInit(&argc, argv);
         glutInitWindowSize(600,600);
         glutCreateWindow("Pure Kleptomania");
-        glutDisplayFunc(display);
+		//Glew has to be initialized on a window for window basiss
+		glewInit();
+        
+		glutDisplayFunc(display);
         glutIdleFunc(idle);
         glutReshapeFunc(reshape);
         glutKeyboardFunc(keyboardInput);

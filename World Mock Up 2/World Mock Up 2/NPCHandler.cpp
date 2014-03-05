@@ -125,6 +125,8 @@ int actor::getID(void) {return ID;}
 * made by ben
 */
 
+//Optimized to pointers for speed boost by Ryan Davis
+
 void actor::checkMovement(world *map, int x, int y)
 {
         unsigned int posOne[2];
@@ -162,6 +164,8 @@ void actor::checkMovement(world *map, int x, int y)
 		else this->isHittingWall = true;
 }
 
+//Optimized to pointers for speed boost
+//By Ryan Davis
 void actor::updateMovement(world *map)
 {
     if (this->getMoving() == true)

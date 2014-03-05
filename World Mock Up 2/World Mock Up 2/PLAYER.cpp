@@ -79,7 +79,8 @@ layers to check if motion is possible. This is done by taking the X and Y value 
 player and then dividing by the square 64 then checking it against the tile map at 
 that location tileLocation(x,y) = posX/64, posY/64
 */
-void player::checkMovement(world map, int x, int y)
+//Optimized to use pointers by Ryan Davis
+void player::checkMovement(world *map, int x, int y)
 {
 	unsigned int posOne[2];
 	unsigned int posTwo[2];
@@ -92,21 +93,21 @@ void player::checkMovement(world map, int x, int y)
 	y = (y >= 1)  ?  speed : y;
 	y = (y <= -1) ? -speed : y;
 	
-	speed = map.getResolution() - speed;
+	speed = map -> getResolution() - speed;
 
 	//This is a check of the lower bound of movement
-	posOne[0] = (x + position[0])/map.getResolution(), posOne[1] = (y + position[1])/map.getResolution();
+	posOne[0] = (x + position[0])/map -> getResolution(), posOne[1] = (y + position[1])/map -> getResolution();
 	//This is a check of the upper bound of movement
-	posTwo[0] = (x + speed + position[0])/map.getResolution(), posTwo[1] = (y + speed + position[1])/map.getResolution();
+	posTwo[0] = (x + speed + position[0])/map -> getResolution(), posTwo[1] = (y + speed + position[1])/map -> getResolution();
 	//This is a check of the lower bound of movement
-	posThree[0] = (x + position[0])/map.getResolution(), posThree[1] = (y + speed + position[1])/map.getResolution();
+	posThree[0] = (x + position[0])/map -> getResolution(), posThree[1] = (y + speed + position[1])/map -> getResolution();
 	//This is a check of the upper bound of movement
-	posFour[0] = (x + speed + position[0])/map.getResolution(), posFour[1] = (y + position[1])/map.getResolution();
+	posFour[0] = (x + speed + position[0])/map -> getResolution(), posFour[1] = (y + position[1])/map -> getResolution();
 
-	if(map.getTileCollision(map.checkTileMap(posOne)) 
-		&& map.getTileCollision(map.checkTileMap(posTwo))
-		&& map.getTileCollision(map.checkTileMap(posThree)) 
-		&& map.getTileCollision(map.checkTileMap(posFour))) 
+	if(map -> getTileCollision(map -> checkTileMap(posOne)) 
+		&& map -> getTileCollision(map -> checkTileMap(posTwo))
+		&& map -> getTileCollision(map -> checkTileMap(posThree)) 
+		&& map -> getTileCollision(map -> checkTileMap(posFour))) 
 	{
 		position[0] = x + position[0], position[1] = y + position[1];
 		updatePosition();

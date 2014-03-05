@@ -100,7 +100,7 @@ namespace kyb
 	}
 
 	/* This is the state machine to run the keyboard in the idleFunc */
-	player menuStates(player character, world map)
+	player menuStates(player character, world *map)
 	{
 		//W and A
 		if(keys[0] && keys[2])

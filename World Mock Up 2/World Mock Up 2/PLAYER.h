@@ -46,7 +46,7 @@ public:
 	void changeDescription(string newDescription);
 	void changePosition(unsigned int pos[2]);
 	void changeBitMap(string newBitMap);
-	void checkMovement(world map, int x, int y);
+	void checkMovement(world *map, int x, int y);
 	void setSpeed(int movement);
 	void incAnimationStep(void);
 	int getAnimationStep(void);

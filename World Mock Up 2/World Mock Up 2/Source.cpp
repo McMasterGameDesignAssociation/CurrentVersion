@@ -177,7 +177,7 @@ void idle(void)
 	if(!pause)
 	{
 		PLAYER_ONE.setSpeed(2);
-		PLAYER_ONE = menuStates(PLAYER_ONE, DAN);
+		PLAYER_ONE = menuStates(PLAYER_ONE, &DAN);
 	}
 }
 
@@ -221,7 +221,7 @@ void main(int argc, char* argv[])
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
 		
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < 100; i++){
 			
 			actor newActor(5*64,13*64, 4);
 			DAN.addActor(newActor);

@@ -125,7 +125,7 @@ int actor::getID(void) {return ID;}
 * made by ben
 */
 
-void actor::checkMovement(world map, int x, int y)
+void actor::checkMovement(world *map, int x, int y)
 {
         unsigned int posOne[2];
         unsigned int posTwo[2];
@@ -150,10 +150,10 @@ void actor::checkMovement(world map, int x, int y)
         //This is a check of the upper bound of movement
         posFour[0] = (x + speed + getPosition().x)/64, posFour[1] = (y + getPosition().y)/64;
 
-	    if(map.getTileCollision(map.checkTileMap(posOne)) 
-		&& map.getTileCollision(map.checkTileMap(posTwo))
-		&& map.getTileCollision(map.checkTileMap(posThree)) 
-		&& map.getTileCollision(map.checkTileMap(posFour)))        
+	    if(map -> getTileCollision(map ->checkTileMap(posOne)) 
+		&& map -> getTileCollision(map -> checkTileMap(posTwo))
+		&& map -> getTileCollision(map -> checkTileMap(posThree)) 
+		&& map -> getTileCollision(map -> checkTileMap(posFour)))        
 		{
                 posOne[0] = x + getPosition().x, posOne[1] = y + getPosition().y;
                 setPosition(posOne[0], posOne[1]);
@@ -162,29 +162,25 @@ void actor::checkMovement(world map, int x, int y)
 		else this->isHittingWall = true;
 }
 
-void actor::updateMovement(world map)
+void actor::updateMovement(world *map)
 {
-        if (this->getMoving() == true)
-        {
-                if(frameCounter > 10 - speed)
-				{
-                        if (face == Up)
-                                //vPosition.y += speed;
-                                checkMovement(map, 0, 1);
-                        else if (face == Right)
-                                //vPosition.x += speed;
-                                checkMovement(map, 1, 0);
-                        else if (face == Left) 
-                                //vPosition.x -= speed;
-                                checkMovement(map, -1, 0);                      
-                        else if (face == Down) 
-                                //vPosition.y -= speed;
-                                checkMovement(map, 0, -1);
+    if (this->getMoving() == true)
+    {
+        if(frameCounter > 10 - speed)
+		{
+             if (face == Up) 
+                 checkMovement(map, 0, 1);
+             else if (face == Right)
+                  checkMovement(map, 1, 0);
+             else if (face == Left)  
+				  checkMovement(map, -1, 0);                      
+             else if (face == Down)
+                  checkMovement(map, 0, -1);
 
-                        frameCounter = 0;
-                }
-                frameCounter ++;
-        }
+             frameCounter = 0;
+         }
+         frameCounter ++;
+    }
 }
 
 bool actor::getIsHittingWall(void) {return isHittingWall;}

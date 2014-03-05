@@ -382,16 +382,17 @@ void world::populateWorld(void)
 void world::updateNPCSet(player currentPlayer)
 {
 	for(unsigned int i = 0; i < actorSet.size(); i++)
-		{
-			double probabilities[4] = {1,1,1,1};
-            actorSet[i].updateMovement(*this);
- 
-  			if(actorSet[i].isFacingPlayer(currentPlayer) && currentPlayer.getSuspicious()) actorSet[i].increaseAlert();
-			else if(actorSet[i].getAlert() > 0) actorSet[i].decreaseAlert();
- 
-			actorSet[i].setMoving(true);
-            if(actorSet[i].getAlert() == 0) {
+	{
+		double probabilities[4] = {1,1,1,1};
+		//TODO: find out why the line below slows down the game so much (even when updateMovement(world map) has its code commented out)
+        actorSet[i].updateMovement(this); 
 		
+ 		if(actorSet[i].isFacingPlayer(currentPlayer) && currentPlayer.getSuspicious()) actorSet[i].increaseAlert();
+		else if(actorSet[i].getAlert() > 0) actorSet[i].decreaseAlert();
+ 
+		actorSet[i].setMoving(true);
+        if(actorSet[i].getAlert() == 0) 
+		{
 			//Scatter algorithm
 			int * seedy;
 			seedy = new int[0];
@@ -410,6 +411,7 @@ void world::updateNPCSet(player currentPlayer)
 				actorSet[i].changeDirection(probabilities);
 				frameCounter = 0;
 			}
+
 		}
                
 		//Detect movement ends here
@@ -438,7 +440,9 @@ void world::updateNPCSet(player currentPlayer)
 			}
 			else actorSet[i].setMoving(false);
 		}
-	}
+		
+	} // actorSet FOR loop end
+	
 }
 
 #endif

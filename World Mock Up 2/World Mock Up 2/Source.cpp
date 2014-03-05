@@ -220,13 +220,15 @@ void main(int argc, char* argv[])
 		/*(+) NPC stuff 
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
-
-		for (int i = 2; i < 6; i++){
+		
+		for (int i = 0; i < 5; i++){
+			
 			actor newActor(5*64,13*64, 4);
 			DAN.addActor(newActor);
 		}
 		DAN.actorSet = DAN.getActorSet();
 		scene.setupActorArrays(DAN);
+		
 		//(-) NPC stuff //
 
 		scene.setUpCharacters(7);
@@ -267,6 +269,12 @@ void main(int argc, char* argv[])
 
 		scene.worldToArray(DAN);
 		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE, DAN);
+
+		unsigned int testPos[2];
+		testPos[0]= 3, testPos[1] = 5;
+		cout << "\n\n\n\n\n\n\n\nresolution: " << DAN.getResolution() <<"\n\n\n\n\n\n\n\n";
+		cout << "\n\n\n\n\n\n\n\npassThrough: " << DAN.getTileCollision(DAN.checkTileMap(testPos))<< "\n\n\n\n\n\n\n\n";
+		cout << "\n\n\n\n\n\n\n\npassThrough: " << DAN.getTileCollision(10);
 
         glutInit(&argc, argv);
         glutInitWindowSize(600,600);

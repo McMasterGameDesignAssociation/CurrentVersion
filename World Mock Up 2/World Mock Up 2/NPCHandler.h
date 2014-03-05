@@ -96,7 +96,7 @@ class actor
                 int getSpeed();
                 ActorVector getPosition();
                 bool getMoving();
-                void checkMovement(world map, int x, int y);
+                void checkMovement(world *map, int x, int y);
                 double getVisionRange(void);
                 int getAlert(void);
                 bool getSeesPlayer(void);
@@ -109,7 +109,7 @@ class actor
                 void printLog(void);
 
                 //Update Function
-                void updateMovement(world map);
+                void updateMovement(world *map);
                 //moveToPlayer, currently unused
                 void moveToPlayer();
 

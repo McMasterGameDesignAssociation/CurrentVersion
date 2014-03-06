@@ -25,24 +25,24 @@ player::player(void)
 
 }
 
-player::player(world map)
+player::player(world* map)
 {
 	//Added by Ryan Davis
 	//Player variable initializations
 	suspicious = false;
 
 	unsigned int* temp;
-	temp = map.getPlayerStart();
-	this -> position[0] = temp[0]*map.getResolution(), 
-	this -> position[1] = temp[1]*map.getResolution();
-	this -> size = 64;
-	for(int i = 0; i < 12; i++) this-> vertices[i] = 0;
-	for(int i = 0; i < 18; i++) this-> shadeVertices[i] = 1;
-	this -> bitMapName = "None";
-	this -> description = "This is an empty player";
-	this -> speed = 0;
-	this -> animationStep = 0;
-	this -> face = Up;
+	temp = map -> getPlayerStart();
+	position[0] = temp[0]*map -> getResolution(), 
+	position[1] = temp[1]*map -> getResolution();
+	size = 64;
+	for(int i = 0; i < 12; i++) vertices[i] = 0;
+	for(int i = 0; i < 18; i++) shadeVertices[i] = 1;
+	bitMapName = "None";
+	description = "This is an empty player";
+	speed = 0;
+	animationStep = 0;
+	face = Up;
 	updatePosition();
 }
 

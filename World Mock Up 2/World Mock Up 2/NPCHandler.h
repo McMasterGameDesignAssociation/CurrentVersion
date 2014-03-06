@@ -86,7 +86,7 @@ class actor
 
 				void changeDirection(double probabilities[4]);
 
-				bool isFacingPlayer(player currentPlayer);
+				bool isFacingPlayer(player* currentPlayer);
 
                 //Accessor
                 int getID(void);

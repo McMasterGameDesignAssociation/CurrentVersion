@@ -247,12 +247,12 @@ void renderer::printPoint(unsigned int pos)
 	else cout << "no point found" << endl;
 }
 
-void renderer::setupActorArrays(world map)
+void renderer::setupActorArrays(world* map)
 {
 	int *temp;
 	double *tempDouble;
-	characterData = new image[map.actorSet.size()];
-	for(int i = 0; i < map.actorSet.size(); i++)
+	characterData = new image[map -> actorSet.size()];
+	for(int i = 0; i < map -> actorSet.size(); i++)
 	{
 		temp = new int[1];
 		//This is hardcoded and should be fixed later
@@ -264,17 +264,17 @@ void renderer::setupActorArrays(world map)
 	}
 }
 
-void renderer::UpdateActorArrays(world map)
+void renderer::UpdateActorArrays(world* map)
 {
-	for(int i = 0; i < map.actorSet.size()-1; i++)
+	for(int i = 0; i < map -> actorSet.size()-1; i++)
 	{
 		actorArrays.at(i) = new int[12];
-		actorArrays.at(i)[0] = map.actorSet.at(i).getPosition().x-32, actorArrays.at(i)[1] = map.actorSet.at(i).getPosition().y-32,
-		actorArrays.at(i)[2] = map.actorSet.at(i).getPosition().x+32, actorArrays.at(i)[3] = map.actorSet.at(i).getPosition().y-32,
-		actorArrays.at(i)[4] = map.actorSet.at(i).getPosition().x-32, actorArrays.at(i)[5] = map.actorSet.at(i).getPosition().y+32,
-		actorArrays.at(i)[6] = map.actorSet.at(i).getPosition().x-32, actorArrays.at(i)[7] = map.actorSet.at(i).getPosition().y+32,
-		actorArrays.at(i)[8] = map.actorSet.at(i).getPosition().x+32, actorArrays.at(i)[9] = map.actorSet.at(i).getPosition().y+32,
-		actorArrays.at(i)[10] = map.actorSet.at(i).getPosition().x+32,actorArrays.at(i)[11] = map.actorSet.at(i).getPosition().y-32;
+		actorArrays.at(i)[0] = map  -> actorSet.at(i).getPosition().x-32, actorArrays.at(i)[1] = map -> actorSet.at(i).getPosition().y-32,
+		actorArrays.at(i)[2] = map  -> actorSet.at(i).getPosition().x+32, actorArrays.at(i)[3] = map -> actorSet.at(i).getPosition().y-32,
+		actorArrays.at(i)[4] = map  -> actorSet.at(i).getPosition().x-32, actorArrays.at(i)[5] = map -> actorSet.at(i).getPosition().y+32,
+		actorArrays.at(i)[6] = map  -> actorSet.at(i).getPosition().x-32, actorArrays.at(i)[7] = map -> actorSet.at(i).getPosition().y+32,
+		actorArrays.at(i)[8] = map  -> actorSet.at(i).getPosition().x+32, actorArrays.at(i)[9] = map -> actorSet.at(i).getPosition().y+32,
+		actorArrays.at(i)[10] = map -> actorSet.at(i).getPosition().x+32,actorArrays.at(i)[11] = map -> actorSet.at(i).getPosition().y-32;
 		actorColors.at(i) = new double[18];
 		for(int j = 0; j < 18; j++)  
 		{
@@ -284,44 +284,44 @@ void renderer::UpdateActorArrays(world map)
 	}
 }
 
-void renderer::setUpCharacters(unsigned int numberOfCharacters)  {this->characterData = new image[numberOfCharacters];}
+void renderer::setUpCharacters(unsigned int numberOfCharacters)  {characterData = new image[numberOfCharacters];}
 
-void renderer::worldToArray(world gameSpace)
+void renderer::worldToArray(world* gameSpace)
 {
 	unsigned int pos[2];
 	double color[] = {1,1,1};
 	int location[2];
-	for(int i = 0; i < gameSpace.getY(); i++)
+	for(int i = 0; i < gameSpace -> getY(); i++)
 	{
 		pos[1] = i;
-		for(int j = 0; j < gameSpace.getX(); j++)
+		for(int j = 0; j < gameSpace -> getX(); j++)
 		{
 			pos[0] = j;
-			tileData.addTile(gameSpace.checkTileMap(pos)); 
-			location[0] = j*gameSpace.getResolution(), 
-				location[1] = i*gameSpace.getResolution();
-			addTile(location, color, gameSpace.getResolution());
+			tileData.addTile(gameSpace -> checkTileMap(pos)); 
+			location[0] = j*gameSpace -> getResolution(), 
+				location[1] = i*gameSpace -> getResolution();
+			addTile(location, color, gameSpace -> getResolution());
 		}
 	}
 }
 
 
-void renderer::setUpActor(const char* startImage, actor character)
+void renderer::setUpActor(const char* startImage, actor* character)
 {
-	characterData[character.getID()].changeName(startImage);
-	characterData[character.getID()].addCharacter();
-	actorArrays.at(character.getID()) = new int[12];
-	actorArrays.at(character.getID())[0] = character.getInitialXPos()-32, actorArrays.at(character.getID())[1] = character.getInitialXPos()-32,
-	actorArrays.at(character.getID())[2] = character.getInitialXPos()+32, actorArrays.at(character.getID())[3] = character.getInitialXPos()-32,
-	actorArrays.at(character.getID())[4] = character.getInitialXPos()-32, actorArrays.at(character.getID())[5] = character.getInitialXPos()+32,
-	actorArrays.at(character.getID())[6] = character.getInitialXPos()-32, actorArrays.at(character.getID())[7] = character.getInitialXPos()+32,
-	actorArrays.at(character.getID())[8] = character.getInitialXPos()+32, actorArrays.at(character.getID())[9] = character.getInitialXPos()+32,
-	actorArrays.at(character.getID())[10] = character.getInitialXPos()+32,actorArrays.at(character.getID())[11] = character.getInitialXPos()-32;
-	actorColors.at(character.getID()) = new double[18];
-	for(int i = 0; i < 18; i++)  actorColors.at(character.getID())[i] = .2;
+	characterData[character -> getID()].changeName(startImage);
+	characterData[character -> getID()].addCharacter();
+	actorArrays.at(character -> getID()) = new int[12];
+	actorArrays.at(character -> getID())[0] = character -> getInitialXPos()-32, actorArrays.at(character -> getID())[1] = character -> getInitialXPos()-32,
+	actorArrays.at(character -> getID())[2] = character -> getInitialXPos()+32, actorArrays.at(character -> getID())[3] = character -> getInitialXPos()-32,
+	actorArrays.at(character -> getID())[4] = character -> getInitialXPos()-32, actorArrays.at(character -> getID())[5] = character -> getInitialXPos()+32,
+	actorArrays.at(character -> getID())[6] = character -> getInitialXPos()-32, actorArrays.at(character -> getID())[7] = character -> getInitialXPos()+32,
+	actorArrays.at(character -> getID())[8] = character -> getInitialXPos()+32, actorArrays.at(character -> getID())[9] = character -> getInitialXPos()+32,
+	actorArrays.at(character -> getID())[10] = character -> getInitialXPos()+32,actorArrays.at(character -> getID())[11] = character -> getInitialXPos()-32;
+	actorColors.at(character -> getID()) = new double[18];
+	for(int i = 0; i < 18; i++)  actorColors.at(character -> getID())[i] = .2;
 }
 
-void renderer::setUpPlayer(const char* startImage, player &character, world map)
+void renderer::setUpPlayer(const char* startImage, player &character, world* map)
 {
 	playerData.changeName(startImage);
 	playerData.addCharacter();
@@ -333,7 +333,7 @@ void renderer::setUpPlayer(const char* startImage, player &character, world map)
 	for(int i = 0; i < 18; i++)  playerColors[i] = &character.shadeVertices[i];
 }
 
-player renderer::animatePlayer(player character, bool isMoving)
+void renderer::animatePlayer(player &character, bool isMoving)
 {
 	double temp[2];
 	(character.animationStep > 6) ? character.animationStep = 0 : 0;
@@ -356,9 +356,8 @@ player renderer::animatePlayer(player character, bool isMoving)
 			break;
 	}
 	temp[0] = double(character.animationStep)*.125;
-	character.animationStep++;
+	if(isMoving) character.animationStep++;
 	playerData.moveActorCoords(temp);
-	return character;
 }
 
 actor renderer::animateActor(actor character, bool isMoving)

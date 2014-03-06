@@ -137,7 +137,7 @@ class world //: actor, player, object, tile
 		int getObjectSetSize(void);
 
 		//Created by Ryan for the NPC 
-		void updateNPCSet(player currentPlayer);
+		void updateNPCSet(player* currentPlayer);
 };
 
 #endif // !_WORLD

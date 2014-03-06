@@ -66,7 +66,7 @@ int viewPortCenter[2] = {0,0};
 //explanatory
 unsigned int initSize[2] = {1,1};
 world DAN(initSize, "world.txt");
-player PLAYER_ONE(DAN);
+player PLAYER_ONE(&DAN);
 bool pause = false;
 //bool suspicious = false;
 
@@ -95,19 +95,19 @@ player character
 Update viewport creates an invisible box around the player which gives
 the area that the camera can see
 */
-void updateViewPort(player character)
+void updateViewPort(player* character)
 {
 	//The viewport encompasses 75% of the the center of the scene
 	//Therefore when the chracter position reaches 25%> and <75%
 	//The view port moves at the same speed as the character
-	if((character.getPositionX() - viewPortCenter[0]) > 0.75*WIDTH)
-		viewPortCenter[0] += character.getSpeed(); 
-	else if((character.getPositionX() - viewPortCenter[0]) < 0.25*WIDTH)
-		viewPortCenter[0]-= character.getSpeed(); 
-	if((character.getPositionY() - viewPortCenter[1]) > 0.75*HEIGHT)
-		viewPortCenter[1]+= character.getSpeed(); 
-	else if((character.getPositionY() - viewPortCenter[1]) < 0.25*HEIGHT)
-		viewPortCenter[1]-= character.getSpeed(); 
+	if((character -> getPositionX() - viewPortCenter[0]) > 0.75*WIDTH)
+		viewPortCenter[0] += character -> getSpeed(); 
+	else if((character -> getPositionX() - viewPortCenter[0]) < 0.25*WIDTH)
+		viewPortCenter[0]-= character -> getSpeed(); 
+	if((character -> getPositionY() - viewPortCenter[1]) > 0.75*HEIGHT)
+		viewPortCenter[1]+= character -> getSpeed(); 
+	else if((character -> getPositionY() - viewPortCenter[1]) < 0.25*HEIGHT)
+		viewPortCenter[1]-= character -> getSpeed(); 
 }
 
 /*
@@ -149,14 +149,12 @@ void display(void)
 	glViewport(0,0,WIDTH, HEIGHT);
 
 	//Update the view port to maintain the camera on the player
-	updateViewPort(PLAYER_ONE);
-
+	updateViewPort(&PLAYER_ONE);
 	
     //Added by Ryan
-	DAN.updateNPCSet(PLAYER_ONE); // This is the NPC idler (it works :D)
+	DAN.updateNPCSet(&PLAYER_ONE); // This is the NPC idler (it works :D)
  
- 
-	scene.UpdateActorArrays(DAN);
+	scene.UpdateActorArrays(&DAN);
 
 	//Never Forget the teture initialization
 	scene.render();
@@ -169,7 +167,7 @@ void display(void)
 void reshape(int x, int y)
 {
 	WIDTH = x, HEIGHT = y;
-	updateViewPort(PLAYER_ONE);
+	updateViewPort(&PLAYER_ONE);
 }
 
 void idle(void)
@@ -177,7 +175,7 @@ void idle(void)
 	if(!pause)
 	{
 		PLAYER_ONE.setSpeed(2);
-		PLAYER_ONE = menuStates(PLAYER_ONE, &DAN);
+		menuStates(PLAYER_ONE, &DAN, &scene);
 	}
 }
 
@@ -221,13 +219,13 @@ void main(int argc, char* argv[])
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
 		
-		for (int i = 0; i < 100; i++){
+		for (int i = 0; i < 200; i++){
 			
 			actor newActor(5*64,13*64, 4);
 			DAN.addActor(newActor);
 		}
 		DAN.actorSet = DAN.getActorSet();
-		scene.setupActorArrays(DAN);
+		scene.setupActorArrays(&DAN);
 		
 		//(-) NPC stuff //
 
@@ -241,7 +239,7 @@ void main(int argc, char* argv[])
 		unsigned int txtFileSize[] = {26,19};
 
         DAN.changePlayerStart(size);
-        player greg(DAN);
+        player greg(&DAN);
         PLAYER_ONE = greg;
 
         block.changeDescription("HOORAY");
@@ -267,8 +265,8 @@ void main(int argc, char* argv[])
 
         DAN.populateWorld();
 
-		scene.worldToArray(DAN);
-		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE, DAN);
+		scene.worldToArray(&DAN);
+		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE, &DAN);
 
 		unsigned int testPos[2];
 		testPos[0]= 3, testPos[1] = 5;
@@ -280,7 +278,7 @@ void main(int argc, char* argv[])
         glutInitWindowSize(600,600);
         glutCreateWindow("Pure Kleptomania");
 		//Glew has to be initialized on a window for window basiss
-		//glewInit();
+		glewInit();
         
 		glutDisplayFunc(display);
         glutIdleFunc(idle);

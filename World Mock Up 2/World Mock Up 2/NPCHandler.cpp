@@ -207,16 +207,16 @@ required update:
 -raycasting that checks if there are objects between the player and the
 actor, if there is an object in the way the actor should not be triggered
 */
-bool actor::isFacingPlayer(player currentPlayer)
+bool actor::isFacingPlayer(player* currentPlayer)
 {
 	//This statement will be simplified the check does more than it should be doing
-	if( (abs( (double) vPosition.x - currentPlayer.getPositionX() ) < visionRange) 
-		&& (abs((double) vPosition.y - currentPlayer.getPositionY()) < visionRange))
+	if( (abs( (double) vPosition.x - currentPlayer -> getPositionX() ) < visionRange) 
+		&& (abs((double) vPosition.y - currentPlayer -> getPositionY()) < visionRange))
 	{
-		if(face == Up && currentPlayer.getPositionY() > vPosition.y
-			|| face == Right && currentPlayer.getPositionX() > vPosition.x
-			|| face == Down && currentPlayer.getPositionY() <  vPosition.y
-			|| face == Left && currentPlayer.getPositionX() < vPosition.x)
+		if(face == Up && currentPlayer -> getPositionY() > vPosition.y
+			|| face == Right && currentPlayer -> getPositionX() > vPosition.x
+			|| face == Down && currentPlayer -> getPositionY() <  vPosition.y
+			|| face == Left && currentPlayer -> getPositionX() < vPosition.x)
 			return true;
     } 
 	else return false;

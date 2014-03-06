@@ -100,7 +100,7 @@ namespace kyb
 	}
 
 	/* This is the state machine to run the keyboard in the idleFunc */
-	player menuStates(player character, world *map)
+	void menuStates(player &character, world *map, renderer *currentScene)
 	{
 		//W and A
 		if(keys[0] && keys[2])
@@ -110,7 +110,7 @@ namespace kyb
 			{
 				character.checkMovement(map, 0, 1);
 				character.checkMovement(map, -1, 0);
-				character = scene.animatePlayer(character, true);
+				currentScene -> animatePlayer(character, true);
 			}
 		}
 		//W and D
@@ -121,7 +121,7 @@ namespace kyb
 			{
 				character.checkMovement(map, 0, 1);
 				character.checkMovement(map, 1, 0);
-				character = scene.animatePlayer(character, true);
+				currentScene -> animatePlayer(character, true);
 			}
 		}
 		//S and A
@@ -132,7 +132,7 @@ namespace kyb
 			{
 				character.checkMovement(map, -1, 0);
 				character.checkMovement(map, 0, -1);
-				character = scene.animatePlayer(character, true);
+				currentScene -> animatePlayer(character, true);
 			}
 
 		}
@@ -144,7 +144,7 @@ namespace kyb
 			{
 				character.checkMovement(map, 1, 0);
 				character.checkMovement(map, 0, -1);
-				character = scene.animatePlayer(character, true);
+				currentScene -> animatePlayer(character, true);
 			}
 
 		}
@@ -155,7 +155,7 @@ namespace kyb
 			else 
 			{
 				character.checkMovement(map, 0, 1);
-				character = scene.animatePlayer(character, true);
+				currentScene -> animatePlayer(character, true);
 			}
 		}
 		//S
@@ -165,7 +165,7 @@ namespace kyb
 			else 
 			{ 
 				character.checkMovement(map, 0, -1);
-				character = scene.animatePlayer(character, true);
+				currentScene -> animatePlayer(character, true);
 			}
 		}
 		//A
@@ -175,7 +175,7 @@ namespace kyb
 			else 
 			{
 				character.checkMovement(map, -1, 0);
-				character = scene.animatePlayer(character, true);
+				currentScene -> animatePlayer(character, true);
 			}
 		}
 		//D
@@ -185,15 +185,13 @@ namespace kyb
 			else 
 			{
 				character.checkMovement(map, 1, 0);
-				character = scene.animatePlayer(character, true);
+				currentScene -> animatePlayer(character, true);
 			}
 		}
 		//Action or E key
 		else if(keys[4]);
 		//Menu or Q key
 		else if(keys[7]);
-		return character;
-
 	}
 }
 #endif

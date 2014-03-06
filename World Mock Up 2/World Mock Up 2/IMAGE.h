@@ -17,7 +17,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #define _IMAGE_HANDLER
 
 //#include "COLLECTIONS.h"
-#include <libpng/png.h>
+#include <png.h>
 #include <GL/freeglut.h>
 #include <GL/GL.h>
 #include <iostream>

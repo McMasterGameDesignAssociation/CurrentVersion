@@ -59,7 +59,7 @@ inline direction operator--(const direction rhs)
 #ifndef _COLLECTIONS
 #define _COLLECTIONS
 
-//#include <GL/glew.h>
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include <iostream>
 #include <ctime>
@@ -67,7 +67,7 @@ inline direction operator--(const direction rhs)
 #include <string>
 #include <vector>
 #include <fstream>
-//#pragma comment(lib, "glew32.lib")
+#pragma comment(lib, "glew32.lib")
 
 using namespace std;
 

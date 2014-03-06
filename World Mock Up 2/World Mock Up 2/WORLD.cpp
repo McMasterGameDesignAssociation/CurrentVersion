@@ -379,7 +379,7 @@ void world::populateWorld(void)
         */
 //Added by ryan davis 
 
-void world::updateNPCSet(player currentPlayer)
+void world::updateNPCSet(player* currentPlayer)
 {
 	for(unsigned int i = 0; i < actorSet.size(); i++)
 	{
@@ -387,7 +387,7 @@ void world::updateNPCSet(player currentPlayer)
 		//TODO: find out why the line below slows down the game so much (even when updateMovement(world map) has its code commented out)
         actorSet[i].updateMovement(this); 
 		
- 		if(actorSet[i].isFacingPlayer(currentPlayer) && currentPlayer.getSuspicious()) actorSet[i].increaseAlert();
+ 		if(actorSet[i].isFacingPlayer(currentPlayer) && currentPlayer -> getSuspicious()) actorSet[i].increaseAlert();
 		else if(actorSet[i].getAlert() > 0) actorSet[i].decreaseAlert();
  
 		actorSet[i].setMoving(true);
@@ -419,20 +419,20 @@ void world::updateNPCSet(player currentPlayer)
 		if(actorSet[i].isFacingPlayer(currentPlayer) && actorSet[i].getAlert() > 0)
         { //if actor can see vector
 			actorSet[i].setMoving(true);
-			if(abs( (double) currentPlayer.getPositionX() - actorSet[i].getPosition().x) > 32 || abs( (double) currentPlayer.getPositionY() - actorSet[i].getPosition().y) > 32)
+			if(abs( (double) currentPlayer -> getPositionX() - actorSet[i].getPosition().x) > 32 || abs( (double) currentPlayer -> getPositionY() - actorSet[i].getPosition().y) > 32)
 			{ //if the actor is greater than 32 pixels away from the player (if it isn't, there is no need to move)
-				if( (abs( (double) currentPlayer.getPositionX() - actorSet[i].getPosition().x) > abs( (double) currentPlayer.getPositionY() - actorSet[i].getPosition().y)))
+				if( (abs( (double) currentPlayer -> getPositionX() - actorSet[i].getPosition().x) > abs( (double) currentPlayer -> getPositionY() - actorSet[i].getPosition().y)))
 				{ //if the x is further away than the y then move x. otherwise move in y.
-					if (actorSet[i].getPosition().x < currentPlayer.getPositionX() + 32 )
+					if (actorSet[i].getPosition().x < currentPlayer -> getPositionX() + 32 )
 						actorSet[i].changeDirection(Right);
-					else if (actorSet[i].getPosition().x > currentPlayer.getPositionX() - 32)
+					else if (actorSet[i].getPosition().x > currentPlayer -> getPositionX() - 32)
 						actorSet[i].changeDirection(Left);
 				}
 				else
 				{
-					if (actorSet[i].getPosition().y < currentPlayer.getPositionY() + 32)
+					if (actorSet[i].getPosition().y < currentPlayer -> getPositionY() + 32)
 						actorSet[i].changeDirection(Up);
-					else if (actorSet[i].getPosition().y > currentPlayer.getPositionY() - 32)
+					else if (actorSet[i].getPosition().y > currentPlayer -> getPositionY() - 32)
 						actorSet[i].changeDirection(Down);
 				}
 				if(actorSet[i].getIsHittingWall() == true)

@@ -36,20 +36,20 @@ public:
 	renderer(void);
 	void addTile(int center[2], double color[3], int size);
 	void render(void);
-	void worldToArray(world gameSpace);
+	void worldToArray(world* gameSpace);
 	void testRender(void);
 	image getTileData(void);
 	void changeTextureInfo(image newTextureData);
 	actor animateActor(actor character, bool isMoving);
-	player animatePlayer(player character, bool isMoving);
+	void animatePlayer(player &character, bool isMoving);
 
-	void setUpActor(const char* startImage, actor character);
-	void setUpPlayer(const char* startImage, player &character, world map);
+	void setUpActor(const char* startImage, actor* character);
+	void setUpPlayer(const char* startImage, player &character, world* map);
 	
 	void setUpCharacters(unsigned int numberOfCharacters);
 
-	void UpdateActorArrays(world map);
-	void setupActorArrays(world map);
+	void UpdateActorArrays(world* map);
+	void setupActorArrays(world* map);
 	
 	~renderer(void);
 

@@ -36,7 +36,7 @@ protected:
 
 public:
 	player(void);
-	player(world map);
+	player(world* map);
 	int getSpeed(void);
 	direction face;
 	unsigned int getPositionX(void);

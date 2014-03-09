@@ -41,6 +41,7 @@ void image::addTexture(double* textCoords)
 	holdOver[0] = textCoords[0];
 	holdOver[1] = textCoords[1];
 	textureVector.push_back(holdOver);
+	buildOkay = true;
 }
 
 void image::addTile(int ID)
@@ -77,6 +78,7 @@ void image::buildTextureArray(void)
 
 void image::checkIfAvailable(void) 
 {
+	cout << endl << imageName << endl;
 	png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;
@@ -137,7 +139,7 @@ void image::checkIfAvailable(void)
  
 	png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
  
-	for(int i = 0; i < height; i++) 
+	for(unsigned int i = 0; i < height; i++) 
 	{
 		// note that png is ordered top to
 		// bottom, but OpenGL expect it bottom to top
@@ -159,6 +161,10 @@ void image::checkIfAvailable(void)
 
 void image::enableSetUp(void)
 {
+	//glGenTextures(1, &texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, imageSize[0],
+					 imageSize[1], 0, GL_RGBA, GL_UNSIGNED_BYTE,
+					 textureBinary);
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
@@ -175,8 +181,9 @@ void image::enableSetUp(void)
 
 void image::disableSetUp(void)
 {
+	//glDeleteTextures(1, &texture);
 	glDisable(GL_BLEND | GL_SRC_ALPHA | GL_UNPACK_ALIGNMENT |
-		GL_ONE_MINUS_SRC_ALPHA |  hasAlpha ? GL_RGBA : GL_RGB 
+		GL_ONE_MINUS_SRC_ALPHA |  (hasAlpha ? GL_RGBA : GL_RGB) 
 		| GL_UNSIGNED_BYTE | GL_TEXTURE_WRAP_S | GL_CLAMP |
 		GL_TEXTURE_MAG_FILTER | GL_LINEAR | GL_TEXTURE_WRAP_T |
 		GL_TEXTURE_MIN_FILTER);
@@ -186,19 +193,14 @@ void image::setupTexture(void)
 {
  	if(!imageAvailable) checkIfAvailable();
 	if(buildOkay)
-	{
 		buildTextureArray();
-		writeReport();
-	}
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, imageSize[0],
-					 imageSize[1], 0, GL_RGBA, GL_UNSIGNED_BYTE,
-					 textureBinary);
 }
 
 double* image::getTextureArray(void) {return textureArray;}
 
 GLuint image::getTexture(void) {return texture;}
-
+GLubyte* image::getTextureBinary(void) {return textureBinary;}
+char* image::getImageName(void) {return (char*)imageName;}
 void image::writeReport(void)
 {
 	cout << "X size: " << imageSize[0] << " Y size: " << imageSize[1] << endl;
@@ -209,8 +211,6 @@ void image::writeReport(void)
 void image::addCharacter(void)
 {
 	double temp[2];
-	//delete[] textureArray;
-
 	textureArray = new double[12];
 
 	temp[0] = 0, temp[1] = 0;

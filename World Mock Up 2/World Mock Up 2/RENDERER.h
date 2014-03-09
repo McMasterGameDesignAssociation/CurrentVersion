@@ -18,7 +18,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 #define _RENDERER
 
 #include "COLLECTIONS.h"
-#include "IMAGE.h"
 
 /*
 The renderer is the class that is responsible for controlling the
@@ -40,15 +39,12 @@ public:
 	void testRender(void);
 	image getTileData(void);
 	void changeTextureInfo(image newTextureData);
-	actor animateActor(actor character, bool isMoving);
+	void animateActor(actor &character, bool isMoving);
 	void animatePlayer(player &character, bool isMoving);
 
 	void setUpActor(const char* startImage, actor* character);
 	void setUpPlayer(const char* startImage, player &character, world* map);
-	
-	void setUpCharacters(unsigned int numberOfCharacters);
 
-	void UpdateActorArrays(world* map);
 	void setupActorArrays(world* map);
 	
 	~renderer(void);
@@ -58,19 +54,20 @@ private:
 	int ** playerArray;
 	double ** playerColors;
 
-	int * vertices;
-	double * colors;
+	int * tileArray;
+	double * tileColors;
 	
-	image tileData;
-	image objectData;
+	//All image data needs to be used as pointers
 	image *characterData;
-	image playerData;
+	image *tileData;
+	image *objectData;
+	image *playerData;
 
 	vector<int*> tempVertices;
 	vector<double*> tempColors;
 
-	vector<int*> actorArrays;
-	vector<double*> actorColors;
+	vector<int**> actorArrays;
+	vector<double**> actorColors;
 
 	/*BuildOk is used as a gaurd variable, so that if the
 	arrays have already been written they won't rewrite

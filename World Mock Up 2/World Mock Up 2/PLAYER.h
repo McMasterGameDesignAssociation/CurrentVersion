@@ -16,7 +16,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 #define _PLAYER
 
 #include "COLLECTIONS.h"
-class world;
 
 class player
 {

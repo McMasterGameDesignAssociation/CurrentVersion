@@ -28,14 +28,6 @@ to manage there respective entity type
 
 #include "COLLECTIONS.h"
 
-using namespace std;
-
-class actor;
-class tile;
-class object;
-class player;
-class image;
-class FileReader;
 
 /*
 contains
@@ -61,11 +53,6 @@ class world //: actor, player, object, tile
 
 		vector<tile> tileSet;
 		vector<object> objectSet;
-
-		string characterPNG;
-		string tilePNG;
-		string objectPNG;
-		string * actorPNG;
 
 		int* tileLocations;
 		int* objectLocations;
@@ -137,7 +124,8 @@ class world //: actor, player, object, tile
 		int getObjectSetSize(void);
 
 		//Created by Ryan for the NPC 
-		void updateNPCSet(player* currentPlayer);
+		void updateNPCSet(player* currentPlayer, renderer* act);
 };
 
 #endif // !_WORLD
+//3043 as of 09/03/2014

@@ -12,7 +12,39 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.
 */
+/*
+real quick not to make a function pointer use
+return type (*to function) (list of arguments);
+*/
+//void greg(void(*gregory)(double theGregs));
+
+
+class tile;
+class actor;
+class world;
+class player;
+class object;
+class renderer;
+class image;
+class FileReader;
+using namespace std;
+
 #pragma once
+
+#ifndef ACTOR_VECTOR
+#define ACTOR_VECTOR
+struct ActorVector
+{
+        unsigned int x;
+        unsigned int y;
+};
+#endif
+
+#ifndef KLEPTO_CALL_BACKS
+#define KLEPTO_CALL_BACKS
+typedef void(*genericCallback)(void* arg);
+typedef void(*actorCallback)(actor* character);
+#endif
 
 #ifndef _ITEM_TYPES
 #define _ITEM_TYPES
@@ -25,7 +57,6 @@ static enum itemType{clothing, electronics, games, food};
 #define _COUNTER_OPTIONS
 
 static enum countChoice{reset, inc};
-
 #endif
 
 #ifndef _DIRECTION
@@ -60,26 +91,26 @@ inline direction operator--(const direction rhs)
 #define _COLLECTIONS
 
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <iostream>
 #include <ctime>
 #include <stdlib.h>
 #include <string>
 #include <vector>
 #include <fstream>
+#include <png.h>
+
 #pragma comment(lib, "glew32.lib")
+#pragma comment(lib, "libpng16.lib")
 
-using namespace std;
-
+#include "IMAGE.h"
 #include "NPCHandler.h"
 #include "OBJECT.h"
 #include "PLAYER.h"
 #include "TILE.h"
 #include "FILEREADER.h"
 #include "WORLD.h"
-
 #include "RENDERER.h"
-
 #include "TIMER.h"
 
 #endif

@@ -17,7 +17,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 #include "COLLECTIONS.h"
 
-using namespace std;
 class FileReader
 {
 public:

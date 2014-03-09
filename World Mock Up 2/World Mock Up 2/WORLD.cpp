@@ -16,7 +16,7 @@ world::world(unsigned int size[2], string worldFile)
 {
 	//Added by Ryan Davis. 
 	//NPC variable initializations
-	detectionRange = 64 * 100;
+	detectionRange = resolution * 100;
 	frameCounter = 0;
 	randomNumNPC = 0;
 	frameStop = 1000;
@@ -43,8 +43,6 @@ world::world(unsigned int size[2], string worldFile)
 	object objectBlock;
 	addObject(objectBlock);
 
-	actor character;
-	addActor(character);
 	unsigned int temp[2];
 	
 	for(unsigned int i = 0; i < dimensions[0]; i++)
@@ -357,9 +355,9 @@ void world::populateWorld(void)
 	//cause the reads in top to bottom and not bottom to top
 	unsigned int mapLocation[2] = {0,currentMap.size()};
 
-	for(int i = 0; i < currentMap.size(); i++)
+	for(unsigned int i = 0; i < currentMap.size(); i++)
 	{
-		for(int j = 0; j < currentMap.at(0).size(); j++)
+		for(unsigned int j = 0; j < currentMap.at(0).size(); j++)
 		{	
 			setTileLocation(mapLocation, currentMap.at(i).at(j));
 			mapLocation[0]++;
@@ -379,13 +377,13 @@ void world::populateWorld(void)
         */
 //Added by ryan davis 
 
-void world::updateNPCSet(player* currentPlayer)
+void world::updateNPCSet(player* currentPlayer, renderer* act)
 {
 	for(unsigned int i = 0; i < actorSet.size(); i++)
 	{
 		double probabilities[4] = {1,1,1,1};
 		//TODO: find out why the line below slows down the game so much (even when updateMovement(world map) has its code commented out)
-        actorSet[i].updateMovement(this); 
+        actorSet[i].updateMovement(this, act); 
 		
  		if(actorSet[i].isFacingPlayer(currentPlayer) && currentPlayer -> getSuspicious()) actorSet[i].increaseAlert();
 		else if(actorSet[i].getAlert() > 0) actorSet[i].decreaseAlert();
@@ -396,7 +394,7 @@ void world::updateNPCSet(player* currentPlayer)
 			//Scatter algorithm
 			int * seedy;
 			seedy = new int[0];
-			srand(time(NULL) * (int)&seedy[0]);
+			srand(int(time(NULL)) * (int)&seedy[0]);
 			delete[] seedy;
             randomNumNPC = rand()%100;
             //In this situation, the NPCs are out of range. They patrol the area

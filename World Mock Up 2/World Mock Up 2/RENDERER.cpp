@@ -30,8 +30,8 @@ Clears
 */
 renderer::~renderer(void)
 {
-	delete[] vertices;
-	delete[] colors;
+	delete[] tileArray;
+	delete[] tileColors;
 	//delete[] playerArray;
 	tempColors.clear();
 	tempVertices.clear();
@@ -44,8 +44,8 @@ to true
 */
 void renderer::clearArrays(void)
 {
-	delete[] vertices;
-	delete[] colors;
+	delete[] tileArray;
+	delete[] tileColors;
 }
 
 /*
@@ -65,13 +65,15 @@ renderer::renderer(void)
 	tempColors.clear();
 	//This needs to be user selected, or an agreed upon
 	//null image needs to be made
-	tileData.changeName("rough_tiles.png");
+	tileData = new image[1];
+	tileData -> changeName("rough_tiles.png");
 	
-	playerData.addCharacter();
-	playerData.setupTexture();
+	playerData = new image[1];
+	playerData -> addCharacter();
+	//playerData.setupTexture();
 	//Initialize the image binary to a 0
 	//dimensional array to avoid memory issues
-	characterData = new image[0];
+	//characterData = new image[50];
 
 	/*Player data will always be in 6 doubles
 	and 6 triples (2 triangles, not in strips).
@@ -105,15 +107,15 @@ void renderer::buildArrays(void)
 	if(!tempVertices.empty())
 	{
 		clearArrays();
-		vertices = new int[tempVertices.size()*2];
-		colors = new double[tempColors.size()*3];
+		tileArray = new int[tempVertices.size()*2];
+		tileColors = new double[tempColors.size()*3];
 		for(unsigned int i = 0; i < tempVertices.size(); i++)
 		{
-			vertices[i*2] = tempVertices.at(i)[0];
-			vertices[i*2 + 1] = tempVertices.at(i)[1];
-			colors[i*3] = tempColors.at(i)[0];
-			colors[i*3 + 1] = tempColors.at(i)[1];
-			colors[i*3 + 2] = tempColors.at(i)[2];
+			tileArray[i*2] = tempVertices.at(i)[0];
+			tileArray[i*2 + 1] = tempVertices.at(i)[1];
+			tileColors[i*3] = tempColors.at(i)[0];
+			tileColors[i*3 + 1] = tempColors.at(i)[1];
+			tileColors[i*3 + 2] = tempColors.at(i)[2];
 		}
 		//This line indicates that all of the current world is
 		//up-to-date and is not needed to be recalculated
@@ -187,8 +189,9 @@ void renderer::addTile(int center[2], double color[3], int size)
 */
 void renderer::render(void)
 {
+	bool check = false;
 	if(buildOk) buildArrays();
-		
+
 	//Enable clientStates so that the drawArrays has
 	//the correct array information
 	//Vertex is for the spacial information
@@ -198,36 +201,50 @@ void renderer::render(void)
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	
+	//Image Data for character Texture is not
+	//Actually set up in the system, this needs
+	//To be investigated
 	glEnable(GL_TEXTURE_2D);
 
-	tileData.setupTexture();
-	tileData.enableSetUp();
+	tileData -> setupTexture();
+	tileData -> enableSetUp();
 
-	glVertexPointer(2, GL_INT, 0, vertices);
-	glColorPointer(3, GL_DOUBLE, 0, colors);
-	glTexCoordPointer(2, GL_DOUBLE, 0, tileData.textureArray);
+	glVertexPointer(2, GL_INT, 0, tileArray);
+	glColorPointer(3, GL_DOUBLE, 0, tileColors);
+	glTexCoordPointer(2, GL_DOUBLE, 0, tileData -> textureArray);
 	glDrawArrays(GL_TRIANGLES, 0, tempVertices.size());
+	tileData -> disableSetUp();
 
-	playerData.setupTexture();
 	glClear(GL_DEPTH_BUFFER_BIT);
-	playerData.enableSetUp();
+	playerData -> setupTexture();
+	playerData -> enableSetUp();
 
 	glVertexPointer(2, GL_INT, 0, *playerArray);
 	glColorPointer(3, GL_DOUBLE, 0, *playerColors);
-	glTexCoordPointer(2, GL_DOUBLE, 0, playerData.textureArray);
+	glTexCoordPointer(2, GL_DOUBLE, 0, playerData -> textureArray);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	playerData -> disableSetUp();
 
+	glClear(GL_DEPTH_BUFFER_BIT);
 	for(unsigned int i = 0; i < actorArrays.size(); i++)
 	{
-		//characterData[i].setupTexture();
-		//characterData[i].enableSetUp();
-		glVertexPointer(2, GL_INT, 0, actorArrays.at(i));
-		glColorPointer(3, GL_DOUBLE, 0, actorColors.at(i));
-		//glTexCoordPointer(2, GL_DOUBLE, 0, characterData[i].textureArray);
+		if( i == 0 || (i > 0 && characterData[i].getImageName() != characterData[i-1].getImageName()))
+		{
+			characterData[i].setupTexture();
+			characterData[i].enableSetUp();
+			check = true;
+		}
+		glVertexPointer(2, GL_INT, 0, *actorArrays.at(i));
+		glColorPointer(3, GL_DOUBLE, 0, *actorColors.at(i));
+		glTexCoordPointer(2, GL_DOUBLE, 0, characterData[i].textureArray);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		if(check) 
+		{
+			characterData[i].disableSetUp();
+			check = false;
+		}
 		glClear(GL_DEPTH_BUFFER_BIT);
-		//characterData[i].disableSetUp();
 	}
 
 	glDisable(GL_TEXTURE_2D);
@@ -237,8 +254,8 @@ void renderer::render(void)
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-image renderer::getTileData(void) {return tileData;}
-void renderer::changeTextureInfo(image newTextureData) {tileData = newTextureData;}
+image renderer::getTileData(void) {return *tileData;}
+void renderer::changeTextureInfo(image newTextureData) {tileData = &newTextureData;}
 
 void renderer::printPoint(unsigned int pos)
 {
@@ -249,42 +266,20 @@ void renderer::printPoint(unsigned int pos)
 
 void renderer::setupActorArrays(world* map)
 {
-	int *temp;
-	double *tempDouble;
+	int **temp;
+	double **tempDouble;
 	characterData = new image[map -> actorSet.size()];
-	for(int i = 0; i < map -> actorSet.size(); i++)
+	for(unsigned int i = 0; i < map -> actorSet.size(); i++)
 	{
-		temp = new int[1];
-		//This is hardcoded and should be fixed later
-		characterData[i].changeName("Charactersforreal.png");
-		characterData[i].addCharacter();
-		tempDouble = new double[1];
+		temp = new int*[12];
+		tempDouble = new double*[18];
 		actorArrays.push_back(temp);
 		actorColors.push_back(tempDouble);
+		//This is hardcoded and should be fixed later
+		cout << map -> actorSet.at(i).getBitMapName() << endl;
+		setUpActor(map -> actorSet.at(i).getBitMapName(), &(map -> actorSet.at(i)));
 	}
 }
-
-void renderer::UpdateActorArrays(world* map)
-{
-	for(int i = 0; i < map -> actorSet.size()-1; i++)
-	{
-		actorArrays.at(i) = new int[12];
-		actorArrays.at(i)[0] = map  -> actorSet.at(i).getPosition().x-32, actorArrays.at(i)[1] = map -> actorSet.at(i).getPosition().y-32,
-		actorArrays.at(i)[2] = map  -> actorSet.at(i).getPosition().x+32, actorArrays.at(i)[3] = map -> actorSet.at(i).getPosition().y-32,
-		actorArrays.at(i)[4] = map  -> actorSet.at(i).getPosition().x-32, actorArrays.at(i)[5] = map -> actorSet.at(i).getPosition().y+32,
-		actorArrays.at(i)[6] = map  -> actorSet.at(i).getPosition().x-32, actorArrays.at(i)[7] = map -> actorSet.at(i).getPosition().y+32,
-		actorArrays.at(i)[8] = map  -> actorSet.at(i).getPosition().x+32, actorArrays.at(i)[9] = map -> actorSet.at(i).getPosition().y+32,
-		actorArrays.at(i)[10] = map -> actorSet.at(i).getPosition().x+32,actorArrays.at(i)[11] = map -> actorSet.at(i).getPosition().y-32;
-		actorColors.at(i) = new double[18];
-		for(int j = 0; j < 18; j++)  
-		{
-			if(j % 3 == 1)actorColors.at(i)[j] = .9;
-			else actorColors.at(i)[j] = .0;
-		}
-	}
-}
-
-void renderer::setUpCharacters(unsigned int numberOfCharacters)  {characterData = new image[numberOfCharacters];}
 
 void renderer::worldToArray(world* gameSpace)
 {
@@ -297,7 +292,7 @@ void renderer::worldToArray(world* gameSpace)
 		for(int j = 0; j < gameSpace -> getX(); j++)
 		{
 			pos[0] = j;
-			tileData.addTile(gameSpace -> checkTileMap(pos)); 
+			tileData -> addTile(gameSpace -> checkTileMap(pos)); 
 			location[0] = j*gameSpace -> getResolution(), 
 				location[1] = i*gameSpace -> getResolution();
 			addTile(location, color, gameSpace -> getResolution());
@@ -310,21 +305,15 @@ void renderer::setUpActor(const char* startImage, actor* character)
 {
 	characterData[character -> getID()].changeName(startImage);
 	characterData[character -> getID()].addCharacter();
-	actorArrays.at(character -> getID()) = new int[12];
-	actorArrays.at(character -> getID())[0] = character -> getInitialXPos()-32, actorArrays.at(character -> getID())[1] = character -> getInitialXPos()-32,
-	actorArrays.at(character -> getID())[2] = character -> getInitialXPos()+32, actorArrays.at(character -> getID())[3] = character -> getInitialXPos()-32,
-	actorArrays.at(character -> getID())[4] = character -> getInitialXPos()-32, actorArrays.at(character -> getID())[5] = character -> getInitialXPos()+32,
-	actorArrays.at(character -> getID())[6] = character -> getInitialXPos()-32, actorArrays.at(character -> getID())[7] = character -> getInitialXPos()+32,
-	actorArrays.at(character -> getID())[8] = character -> getInitialXPos()+32, actorArrays.at(character -> getID())[9] = character -> getInitialXPos()+32,
-	actorArrays.at(character -> getID())[10] = character -> getInitialXPos()+32,actorArrays.at(character -> getID())[11] = character -> getInitialXPos()-32;
-	actorColors.at(character -> getID()) = new double[18];
-	for(int i = 0; i < 18; i++)  actorColors.at(character -> getID())[i] = .2;
+	actorColors.at(character -> getID()) = new double*[18];
+	for(int i = 0; i < 12; i++) actorArrays.at(character -> getID())[i] = &character -> vertices[i];
+	for(int i = 0; i < 18; i++)  actorColors.at(character -> getID())[i] = &character -> shadeVertices[i];
 }
 
 void renderer::setUpPlayer(const char* startImage, player &character, world* map)
 {
-	playerData.changeName(startImage);
-	playerData.addCharacter();
+	playerData -> changeName(startImage);
+	playerData -> addCharacter();
 	//This is a very strange bug, I can't initiate playerColors in the constructor
 	//This will need to be repaired for later purposes, however this is fine for
 	//now
@@ -357,19 +346,13 @@ void renderer::animatePlayer(player &character, bool isMoving)
 	}
 	temp[0] = double(character.animationStep)*.125;
 	if(isMoving) character.animationStep++;
-	playerData.moveActorCoords(temp);
+	playerData -> moveActorCoords(temp);
 }
 
-actor renderer::animateActor(actor character, bool isMoving)
+void renderer::animateActor(actor &character, bool isMoving)
 {
 	double temp[2];
-	actorArrays.at(character.getID())[0] = character.getPosition().x-32, actorArrays.at(character.getID())[1] = character.getPosition().y-32,
-	actorArrays.at(character.getID())[2] = character.getPosition().x+32, actorArrays.at(character.getID())[3] = character.getPosition().y-32,
-	actorArrays.at(character.getID())[4] = character.getPosition().x-32, actorArrays.at(character.getID())[5] = character.getPosition().y+32,
-	actorArrays.at(character.getID())[6] = character.getPosition().x-32, actorArrays.at(character.getID())[7] = character.getPosition().y+32,
-	actorArrays.at(character.getID())[8] = character.getPosition().x+32, actorArrays.at(character.getID())[9] = character.getPosition().y+32,
-	actorArrays.at(character.getID())[10] = character.getPosition().x+32,actorArrays.at(character.getID())[11] = character.getPosition().y-32;
-	(character.animationStep > 6) ? character.animationStep = 0 : 0;
+		(character.animationStep > 6) ? character.animationStep = 0 : 0;
 	
 	switch(character.face)
 	{
@@ -391,7 +374,6 @@ actor renderer::animateActor(actor character, bool isMoving)
 	}
 	temp[0] = double(character.animationStep)*.125;
 	character.animationStep++;
-	playerData.moveActorCoords(temp);
-	return character;
+	characterData[character.getID()].moveActorCoords(temp);
 }
 #endif

@@ -11,6 +11,7 @@ actor::actor(void)
 	animationStep = 0;
 	bitMapName = "None";
 	description = "This is an empty character";
+	updatePosition();
 }
 //
 ///*
@@ -51,24 +52,24 @@ void actor::changeID(unsigned int newID) {ID = newID;}
 //int actor::getID(void) {return ID;}
 //actor::direction actor::getFace(void) {return face;}
 //string actor::getBitMapName(void) {return bitMapName;}
+const char* actor::getBitMapName(void) {return bitMapName;}
 
 //Beginning of ryan
-actor::actor(unsigned int x, unsigned int y, int speed)
+actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* newBitmap,  world *map)
 {
-        this->vPosition.x = x;this->initialXPos = x;
-        this->vPosition.y = y;this->initialYPos = y;
-        this->speed = speed;
-       // this->ID = newID;
-        this->face = Up;
-        this->bitMapName = "None";
-        this->description = "This is an empty character";
-        this->frameCounter = 0;
-        this->visionRange = 5*64;
-        this->alert = 0;
-        this->playerWithinRange;
-        this->maxVision = visionRange + 4*64;
-        this->isHittingWall;
-		this->animationStep = 0;
+	vPosition.x = posX, initialXPos = posX;
+	vPosition.y = posY, initialYPos = posY;
+    speed = newSpeed;
+    face = Up;
+	size = map -> getResolution();
+	bitMapName = newBitmap;
+    description = "This is an empty character";
+    frameCounter = 0;
+    visionRange = 5*64;
+    alert = 0;
+    maxVision = visionRange + 4*64;
+	animationStep = 0;
+	updatePosition();
 }
 
 int actor::getFrameCount() {return frameCounter;}
@@ -141,7 +142,6 @@ void actor::checkMovement(world *map, int x, int y)
         
         speed = 64 - speed;
 
-
         //This is a check of the lower bound of movement
         posOne[0] = (x + getPosition().x)/64, posOne[1] = (y + getPosition().y)/64;
         //This is a check of the upper bound of movement
@@ -162,11 +162,23 @@ void actor::checkMovement(world *map, int x, int y)
 				this->isHittingWall = false;
         }
 		else this->isHittingWall = true;
+		updatePosition();
 }
 
+void actor::updatePosition(void)
+{
+	this -> vertices[0]  = vPosition.x - (size/2), this -> vertices[1]  = vPosition.y - (size/2),
+	this -> vertices[2]  = vPosition.x + (size/2), this -> vertices[3]  = vPosition.y - (size/2),
+	this -> vertices[4]  = vPosition.x - (size/2), this -> vertices[5]  = vPosition.y + (size/2),
+	this -> vertices[6]  = vPosition.x - (size/2), this -> vertices[7]  = vPosition.y + (size/2),
+	this -> vertices[8]  = vPosition.x + (size/2), this -> vertices[9]  = vPosition.y + (size/2),
+	this -> vertices[10] = vPosition.x + (size/2), this -> vertices[11] = vPosition.y - (size/2);
+
+	for(int i = 0; i < 18; i++) this-> shadeVertices[i] = 1;
+}
 //Optimized to pointers for speed boost
 //By Ryan Davis
-void actor::updateMovement(world *map)
+void actor::updateMovement(world *map, renderer *act)
 {
     if (this->getMoving() == true)
     {
@@ -185,6 +197,7 @@ void actor::updateMovement(world *map)
          }
          frameCounter ++;
     }
+	act -> animateActor(*this, true);
 }
 
 bool actor::getIsHittingWall(void) {return isHittingWall;}
@@ -218,8 +231,8 @@ bool actor::isFacingPlayer(player* currentPlayer)
 			|| face == Down && currentPlayer -> getPositionY() <  vPosition.y
 			|| face == Left && currentPlayer -> getPositionX() < vPosition.x)
 			return true;
+		else return false;
     } 
-	else return false;
 }
 
 /*
@@ -239,7 +252,7 @@ void actor::changeDirection(double probabilities[4])
 	direction directions[] = {Up, Left, Down, Right};
 	direction tempHeading;
 
-	srand((int)&directions*time(NULL)/((int)&probabilities%100));
+	srand((int)&directions*int(time(NULL))/((int)&probabilities%100+0.00001));
 	int randomNum = (rand()%100);
 
 	probabilities[0] = probabilities[0]/total;
@@ -267,6 +280,6 @@ void actor::changeDirection(double probabilities[4])
 	else  face = directions[3];
 }
 
-void actor::incrementDirection(void) {this->face = face++;}
+void actor::incrementDirection(void) {face++;}
 ////////////end of new ryan
 #endif

@@ -16,8 +16,7 @@ OTHER DEALINGS IN THE SOFTWARsE.
 #define _NPCHANDLER
 
 #include "COLLECTIONS.h"
-class world;
-class player;
+
 /*
 contains
 	enum direction - direction will be used to determine the direction 
@@ -31,18 +30,12 @@ contains
 
 The actor class is used to make instances of NPCs to be used in the world
 */
-struct ActorVector
-{
-        unsigned int x;
-        unsigned int y;
-};
-
 class actor
 {
         private:
                 
                 unsigned int ID;
-                string bitMapName;
+                const char* bitMapName;
                 string description;
                 ActorVector vPosition;
                 unsigned int speed;
@@ -55,14 +48,16 @@ class actor
                 int initialXPos;
                 int initialYPos;
                 int framCounterSpawn;
-
+				actorCallback currentAI;
 				bool movementHistory[4];
                 unsigned int frameCounter; //the NPC will move after a set number of frames
+				int size;
 
         public:
 
                 //Modifiers
-                actor(unsigned int x, unsigned int y, int speed);
+                actor(unsigned int posX, unsigned int posY, 
+					int newSpeed, const char* newBitmap, world* map);
                 actor(void);
 				int animationStep;
 				/*This tracks the direction the actor is facing
@@ -91,7 +86,7 @@ class actor
                 //Accessor
                 int getID(void);
                 direction getFace(void);
-                string getBitMapName(void);
+                const char* getBitMapName(void);
                 string getDescription(void);
                 int getSpeed();
                 ActorVector getPosition();
@@ -104,15 +99,17 @@ class actor
                 int getInitialXPos(void);
                 int getInitialYPos(void);
                 int getFrameCount(void);
+				
 
+				int vertices[12];
+				double shadeVertices[18];
                 //Logging function
                 void printLog(void);
-
                 //Update Function
-                void updateMovement(world *map);
+                void updateMovement(world *map, renderer *act);
                 //moveToPlayer, currently unused
                 void moveToPlayer();
-
+				void updatePosition(void);
 };
 
 #endif

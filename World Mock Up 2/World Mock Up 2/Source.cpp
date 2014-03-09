@@ -45,7 +45,7 @@ update procedures
 
 #pragma once
 #ifndef _PURE_KLEPTOMANIA
-#define _PURE_KLEPTOMANIA
+#define _PURE_KLEPTOMANIA	"PURE KLEPTOMANIA"
 
 #include "COLLECTIONS.h"
 //#include "RENDERER.h"
@@ -133,7 +133,7 @@ Required updates:
 void display(void)
 {
 	//Obligatory Set up functions
-	glClearColor(0,0,0.2,0);
+	glClearColor(GLclampf(0),GLclampf(0),GLclampf(.2),GLclampf(0));
 	glutInitDisplayMode(GL_DEPTH | GL_DOUBLE | GL_RGBA);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -150,11 +150,6 @@ void display(void)
 
 	//Update the view port to maintain the camera on the player
 	updateViewPort(&PLAYER_ONE);
-	
-    //Added by Ryan
-	DAN.updateNPCSet(&PLAYER_ONE); // This is the NPC idler (it works :D)
- 
-	scene.UpdateActorArrays(&DAN);
 
 	//Never Forget the teture initialization
 	scene.render();
@@ -176,6 +171,9 @@ void idle(void)
 	{
 		PLAYER_ONE.setSpeed(2);
 		menuStates(PLAYER_ONE, &DAN, &scene);
+		 //Added by Ryan
+		DAN.updateNPCSet(&PLAYER_ONE, &scene); // This is the NPC idler (it works :D)
+		//scene.UpdateActorArrays(&DAN);
 	}
 }
 
@@ -218,18 +216,15 @@ void main(int argc, char* argv[])
 		/*(+) NPC stuff 
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
-		
-		for (int i = 0; i < 200; i++){
+		for (int i = 0; i < 50; i++){
 			
-			actor newActor(5*64,13*64, 4);
+			actor newActor(5*64,5*64, 4, "test_subject_2.png", &DAN);
 			DAN.addActor(newActor);
 		}
 		DAN.actorSet = DAN.getActorSet();
-		scene.setupActorArrays(&DAN);
-		
 		//(-) NPC stuff //
 
-		scene.setUpCharacters(7);
+		//scene.setUpCharacters(7);
         tile block;
         object newBlock;
 
@@ -259,24 +254,20 @@ void main(int argc, char* argv[])
 		DAN.addTile(block);
 		DAN.addTile(block);
 		DAN.addTile(block);
-        DAN.printLog();
-
-		DAN.printLog();
+        //DAN.printLog();
 
         DAN.populateWorld();
 
 		scene.worldToArray(&DAN);
 		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE, &DAN);
-
+		
+		scene.setupActorArrays(&DAN);
 		unsigned int testPos[2];
 		testPos[0]= 3, testPos[1] = 5;
-		cout << "\n\n\n\n\n\n\n\nresolution: " << DAN.getResolution() <<"\n\n\n\n\n\n\n\n";
-		cout << "\n\n\n\n\n\n\n\npassThrough: " << DAN.getTileCollision(DAN.checkTileMap(testPos))<< "\n\n\n\n\n\n\n\n";
-		cout << "\n\n\n\n\n\n\n\npassThrough: " << DAN.getTileCollision(10);
 
         glutInit(&argc, argv);
         glutInitWindowSize(600,600);
-        glutCreateWindow("Pure Kleptomania");
+		glutCreateWindow(_PURE_KLEPTOMANIA);
 		//Glew has to be initialized on a window for window basiss
 		glewInit();
         

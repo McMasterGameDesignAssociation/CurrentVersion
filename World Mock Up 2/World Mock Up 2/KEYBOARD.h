@@ -53,7 +53,6 @@ namespace kyb
 
 		case 'd': keys[3] = false;
 			break;
-
 		case 'e': 
 		case 'q': 
 		default: resetKeys();
@@ -94,7 +93,7 @@ namespace kyb
 		case 'q': resetKeys();
 			keys[5] = true;
 			break;
-		
+		case 'p': pause = !pause;
 		default: break;
 		}
 	}
@@ -189,9 +188,9 @@ namespace kyb
 			}
 		}
 		//Action or E key
-		else if(keys[4]);
+		//else if(keys[4]) ;
 		//Menu or Q key
-		else if(keys[7]);
+		else if(keys[5]) exit(0);
 	}
 }
 #endif

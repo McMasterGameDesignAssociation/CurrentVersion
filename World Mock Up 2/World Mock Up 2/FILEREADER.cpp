@@ -50,9 +50,9 @@ int FileReader::getY(void) {return currentMap.size();}
 void FileReader::print2dIntVector(vector<vector<int>> vec2d)
 {
 	//(+) debugging
-	for (int i = 0; i<vec2d.size(); i++)
+	for (unsigned int i = 0; i<vec2d.size(); i++)
 	{
-		for(int j = 0; j<vec2d.at(0).size(); j++)
+		for(unsigned int j = 0; j<vec2d.at(0).size(); j++)
 			cout<<vec2d.at(i).at(j)<<"-";
 		cout<<endl;
 	}
@@ -67,10 +67,10 @@ vector<int> FileReader::removeSlashAndParse(string line)
 	int temp = 0;
 	vector<int> slashLoc;
 	vector<int> IDs;
-	for(int i = 0; i <line.size();i++)
+	for(unsigned int i = 0; i <line.size();i++)
 		if (line[i] == '/') slashLoc.push_back(i);
 
-	for(int i = 0; i<slashLoc.size()-1;i++)
+	for(unsigned int i = 0; i<slashLoc.size()-1;i++)
 	{	
 		temp = stoi(line.substr(slashLoc.at(i)+1,slashLoc.at(i+1)-slashLoc.at(i)-1));
 		IDs.push_back(temp);

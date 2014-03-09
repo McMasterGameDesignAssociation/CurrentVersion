@@ -35,7 +35,7 @@ player::player(world* map)
 	temp = map -> getPlayerStart();
 	position[0] = temp[0]*map -> getResolution(), 
 	position[1] = temp[1]*map -> getResolution();
-	size = 64;
+	size = map -> getResolution();
 	for(int i = 0; i < 12; i++) vertices[i] = 0;
 	for(int i = 0; i < 18; i++) shadeVertices[i] = 1;
 	bitMapName = "None";
@@ -49,6 +49,7 @@ player::player(world* map)
 unsigned int player::getPositionX(void) {return position[0];}
 unsigned int player::getPositionY(void) {return position[1];}
 int player::getSpeed(void) {return speed;}
+
 
 string player::getBitMap(void) {return bitMapName;}
 string player::getDescription(void) {return description;}

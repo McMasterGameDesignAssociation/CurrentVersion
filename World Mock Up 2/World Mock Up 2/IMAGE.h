@@ -12,21 +12,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
 #ifndef _IMAGE_HANDLER
 #define _IMAGE_HANDLER
 
-//#include "COLLECTIONS.h"
-#include <png.h>
-#include <GL/freeglut.h>
-#include <GL/GL.h>
-#include <iostream>
-#include <vector>
+#include "COLLECTIONS.h"
 
 #ifndef TEXTURE_LOAD_ERROR
 	#define TEXTURE_LOAD_ERROR 0
 #endif
-using namespace std;
+
 class image
 {
 	private: 
@@ -47,6 +41,7 @@ class image
 
 	public:
 		
+
 		image(void);
 		image(const char* startImage);
 		~image(void);
@@ -62,5 +57,6 @@ class image
 		void moveActorCoords(double pos[2]);
 		void enableSetUp(void);
 		void disableSetUp(void);
+		char* getImageName(void);
 };
 #endif

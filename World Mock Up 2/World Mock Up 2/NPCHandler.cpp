@@ -3,6 +3,73 @@
 
 #include "NPCHandler.h"
 
+#ifndef _NPC_AI
+#define _NPC_AI
+void turnAI(actor &aCharacter, world *map, player *pCharacter){
+	aCharacter.setMoving(true);
+	aCharacter.incrementDirection();
+}
+void stopAI(actor &aCharacter, world *map, player *pCharacter){aCharacter.setMoving(false);}
+void randomMovement(actor &aCharacter, world *map, player *pCharacter)
+{
+	double probabilities[4] = {1,1,1,1};
+	int randomNumNPC;
+	if(aCharacter.isFacingPlayer(pCharacter) && pCharacter -> getSuspicious()) aCharacter.increaseAlert();
+		else if(aCharacter.getAlert() > 0) aCharacter.decreaseAlert();
+ 
+		aCharacter.setMoving(true);
+        if(aCharacter.getAlert() == 0) 
+		{
+			//Scatter algorithm
+			int * seedy;
+			seedy = new int[0];
+			srand(int(time(NULL)) * (int)&seedy[0]);
+			delete[] seedy;
+            randomNumNPC = rand()%100;
+            //In this situation, the NPCs are out of range. They patrol the area
+			//This should be migrated to the timer function
+			if(aCharacter.getIsHittingWall() == false) map -> frameStop = 1000;
+			else map -> frameStop = 200;
+ 
+			map -> frameCounter++;
+                       
+			if(map -> frameCounter > map -> frameStop)
+			{
+				aCharacter.changeDirection(probabilities);
+				map -> frameCounter = 0;
+			}
+
+		}
+               
+		//Detect movement ends here
+        aCharacter.setMoving(true);
+		if(aCharacter.isFacingPlayer(pCharacter) && aCharacter.getAlert() > 0)
+        { //if actor can see vector
+			aCharacter.setMoving(true);
+			if(abs( (double) pCharacter-> getPositionX() - aCharacter.getPosition().x) > 32 || abs( (double) pCharacter -> getPositionY() - aCharacter.getPosition().y) > 32)
+			{ //if the actor is greater than 32 pixels away from the player (if it isn't, there is no need to move)
+				if( (abs( (double) pCharacter -> getPositionX() - aCharacter.getPosition().x) > abs( (double) pCharacter -> getPositionY() - aCharacter.getPosition().y)))
+				{ //if the x is further away than the y then move x. otherwise move in y.
+					if (aCharacter.getPosition().x < pCharacter -> getPositionX() + 32 )
+						aCharacter.changeDirection(Right);
+					else if (aCharacter.getPosition().x > pCharacter -> getPositionX() - 32)
+						aCharacter.changeDirection(Left);
+				}
+				else
+				{
+					if (aCharacter.getPosition().y < pCharacter -> getPositionY() + 32)
+						aCharacter.changeDirection(Up);
+					else if (aCharacter.getPosition().y > pCharacter -> getPositionY() - 32)
+						aCharacter.changeDirection(Down);
+				}
+				if(aCharacter.getIsHittingWall() == true)
+					aCharacter.incrementDirection();
+			}
+			else aCharacter.setMoving(false);
+		}
+}
+#endif
+
 ///ACTOR METHODS
 actor::actor(void)
 {
@@ -12,6 +79,7 @@ actor::actor(void)
 	bitMapName = "None";
 	description = "This is an empty character";
 	updatePosition();
+	AI = stopAI;
 }
 //
 ///*
@@ -44,6 +112,9 @@ void actor::printLog(void)
 	cout << "ID: "<< ID << endl;
 	cout << "Bit map name: " << bitMapName << endl << endl;
 }
+
+void actor::runAI(world *map, player *currentPlayer) {AI(*this, map, currentPlayer);}
+
 //
 ////This function should be private
 void actor::changeID(unsigned int newID) {ID = newID;}
@@ -55,7 +126,7 @@ void actor::changeID(unsigned int newID) {ID = newID;}
 const char* actor::getBitMapName(void) {return bitMapName;}
 
 //Beginning of ryan
-actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* newBitmap,  world *map)
+actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* newBitmap,  actorCallback newAI, world *map)
 {
 	vPosition.x = posX, initialXPos = posX;
 	vPosition.y = posY, initialYPos = posY;
@@ -70,6 +141,7 @@ actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* new
     maxVision = visionRange + 4*64;
 	animationStep = 0;
 	updatePosition();
+	AI = newAI;
 }
 
 int actor::getFrameCount() {return frameCounter;}
@@ -197,7 +269,7 @@ void actor::updateMovement(world *map, renderer *act)
          }
          frameCounter ++;
     }
-	act -> animateActor(*this, true);
+	if(this -> getMoving()) act -> animateActor(*this, true);
 }
 
 bool actor::getIsHittingWall(void) {return isHittingWall;}
@@ -280,6 +352,6 @@ void actor::changeDirection(double probabilities[4])
 	else  face = directions[3];
 }
 
-void actor::incrementDirection(void) {face++;}
+void actor::incrementDirection(void) {face = face++;}
 ////////////end of new ryan
 #endif

@@ -46,7 +46,6 @@ void image::addTexture(double* textCoords)
 
 void image::addTile(int ID)
 {
-	//if(ID > setSize) return;
 	double step;
 	if(imageSize[0] > 0) step = double(imageSize[1])/double(imageSize[0]);
 	else return;

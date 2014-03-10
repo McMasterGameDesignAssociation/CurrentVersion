@@ -64,8 +64,7 @@ int viewPortCenter[2] = {0,0};
 
 //These are just test constants and are pretty self
 //explanatory
-unsigned int initSize[2] = {1,1};
-world DAN(initSize, "world.txt");
+world DAN("world.txt");
 player PLAYER_ONE(&DAN);
 bool pause = false;
 //bool suspicious = false;
@@ -171,9 +170,8 @@ void idle(void)
 	{
 		PLAYER_ONE.setSpeed(2);
 		menuStates(PLAYER_ONE, &DAN, &scene);
-		 //Added by Ryan
+		//Added by Ryan
 		DAN.updateNPCSet(&PLAYER_ONE, &scene); // This is the NPC idler (it works :D)
-		//scene.UpdateActorArrays(&DAN);
 	}
 }
 
@@ -216,30 +214,30 @@ void main(int argc, char* argv[])
 		/*(+) NPC stuff 
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
-		for (int i = 0; i < 50; i++){
-			
-			actor newActor(5*64,5*64, 4, "test_subject_2.png", &DAN);
+		for (int i = 0; i < 1; i++)
+		{	
+			actor newActor(5*64,5*64, 4, "test_subject_2.png", stopAI, &DAN);
 			DAN.addActor(newActor);
 		}
-		DAN.actorSet = DAN.getActorSet();
+		for (int i = 0; i < 1; i++)
+		{	
+			actor newActor(7*64,13*64, 4, "Charactersforreal.png",  randomMovement, &DAN);
+			DAN.addActor(newActor);
+			actor anotherNewActor(10*64,13*64, 4, "Charactersforreal.png",  turnAI, &DAN);
+			DAN.addActor(anotherNewActor);
+		}
 		//(-) NPC stuff //
 
-		//scene.setUpCharacters(7);
         tile block;
         object newBlock;
 
         unsigned int size[] = {5,5};
-
-        //size of text file rows,columns
-		unsigned int txtFileSize[] = {26,19};
 
         DAN.changePlayerStart(size);
         player greg(&DAN);
         PLAYER_ONE = greg;
 
         block.changeDescription("HOORAY");
-
-        DAN.changeDimension(txtFileSize);
 
 		DAN.addTile(block);
 		block.changePassThrough(true);
@@ -257,13 +255,9 @@ void main(int argc, char* argv[])
         //DAN.printLog();
 
         DAN.populateWorld();
-
-		scene.worldToArray(&DAN);
 		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE, &DAN);
-		
+		scene.worldToArray(&DAN);	
 		scene.setupActorArrays(&DAN);
-		unsigned int testPos[2];
-		testPos[0]= 3, testPos[1] = 5;
 
         glutInit(&argc, argv);
         glutInitWindowSize(600,600);
@@ -279,5 +273,4 @@ void main(int argc, char* argv[])
         glutKeyboardUpFunc(keyRelease);
         glutMainLoop();
 }
-
 #endif

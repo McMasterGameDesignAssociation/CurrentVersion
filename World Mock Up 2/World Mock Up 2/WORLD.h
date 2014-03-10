@@ -61,20 +61,13 @@ class world //: actor, player, object, tile
 		unsigned int dimensions[2];
 		unsigned int playerStartLocation[2];
 
-		//Added by ryan davis
-		//Temporary variables until timer is finished
-		int detectionRange;
-		int frameCounter;
-		int randomNumNPC;
-		int frameStop; //NPCs will update their direction in less frames if they hit a wall
-
 	public:
 
 		//The actor vector has been put into public temporarily for
 		//The HDMI event this needs to be made private again once the movement
 		//update functions have been made correctly
 		vector<actor> actorSet;
-		world(unsigned int size[2], string worldFile);
+		world(string worldFile);
 		void setTiles(vector<tile> newTileSet);
 		void setObjects(vector<object> newObjectSet);
 		void setActor(vector<actor> newActorSet);
@@ -88,7 +81,7 @@ class world //: actor, player, object, tile
 		void removeActor(unsigned int ID);
 		void setTileLocation(unsigned int pos[2], unsigned int ID);
 		void setObjectLocation(unsigned int pos[2], unsigned int ID);
-		void setActorLocation(unsigned int pos[2], unsigned int ID);
+		//void setActorLocation(unsigned int pos[2], unsigned int ID);
 		void swapTile(tile newTile, unsigned int ID);
 		void swapObject(object newObject, unsigned int ID);
 		void swapActor(actor newCharacter, unsigned int ID);
@@ -125,6 +118,13 @@ class world //: actor, player, object, tile
 
 		//Created by Ryan for the NPC 
 		void updateNPCSet(player* currentPlayer, renderer* act);
+		//Added by ryan davis
+		//Temporary variables until timer is finished
+		int detectionRange;
+		int frameCounter;
+		int randomNumNPC;
+		int frameStop; //NPCs will update their direction in less frames if they hit a wall
+
 };
 
 #endif // !_WORLD

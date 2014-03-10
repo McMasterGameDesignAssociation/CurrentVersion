@@ -275,8 +275,6 @@ void renderer::setupActorArrays(world* map)
 		tempDouble = new double*[18];
 		actorArrays.push_back(temp);
 		actorColors.push_back(tempDouble);
-		//This is hardcoded and should be fixed later
-		cout << map -> actorSet.at(i).getBitMapName() << endl;
 		setUpActor(map -> actorSet.at(i).getBitMapName(), &(map -> actorSet.at(i)));
 	}
 }

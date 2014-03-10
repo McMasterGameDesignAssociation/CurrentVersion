@@ -17,6 +17,12 @@ OTHER DEALINGS IN THE SOFTWARsE.
 
 #include "COLLECTIONS.h"
 
+#ifndef AI_PROTO_TYPES
+#define AI_PROTO_TYPES
+void turnAI(actor &aCharacter, world *map, player *pCharacter);
+void stopAI(actor &aCharacter, world *map, player *pCharacter);
+void randomMovement(actor &aCharacter, world *map, player *pCharacter);
+#endif
 /*
 contains
 	enum direction - direction will be used to determine the direction 
@@ -48,16 +54,17 @@ class actor
                 int initialXPos;
                 int initialYPos;
                 int framCounterSpawn;
-				actorCallback currentAI;
 				bool movementHistory[4];
                 unsigned int frameCounter; //the NPC will move after a set number of frames
 				int size;
 
         public:
 
+				actorCallback AI;
                 //Modifiers
                 actor(unsigned int posX, unsigned int posY, 
-					int newSpeed, const char* newBitmap, world* map);
+					int newSpeed, const char* newBitmap, 
+					actorCallback newAI, world* map);
                 actor(void);
 				int animationStep;
 				/*This tracks the direction the actor is facing
@@ -110,6 +117,7 @@ class actor
                 //moveToPlayer, currently unused
                 void moveToPlayer();
 				void updatePosition(void);
+				void runAI(world *map, player *currentPlayer);
 };
 
 #endif

@@ -43,7 +43,7 @@ struct ActorVector
 #ifndef KLEPTO_CALL_BACKS
 #define KLEPTO_CALL_BACKS
 typedef void(*genericCallback)(void* arg);
-typedef void(*actorCallback)(actor* character);
+typedef void(*actorCallback)(actor &aCharacter, world *map, player *pCharacter);
 #endif
 
 #ifndef _ITEM_TYPES

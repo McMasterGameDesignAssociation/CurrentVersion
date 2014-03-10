@@ -12,8 +12,11 @@ outputs void
 This function clears all of the arrays and sets, and then builds a map
 that contains only empty tiles, objects, and actors
 */
-world::world(unsigned int size[2], string worldFile)
+world::world(string worldFile)
 {
+	gameFile = new FileReader(worldFile);
+	dimensions[0] = gameFile -> getX();
+	dimensions[1] = gameFile -> getY();
 	//Added by Ryan Davis. 
 	//NPC variable initializations
 	detectionRange = resolution * 100;
@@ -30,12 +33,8 @@ world::world(unsigned int size[2], string worldFile)
 	delete[] objectLocations;
 	delete[] actorLocations;
 
-	dimensions[0] = unsigned int(size[0]);
-	dimensions[1] = unsigned int(size[1]);
-
-	tileLocations = new int[size[0]*size[1]];
-	objectLocations = new int[size[0]*size[1]];
-	actorLocations = new int[size[0]*size[1]];
+	tileLocations = new int[dimensions[0]*dimensions[1]];
+	objectLocations = new int[dimensions[0]*dimensions[1]];
 	
 	tile block;
 	addTile(block);
@@ -52,12 +51,10 @@ world::world(unsigned int size[2], string worldFile)
 			temp[0] = i, temp[1] = j;
 			setTileLocation(temp, 0);
 			setObjectLocation(temp, 0);
-			setActorLocation(temp, 0);
 		}
 	}
 	playerStartLocation[0] = dimensions[0] - 1;
 	playerStartLocation[1] = dimensions[1] - 1;
-	gameFile = new FileReader(worldFile);
 }
 
 tile world::getTile(unsigned int ID) {return tileSet.at(ID);}
@@ -104,7 +101,6 @@ void world::changeDimension(unsigned int size[2])
 			temp[0] = i, temp[1] = j;
 			setTileLocation(temp, 0);
 			setObjectLocation(temp, 0);
-			setActorLocation(temp, 0);
 		}
 	}
 	playerStartLocation[0] = dimensions[0] - 1;
@@ -274,7 +270,7 @@ This function sets the position of the entity in the world
 */
 void world::setTileLocation(unsigned int pos[2], unsigned int ID)
 {
-	if(pos[0] > dimensions[0] || pos[1] > dimensions[1]);
+	if(pos[0] > dimensions[0] || pos[1] > dimensions[1]) return;
 	else tileLocations[pos[0] + pos[1]*dimensions[0]] = ID;
 }
 
@@ -290,20 +286,6 @@ void world::setObjectLocation(unsigned int pos[2], unsigned int ID)
 {
 	if(pos[0] > dimensions[0] || pos[1] > dimensions[1] || objectSet.size() < ID);
 	else objectLocations[pos[0] + pos[1]*dimensions[0]] = ID;
-}
-
-/*
-inputs 
-	unsigned int pos[2] - This is the position on the map that is being checked
-	int ID - This sets the ID of the entity positioned at that position
-output
-	void
-This function sets the position of the entity in the world
-*/
-void world::setActorLocation(unsigned int pos[2], unsigned int ID)
-{
-	if(pos[0] > dimensions[0] || pos[1] > dimensions[1] || actorSet.size() < ID);
-	else actorLocations[pos[0] + pos[1]*dimensions[0]] = ID;
 }
 
 //getX returns the world's x dimension size
@@ -333,18 +315,6 @@ unsigned int* world::getPlayerStart(void) {return playerStartLocation;}
 int world::getTileSetSize(void) {return tileSet.size();}
 int world::getObjectSetSize(void) {return objectSet.size();}
 
-/*
-updateActor positions checks the position of the actors that are currently on the map
-and the determines if they have done the following things
--Seen the player commit an offense
-	-This means stealing
-	-The NPC must be looking at the player
--Has lost interest in the player
-	-This means that the player has left the
-	field of vision of the Actor
-*/ 
-//void updateActorPositions(void) {}
-
 void world::populateWorld(void)
 {
 	vector<vector<int>> currentMap = gameFile -> getMap();
@@ -353,8 +323,8 @@ void world::populateWorld(void)
 	int n = 0;
 	//Quick modification this starts at 0, and the top runs down
 	//cause the reads in top to bottom and not bottom to top
-	unsigned int mapLocation[2] = {0,currentMap.size()};
-
+	//and the -1 is because the array goes from 0 to size -1
+	unsigned int mapLocation[2] = {0,currentMap.size()-1};
 	for(unsigned int i = 0; i < currentMap.size(); i++)
 	{
 		for(unsigned int j = 0; j < currentMap.at(0).size(); j++)
@@ -376,70 +346,17 @@ void world::populateWorld(void)
         This for loop makes the NPCs move
         */
 //Added by ryan davis 
-
 void world::updateNPCSet(player* currentPlayer, renderer* act)
 {
 	for(unsigned int i = 0; i < actorSet.size(); i++)
 	{
-		double probabilities[4] = {1,1,1,1};
-		//TODO: find out why the line below slows down the game so much (even when updateMovement(world map) has its code commented out)
-        actorSet[i].updateMovement(this, act); 
-		
- 		if(actorSet[i].isFacingPlayer(currentPlayer) && currentPlayer -> getSuspicious()) actorSet[i].increaseAlert();
-		else if(actorSet[i].getAlert() > 0) actorSet[i].decreaseAlert();
- 
-		actorSet[i].setMoving(true);
-        if(actorSet[i].getAlert() == 0) 
-		{
-			//Scatter algorithm
-			int * seedy;
-			seedy = new int[0];
-			srand(int(time(NULL)) * (int)&seedy[0]);
-			delete[] seedy;
-            randomNumNPC = rand()%100;
-            //In this situation, the NPCs are out of range. They patrol the area
-			//This should be migrated to the timer function
-			if(actorSet[i].getIsHittingWall() == false) frameStop = 1000;
-			else frameStop = 200;
- 
-			frameCounter++;
-                       
-			if(frameCounter > frameStop)
-			{
-				actorSet[i].changeDirection(probabilities);
-				frameCounter = 0;
-			}
-
-		}
-               
-		//Detect movement ends here
-        actorSet[i].setMoving(true);
-		if(actorSet[i].isFacingPlayer(currentPlayer) && actorSet[i].getAlert() > 0)
-        { //if actor can see vector
-			actorSet[i].setMoving(true);
-			if(abs( (double) currentPlayer -> getPositionX() - actorSet[i].getPosition().x) > 32 || abs( (double) currentPlayer -> getPositionY() - actorSet[i].getPosition().y) > 32)
-			{ //if the actor is greater than 32 pixels away from the player (if it isn't, there is no need to move)
-				if( (abs( (double) currentPlayer -> getPositionX() - actorSet[i].getPosition().x) > abs( (double) currentPlayer -> getPositionY() - actorSet[i].getPosition().y)))
-				{ //if the x is further away than the y then move x. otherwise move in y.
-					if (actorSet[i].getPosition().x < currentPlayer -> getPositionX() + 32 )
-						actorSet[i].changeDirection(Right);
-					else if (actorSet[i].getPosition().x > currentPlayer -> getPositionX() - 32)
-						actorSet[i].changeDirection(Left);
-				}
-				else
-				{
-					if (actorSet[i].getPosition().y < currentPlayer -> getPositionY() + 32)
-						actorSet[i].changeDirection(Up);
-					else if (actorSet[i].getPosition().y > currentPlayer -> getPositionY() - 32)
-						actorSet[i].changeDirection(Down);
-				}
-				if(actorSet[i].getIsHittingWall() == true)
-					actorSet[i].incrementDirection();
-			}
-			else actorSet[i].setMoving(false);
-		}
-		
-	} // actorSet FOR loop end
+		actorSet.at(i).runAI(this, currentPlayer);
+		actorSet.at(i).updateMovement(this, act);
+	}
+	/*
+	for(unsigned int i = 0; i < actorSet.size(); i++)
+	{
+	} // actorSet FOR loop end*/
 	
 }
 

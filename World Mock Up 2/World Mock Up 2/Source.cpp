@@ -166,13 +166,14 @@ void reshape(int x, int y)
 
 void idle(void)
 {
-	if(!pause)
+	if(!pause && (DAN.getFrameCounter() == DAN.getFrameStop()))
 	{
-		PLAYER_ONE.setSpeed(2);
+		PLAYER_ONE.setSpeed(4);
 		menuStates(PLAYER_ONE, &DAN, &scene);
 		//Added by Ryan
 		DAN.updateNPCSet(&PLAYER_ONE, &scene); // This is the NPC idler (it works :D)
 	}
+	DAN.updateWorldClock();
 }
 
 /*
@@ -216,7 +217,7 @@ void main(int argc, char* argv[])
 		*/
 		for (int i = 0; i < 1; i++)
 		{	
-			actor newActor(5*64,5*64, 4, "test_subject_2.png", stopAI, &DAN);
+			actor newActor(5*64,5*64, 4, "test_subject_2.png", randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
 		for (int i = 0; i < 1; i++)

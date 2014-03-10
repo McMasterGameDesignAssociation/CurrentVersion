@@ -17,6 +17,10 @@ OTHER DEALINGS IN THE SOFTWARsE.
 
 #include "COLLECTIONS.h"
 
+/*
+AI callback structure developed by Benjamin Isherwood
+09/03/14 (March 9 2014)
+*/
 #ifndef AI_PROTO_TYPES
 #define AI_PROTO_TYPES
 void turnAI(actor &aCharacter, world *map, player *pCharacter);
@@ -63,8 +67,8 @@ class actor
 				actorCallback AI;
                 //Modifiers
                 actor(unsigned int posX, unsigned int posY, 
-					int newSpeed, const char* newBitmap, 
-					actorCallback newAI, world* map);
+				int newSpeed, const char* newBitmap, 
+				actorCallback newAI, world* map);
                 actor(void);
 				int animationStep;
 				/*This tracks the direction the actor is facing

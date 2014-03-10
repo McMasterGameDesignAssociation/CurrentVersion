@@ -21,8 +21,7 @@ world::world(string worldFile)
 	//NPC variable initializations
 	detectionRange = resolution * 100;
 	frameCounter = 0;
-	randomNumNPC = 0;
-	frameStop = 1000;
+	frameStop = 0;
 
 	tileSet.clear();
 	objectSet.clear();
@@ -353,11 +352,18 @@ void world::updateNPCSet(player* currentPlayer, renderer* act)
 		actorSet.at(i).runAI(this, currentPlayer);
 		actorSet.at(i).updateMovement(this, act);
 	}
-	/*
-	for(unsigned int i = 0; i < actorSet.size(); i++)
-	{
-	} // actorSet FOR loop end*/
-	
 }
+
+void world::updateWorldClock(void)
+{
+	frameCounter++;
+	if(frameCounter > frameStop) frameCounter = 0;
+	if((time(0)) > timingFunction.getTiming()) 
+		frameStop = (timingFunction.getInc()/45) + 1;
+	timingFunction.updateSystem();
+}
+
+int world::getFrameStop(void) {return frameStop;}
+int world::getFrameCounter(void) {return frameCounter;}
 
 #endif

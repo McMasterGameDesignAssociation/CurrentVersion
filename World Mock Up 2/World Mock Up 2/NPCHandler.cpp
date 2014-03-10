@@ -6,38 +6,32 @@
 #ifndef _NPC_AI
 #define _NPC_AI
 void turnAI(actor &aCharacter, world *map, player *pCharacter){
-	aCharacter.setMoving(true);
-	aCharacter.incrementDirection();
+	int * seedy;
+	seedy = new int[0];
+	srand(int(time(NULL)) * (int)&seedy[0]);
+	delete[] seedy;
+    int randomNumNPC = rand()%10;
+	if(randomNumNPC < 8 && randomNumNPC > 2)
+	{
+		aCharacter.setMoving(true);
+		aCharacter.incrementDirection();
+	}
+	else if(randomNumNPC < 2) aCharacter.AI = randomMovement;
+	else aCharacter.setMoving(false);
 }
 void stopAI(actor &aCharacter, world *map, player *pCharacter){aCharacter.setMoving(false);}
 void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 {
 	double probabilities[4] = {1,1,1,1};
-	int randomNumNPC;
 	if(aCharacter.isFacingPlayer(pCharacter) && pCharacter -> getSuspicious()) aCharacter.increaseAlert();
 		else if(aCharacter.getAlert() > 0) aCharacter.decreaseAlert();
  
 		aCharacter.setMoving(true);
         if(aCharacter.getAlert() == 0) 
 		{
-			//Scatter algorithm
-			int * seedy;
-			seedy = new int[0];
-			srand(int(time(NULL)) * (int)&seedy[0]);
-			delete[] seedy;
-            randomNumNPC = rand()%100;
             //In this situation, the NPCs are out of range. They patrol the area
 			//This should be migrated to the timer function
-			if(aCharacter.getIsHittingWall() == false) map -> frameStop = 1000;
-			else map -> frameStop = 200;
- 
-			map -> frameCounter++;
-                       
-			if(map -> frameCounter > map -> frameStop)
-			{
 				aCharacter.changeDirection(probabilities);
-				map -> frameCounter = 0;
-			}
 
 		}
                
@@ -113,7 +107,8 @@ void actor::printLog(void)
 	cout << "Bit map name: " << bitMapName << endl << endl;
 }
 
-void actor::runAI(world *map, player *currentPlayer) {AI(*this, map, currentPlayer);}
+void actor::runAI(world *map, player *currentPlayer) 
+{AI(*this, map, currentPlayer);}
 
 //
 ////This function should be private
@@ -326,6 +321,7 @@ void actor::changeDirection(double probabilities[4])
 
 	srand((int)&directions*int(time(NULL))/((int)&probabilities%100+0.00001));
 	int randomNum = (rand()%100);
+	if(randomNum < 30) AI = turnAI;
 
 	probabilities[0] = probabilities[0]/total;
 	probabilities[1] = probabilities[1]/total;
@@ -341,9 +337,9 @@ void actor::changeDirection(double probabilities[4])
 				tempHeading = directions[i],
 				directions[i] = directions[j],
 				directions[j] = tempHeading;
-		
+	
 	if(randomNum < probabilities[0]*100)  face = directions[0];
-	else if(randomNum >= probabilities[0] 
+	else if(randomNum >= probabilities[0]*100 
 		&& randomNum < (probabilities[1] + probabilities[0])*100) 
 		face = directions[1];
 	else if(randomNum >= (probabilities[1] + probabilities[0])*100 
@@ -352,6 +348,6 @@ void actor::changeDirection(double probabilities[4])
 	else  face = directions[3];
 }
 
-void actor::incrementDirection(void) {face = face++;}
+void actor::incrementDirection(void) {face++;}
 ////////////end of new ryan
 #endif

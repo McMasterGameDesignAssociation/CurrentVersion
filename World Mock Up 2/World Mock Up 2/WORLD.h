@@ -27,8 +27,7 @@ to manage there respective entity type
 #define _WORLD
 
 #include "COLLECTIONS.h"
-
-
+class counter;
 /*
 contains
 	vector<tile> tileSet - This is the set of tiles used in the world
@@ -60,6 +59,9 @@ class world //: actor, player, object, tile
 		int resolution;
 		unsigned int dimensions[2];
 		unsigned int playerStartLocation[2];
+		counter timingFunction;
+		int frameCounter;
+		int frameStop; 
 
 	public:
 
@@ -121,10 +123,10 @@ class world //: actor, player, object, tile
 		//Added by ryan davis
 		//Temporary variables until timer is finished
 		int detectionRange;
-		int frameCounter;
-		int randomNumNPC;
-		int frameStop; //NPCs will update their direction in less frames if they hit a wall
+		int getFrameStop(void);
+		int getFrameCounter(void);
 
+		void updateWorldClock(void);
 };
 
 #endif // !_WORLD

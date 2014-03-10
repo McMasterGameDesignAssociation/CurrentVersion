@@ -12,12 +12,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
-#ifndef _TIMER
-#define _TIMER
+#ifndef _TIMER_H
+#define _TIMER_H
 
-#include "COLLECTIONS.h"
-
+#include <ctime>
+//#include "COLLECTIONS.h"
+enum countChoice{inc, reset};
 class counter
 {
 
@@ -26,21 +26,19 @@ private:
 	int count;
 	/*This is the number of cycles in a ms*/
 	int increment;
+	/*this will either inc, or reset the counter*/
+	void updateCount(countChoice update);
+	bool checkTiming(void);
+	void updateInc(int newInc);
+	void updateTiming(void);
 
 public:
 
 	counter(void);
-	
 	/*This will check the timing value*/
-	bool checkTiming(void);
-	int getInc(void);
-
-	void updateTiming(void);
-	/*this will either inc, or reset the counter*/
-	void updateCount(countChoice update);
-	void updateInc(int newInc);
 	void updateSystem(void);
-
+	int getInc(void);
+	int getTiming(void);
 };
 
 #endif

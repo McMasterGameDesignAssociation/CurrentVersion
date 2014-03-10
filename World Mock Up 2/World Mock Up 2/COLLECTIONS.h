@@ -27,6 +27,8 @@ class object;
 class renderer;
 class image;
 class FileReader;
+class counter;
+
 using namespace std;
 
 #pragma once
@@ -53,36 +55,52 @@ static enum itemType{clothing, electronics, games, food};
 
 #endif
 
-#ifndef _COUNTER_OPTIONS
-#define _COUNTER_OPTIONS
+//#ifndef _COUNTER_OPTIONS
+//#define _COUNTER_OPTIONS
 
-static enum countChoice{reset, inc};
-#endif
+//static enum countChoice{reset, inc};
+//#endif
 
 #ifndef _DIRECTION
 #define _DIRECTION
 
 static enum direction{Up, UpLeft, Left, DownLeft, Down, DownRight, Right, UpRight};
 
-inline direction operator ++(const direction rhs)
+inline direction operator ++(direction &rhs)
 {
 	switch(rhs)
 	{
-		case Up: return Left;
-		case Left: return Down;
-		case Down: return Right;
-		default: return Up;
+		case Up: 
+			rhs = Left;
+			return Left;
+		case Left: 
+			rhs = Down;
+			return Down;
+		case Down: 
+			rhs = Right;
+			return Right;
+		default: 
+			rhs = Up;
+			return Up;
 	}
 }
 
-inline direction operator--(const direction rhs)
+inline direction operator--(direction &rhs)
 {
 	switch(rhs)
 	{
-	case Up: return Right;
-	case Right: return Down;
-	case Down: return Left;
-	default: return Up;
+	case Up:
+		rhs = Right;
+		return Right;
+	case Right: 
+		rhs = Down;
+		return Down;
+	case Down: 
+		rhs = Left;
+		return Left;
+	default: 
+		rhs = Up;
+		return Up;
 	}
 }
 #endif
@@ -109,8 +127,8 @@ inline direction operator--(const direction rhs)
 #include "PLAYER.h"
 #include "TILE.h"
 #include "FILEREADER.h"
+#include "TIMER.h"
 #include "WORLD.h"
 #include "RENDERER.h"
-#include "TIMER.h"
 
 #endif

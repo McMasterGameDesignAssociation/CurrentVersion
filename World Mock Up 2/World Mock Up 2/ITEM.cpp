@@ -6,16 +6,16 @@
 item::item(void)
 {
 	this -> value = 0;
-	this -> cost  = 0;
+	this -> whieght  = 0;
 	this -> ID = 0;
 	this -> itemClass = food;
 }
 
-item::item(unsigned int newID, unsigned int initValue, unsigned int initCost, itemType newType)
+item::item(unsigned int initValue, unsigned int initCost, itemType newType)
 {
-	this -> ID = newID;
+	this -> ID = 0;
 	this -> value = initValue;
-	this -> cost  = initCost;
+	this -> whieght  = initCost;
 	this -> itemClass = newType;
 }
 

@@ -89,5 +89,11 @@
     <ClInclude Include="FILEREADER.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="INVENTORY.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UTILITIES.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

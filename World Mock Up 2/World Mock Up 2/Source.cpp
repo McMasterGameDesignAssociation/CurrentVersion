@@ -14,7 +14,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 /*
-CURRENT VERSION ALPHA 0.01
+CURRENT VERSION ALPHA 0.05
 VERSION NOTES
 -Basic game operation (i.e. movement, basic collision detection)
 -Basic file operation (i.e. fully readable files, no organization structure)
@@ -27,12 +27,6 @@ VERSION NOTES
 -No story elements
 
 UPDATES REQUIRED
-
--Separation of the test globals from the
-keyboard function (This is an NPC issue)
-
--Separation of the NPC animation and
-update procedures
 
 -Locking the mouse to the movement
 	-An updated method will be need
@@ -66,7 +60,6 @@ int viewPortCenter[2] = {0,0};
 //explanatory
 world DAN("world.txt");
 player PLAYER_ONE(&DAN);
-bool pause = false;
 //bool suspicious = false;
 
 /*
@@ -124,10 +117,6 @@ void passiveMouse(int x, int y)
 /*
 This is the obligatory display function, THE COMMENTS INSIDE
 THE FUNCTION ARE IMPORTANT
-
-Required updates:
-
-- Removal of NPC logic and rendering
 */
 void display(void)
 {
@@ -173,6 +162,8 @@ void idle(void)
 		//Added by Ryan
 		DAN.updateNPCSet(&PLAYER_ONE, &scene); // This is the NPC idler (it works :D)
 	}
+	else if(numberSeries.size() < 1000)makeRandomNumber(DAN.getFrameCounter());
+	else for(int i = 0; i < getRandomNumber()%1000; i++) numberSeries.pop();
 	DAN.updateWorldClock();
 }
 
@@ -181,9 +172,6 @@ Populate world reads in unformatted files and populates the current
 game world
 
 Required Updates:
--Dynamic file name
--Text file size should be determined by the
-file and not the function
 -The file reader should be able to handle structured
 file types, specifically in 
 	-XML(This will be used for data transmission of hard coded entities)
@@ -215,17 +203,15 @@ void main(int argc, char* argv[])
 		/*(+) NPC stuff 
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 40; i++)
 		{	
-			actor newActor(5*64,5*64, 4, "test_subject_2.png", randomMovement, &DAN);
+			actor newActor(64,5*64, 8, "test_subject_2.png", randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
 		for (int i = 0; i < 1; i++)
 		{	
 			actor newActor(7*64,13*64, 4, "Charactersforreal.png",  randomMovement, &DAN);
 			DAN.addActor(newActor);
-			actor anotherNewActor(10*64,13*64, 4, "Charactersforreal.png",  turnAI, &DAN);
-			DAN.addActor(anotherNewActor);
 		}
 		//(-) NPC stuff //
 
@@ -264,7 +250,7 @@ void main(int argc, char* argv[])
         glutInitWindowSize(600,600);
 		glutCreateWindow(_PURE_KLEPTOMANIA);
 		//Glew has to be initialized on a window for window basiss
-		glewInit();
+		//glewInit();
         
 		glutDisplayFunc(display);
         glutIdleFunc(idle);
@@ -272,6 +258,8 @@ void main(int argc, char* argv[])
         glutKeyboardFunc(keyboardInput);
 		glutPassiveMotionFunc(passiveMouse);
         glutKeyboardUpFunc(keyRelease);
+		glutSpecialFunc(movementInput);
+		glutSpecialUpFunc(movementRelease);
         glutMainLoop();
 }
 #endif

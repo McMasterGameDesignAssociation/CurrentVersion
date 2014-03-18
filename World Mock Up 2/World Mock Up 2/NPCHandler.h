@@ -59,7 +59,10 @@ class actor
                 int initialYPos;
                 int framCounterSpawn;
 				bool movementHistory[4];
+				//Placing the frame stop into the characters themselves will 
+				//make them independant and therefore more random
                 unsigned int frameCounter; //the NPC will move after a set number of frames
+				unsigned int frameStop;
 				int size;
 
         public:
@@ -78,7 +81,7 @@ class actor
                 void setActor(direction newFace, string newBitMapName, string newDescription);
                 void moveto(unsigned int x, unsigned int y);
                 void changeID(unsigned int newID);
-                void changeDirection(direction newFace);//
+                void changeDirection(direction newFace);
                 void changeBitMapName(string newbitMapName);
                 void setPosition(unsigned int x, unsigned int y);
                 void setSpeed(int newSpeed);
@@ -109,7 +112,6 @@ class actor
                 bool getIsHittingWall(void);
                 int getInitialXPos(void);
                 int getInitialYPos(void);
-                int getFrameCount(void);
 				
 
 				int vertices[12];
@@ -122,6 +124,10 @@ class actor
                 void moveToPlayer();
 				void updatePosition(void);
 				void runAI(world *map, player *currentPlayer);
+
+				int getFrameCounter(void);
+				void incrementFrameCounter(int worldFrameCounter);
+
 };
 
 #endif

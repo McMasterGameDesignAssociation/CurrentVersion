@@ -66,6 +66,7 @@
   <ItemGroup>
     <ClInclude Include="FILEREADER.h" />
     <ClInclude Include="IMAGE.h" />
+    <ClInclude Include="INVENTORY.h" />
     <ClInclude Include="ITEM.h" />
     <ClInclude Include="KEYBOARD.h" />
     <ClCompile Include="DTDMacros.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="RENDERER.h" />
     <ClInclude Include="TILE.h" />
     <ClInclude Include="TIMER.h" />
+    <ClInclude Include="UTILITIES.h" />
     <ClInclude Include="WORLD.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -8,9 +8,9 @@
 void turnAI(actor &aCharacter, world *map, player *pCharacter){
 	int * seedy;
 	seedy = new int[0];
-	srand(int(time(NULL)) * (int)&seedy[0]);
+	srand((int)&seedy);
 	delete[] seedy;
-    int randomNumNPC = rand()%10;
+	int randomNumNPC = getRandomNumber()%10;
 	if(randomNumNPC < 8 && randomNumNPC > 2)
 	{
 		aCharacter.setMoving(true);
@@ -22,21 +22,61 @@ void turnAI(actor &aCharacter, world *map, player *pCharacter){
 void stopAI(actor &aCharacter, world *map, player *pCharacter){aCharacter.setMoving(false);}
 void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 {
-	double probabilities[4] = {1,1,1,1};
+	// Logic
+	// NPC tracking if surrounding squares are passable
+	//up
+	unsigned int upTile[2], rightTile[2], downTile[2], leftTile[2];
+	double temp[4];
+	upTile[0]= (aCharacter.getPosition().x/map -> getResolution());
+	upTile[1] = (aCharacter.getPosition().y/map -> getResolution()) + 1;
+	//right
+	rightTile[0]= (aCharacter.getPosition().x/map -> getResolution()) + 1;
+	rightTile[1] = (aCharacter.getPosition().y/map -> getResolution());
+	//down
+	downTile[0]= (aCharacter.getPosition().x/map -> getResolution());
+	downTile[1] = (aCharacter.getPosition().y/map -> getResolution()) - 1;
+	//left
+	leftTile[0]= (aCharacter.getPosition().x/map -> getResolution()) - 1;
+	leftTile[1] = (aCharacter.getPosition().y/map -> getResolution());
+	if(map -> getTileCollision(map -> checkTileMap(upTile))) temp[0] = 1;
+	else temp[0] = 0;
+	if(map -> getTileCollision(map -> checkTileMap(leftTile))) temp[1] = 1;
+	else temp[1] = 0;
+	if(map -> getTileCollision(map -> checkTileMap(downTile))) temp[2] = 1;
+	else temp[2] = 0;
+	if(map -> getTileCollision(map -> checkTileMap(rightTile))) temp[3] = 1;
+	else temp[3] = 0;
+	
+	int bias[4] = {0, 0, 0, 0};
+	switch(aCharacter.getFace())
+	{
+	case Up:
+		bias[0] = 2000;
+		break;
+	case Left:
+		bias[1] = 2000;
+		break;
+	case Down:
+		bias[2] = 2000;
+		break;
+	case Right:
+		bias[3] = 2000;
+		break;
+	}
+	double probabilities[] = {(getRandomNumber()%100 + bias[0])*temp[0], 
+							  (getRandomNumber()%100 + bias[1])*temp[1],
+							  (getRandomNumber()%100 + bias[2])*temp[2], 
+							  (getRandomNumber()%100 + bias[3])*temp[3]}; 
 	if(aCharacter.isFacingPlayer(pCharacter) && pCharacter -> getSuspicious()) aCharacter.increaseAlert();
-		else if(aCharacter.getAlert() > 0) aCharacter.decreaseAlert();
+	else if(aCharacter.getAlert() > 0) aCharacter.decreaseAlert();
  
-		aCharacter.setMoving(true);
-        if(aCharacter.getAlert() == 0) 
-		{
-            //In this situation, the NPCs are out of range. They patrol the area
-			//This should be migrated to the timer function
-				aCharacter.changeDirection(probabilities);
-
-		}
-               
-		//Detect movement ends here
-        aCharacter.setMoving(true);
+	aCharacter.setMoving(true);
+	srand((unsigned int)&probabilities*time(NULL));
+	int randomNum = (getRandomNumber())%1000;
+	if(aCharacter.getAlert() == 0 && aCharacter.getIsHittingWall() || (randomNum > 953 || randomNum < 31)) aCharacter.changeDirection(probabilities);
+    
+	//Detect movement ends here
+    aCharacter.setMoving(true);
 		if(aCharacter.isFacingPlayer(pCharacter) && aCharacter.getAlert() > 0)
         { //if actor can see vector
 			aCharacter.setMoving(true);
@@ -56,8 +96,6 @@ void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 					else if (aCharacter.getPosition().y > pCharacter -> getPositionY() - 32)
 						aCharacter.changeDirection(Down);
 				}
-				if(aCharacter.getIsHittingWall() == true)
-					aCharacter.incrementDirection();
 			}
 			else aCharacter.setMoving(false);
 		}
@@ -137,9 +175,13 @@ actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* new
 	animationStep = 0;
 	updatePosition();
 	AI = newAI;
+	#if (defined(_WIN32) || defined(_WIN64))
+		frameCounter = randomNumberGenerator(GetTickCount());
+	#else 
+		frameCounter = randomNumberGenerator(time(NULL));
+	#endif
 }
 
-int actor::getFrameCount() {return frameCounter;}
 void actor::setFrameCount(int newFrameCount) {frameCounter = newFrameCount;}
 bool actor::getMoving() {return isMovingToSpot;}
 void actor::setMoving(bool isMoving) {this->isMovingToSpot = isMoving;}
@@ -298,8 +340,8 @@ bool actor::isFacingPlayer(player* currentPlayer)
 			|| face == Down && currentPlayer -> getPositionY() <  vPosition.y
 			|| face == Left && currentPlayer -> getPositionX() < vPosition.x)
 			return true;
-		else return false;
     } 
+	return false;
 }
 
 /*
@@ -319,9 +361,9 @@ void actor::changeDirection(double probabilities[4])
 	direction directions[] = {Up, Left, Down, Right};
 	direction tempHeading;
 
-	srand((int)&directions*int(time(NULL))/((int)&probabilities%100+0.00001));
-	int randomNum = (rand()%100);
-	if(randomNum < 30) AI = turnAI;
+	srand((unsigned int)&tempHeading+((int)&probabilities%100+0.00001));
+	int randomNum = (getRandomNumber()%100);
+	//if(randomNum < 30) AI = turnAI;
 
 	probabilities[0] = probabilities[0]/total;
 	probabilities[1] = probabilities[1]/total;
@@ -329,15 +371,20 @@ void actor::changeDirection(double probabilities[4])
 	probabilities[3] = probabilities[3]/total;
 
 	for(int i = 0; i < 4; i++)
+	{
 		for(int j = 0; j < 4; j++)
+		{
 			if(probabilities[i] <= probabilities[j]) 
+			{
 				total = probabilities[i], 
 				probabilities[i] = probabilities[j], 
 				probabilities[j] = total,
 				tempHeading = directions[i],
 				directions[i] = directions[j],
 				directions[j] = tempHeading;
-	
+			}
+		}
+	}
 	if(randomNum < probabilities[0]*100)  face = directions[0];
 	else if(randomNum >= probabilities[0]*100 
 		&& randomNum < (probabilities[1] + probabilities[0])*100) 
@@ -349,5 +396,13 @@ void actor::changeDirection(double probabilities[4])
 }
 
 void actor::incrementDirection(void) {face++;}
+
+void actor::incrementFrameCounter(int frameStop) 
+{
+	if(frameCounter > frameStop) frameCounter = 0;
+	else frameCounter++;
+}
+
+int actor::getFrameCounter(void) {return frameCounter;}
 ////////////end of new ryan
 #endif

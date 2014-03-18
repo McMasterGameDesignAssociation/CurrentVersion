@@ -15,6 +15,7 @@ that contains only empty tiles, objects, and actors
 world::world(string worldFile)
 {
 	gameFile = new FileReader(worldFile);
+	timingFunction = new counter();
 	dimensions[0] = gameFile -> getX();
 	dimensions[1] = gameFile -> getY();
 	//Added by Ryan Davis. 
@@ -358,9 +359,9 @@ void world::updateWorldClock(void)
 {
 	frameCounter++;
 	if(frameCounter > frameStop) frameCounter = 0;
-	if((time(0)) > timingFunction.getTiming()) 
-		frameStop = (timingFunction.getInc()/45) + 1;
-	timingFunction.updateSystem();
+	if((time(0)) > timingFunction -> getTiming()) 
+		frameStop = (timingFunction -> getInc()/45) + 1;
+	timingFunction -> updateSystem();
 }
 
 int world::getFrameStop(void) {return frameStop;}

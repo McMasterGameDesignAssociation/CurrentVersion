@@ -12,32 +12,22 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.
 */
-#ifndef _TIMER_H
-#define _TIMER_H
-
+#ifndef INVENTORY_H
+#define INVENTORY_H
 #include "COLLECTIONS.h"
 
-class counter
+class inventory
 {
-
 private:
-	int timing;
-	int count;
-	/*This is the number of cycles in a ms*/
-	int increment;
-	/*this will either inc, or reset the counter*/
-	void updateCount(countChoice update);
-	bool checkTiming(void);
-	void updateInc(int newInc);
-	void updateTiming(void);
+	vector<item> currentInventory;
+	int totalValue;
 
 public:
-	counter(void);
-	/*This will check the timing value*/
-	void updateSystem(void);
-	int getInc(void);
-	int getTiming(void);
-
+	inventory(void);
+	item checkItem(int ID);
+	item removeItem(int ID);
+	int getTotalSize(void);
+	int getTotalValue(void);
 };
 
 #endif

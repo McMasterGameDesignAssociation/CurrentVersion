@@ -77,7 +77,6 @@ void image::buildTextureArray(void)
 
 void image::checkIfAvailable(void) 
 {
-	cout << endl << imageName << endl;
 	png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;

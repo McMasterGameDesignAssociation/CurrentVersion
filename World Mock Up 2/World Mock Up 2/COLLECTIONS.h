@@ -28,10 +28,14 @@ class renderer;
 class image;
 class FileReader;
 class counter;
+class item;
+class inventory;
 
 using namespace std;
 
-#pragma once
+#ifndef PI
+#define PI 2*tan(4)
+#endif
 
 #ifndef ACTOR_VECTOR
 #define ACTOR_VECTOR
@@ -55,11 +59,11 @@ static enum itemType{clothing, electronics, games, food};
 
 #endif
 
-//#ifndef _COUNTER_OPTIONS
-//#define _COUNTER_OPTIONS
+#ifndef _COUNTER_OPTIONS
+#define _COUNTER_OPTIONS
 
-//static enum countChoice{reset, inc};
-//#endif
+static enum countChoice{reset, inc};
+#endif
 
 #ifndef _DIRECTION
 #define _DIRECTION
@@ -117,9 +121,21 @@ inline direction operator--(direction &rhs)
 #include <vector>
 #include <fstream>
 #include <png.h>
+#include <queue>
+#include <math.h>
+//Call windows.h only if the system is a windows system
+//Else include unistd.h for unix compatibility
+#if (defined(_WIN32) || defined (_WIN64))
+	#include <Windows.h>
+#else
+	#inlcude <unistd.h>
+#endif
 
 #pragma comment(lib, "glew32.lib")
 #pragma comment(lib, "libpng16.lib")
+
+#include "UTILITIES.h"
+using namespace utilities;
 
 #include "IMAGE.h"
 #include "NPCHandler.h"
@@ -129,6 +145,8 @@ inline direction operator--(direction &rhs)
 #include "FILEREADER.h"
 #include "TIMER.h"
 #include "WORLD.h"
+#include "ITEM.h"
+#include "INVENTORY.h"
 #include "RENDERER.h"
 
 #endif

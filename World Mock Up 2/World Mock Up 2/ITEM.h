@@ -23,12 +23,19 @@ class item
 private:
 	unsigned int ID;
 	unsigned int value;
-	unsigned int cost;
+	unsigned int whieght;
+	string bitMapName;
 	itemType itemClass;
 
 public:
 	item(void);
-	item(unsigned int newID, unsigned int initValue, unsigned int initCost, itemType newType);
+	item(unsigned int initValue, unsigned int initCost, itemType newType);
+
+	unsigned int getValue(void);
+	unsigned int getWhieght(void);
+	unsigned int getID(void);
+	itemType getClass(void);
+	string getBitmapName(void);
 };
 
 #endif

@@ -27,7 +27,7 @@ to manage there respective entity type
 #define _WORLD
 
 #include "COLLECTIONS.h"
-class counter;
+
 /*
 contains
 	vector<tile> tileSet - This is the set of tiles used in the world
@@ -59,7 +59,7 @@ class world //: actor, player, object, tile
 		int resolution;
 		unsigned int dimensions[2];
 		unsigned int playerStartLocation[2];
-		counter timingFunction;
+		counter* timingFunction;
 		int frameCounter;
 		int frameStop; 
 

@@ -20,6 +20,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 namespace kyb
 {
+
 	/****
 
 	0 - W
@@ -33,29 +34,57 @@ namespace kyb
 
 	***/
 	bool keys[8];
-
+	bool pause = false;
 	/* This will be the clear keys function */
-	void resetKeys(void) {for(int i = 0; i < 8; i++) keys[i] = false;}
+	static void resetKeys(void) {for(int i = 0; i < 8; i++) keys[i] = false;}
+	static void movementInput(int key, int x, int y)
+	{
+		switch(key)
+		{
+		case GLUT_KEY_UP: keys[0] = true;
+			keys[1] = false;
+			break;
 
-	void keyRelease(unsigned char keyStroke, int x, int y)
+		case GLUT_KEY_DOWN: keys[0] = false;
+			keys[1] = true;
+			break;
+
+		case GLUT_KEY_LEFT: keys[2] = true;
+			keys[3] = false;
+			break;
+
+		case GLUT_KEY_RIGHT: keys[2] = false;
+			keys[3] = true;
+			break;
+		default: break;
+		}
+	}
+	static void movementRelease(int key, int x, int y)
+	{
+		switch(key)
+		{
+		case GLUT_KEY_UP: keys[0] = false;
+			break;
+
+		case GLUT_KEY_DOWN: keys[1] = false;
+			break;
+
+		case GLUT_KEY_LEFT: keys[2] = false;
+			break;
+
+		case GLUT_KEY_RIGHT: keys[3] = false;
+			break;
+		default: break;
+		}
+	}
+	static void keyRelease(unsigned char keyStroke, int x, int y)
 	{
 		unsigned int pos[] = {5, 17};
 		switch(keyStroke)
 		{
-		case 'w': keys[0] = false;
-			break;
-
-		case 's': keys[1] = false;
-			break;
-
-		case 'a': keys[2] = false;
-			break;
-
-		case 'd': keys[3] = false;
-			break;
 		case 'e': 
 		case 'q': 
-		default: resetKeys();
+		default:
 			break;
 		}
 	}
@@ -65,27 +94,11 @@ namespace kyb
 	Basic input for the keyboard
 
 	*/
-	void keyboardInput(unsigned char keyStroke, int x, int y)
+	static void keyboardInput(unsigned char keyStroke, int x, int y)
 	{
 		unsigned int pos[] = {5, 14};
 		switch(keyStroke)
 		{
-		case 'w': keys[0] = true;
-			keys[1] = false;
-			break;
-
-		case 's': keys[0] = false;
-			keys[1] = true;
-			break;
-
-		case 'a': keys[2] = true;
-			keys[3] = false;
-			break;
-
-		case 'd': keys[2] = false;
-			keys[3] = true;
-			break;
-
 		case 'e': resetKeys();
 			keys[4] = true;
 			break;
@@ -99,7 +112,7 @@ namespace kyb
 	}
 
 	/* This is the state machine to run the keyboard in the idleFunc */
-	void menuStates(player &character, world *map, renderer *currentScene)
+	static void menuStates(player &character, world *map, renderer *currentScene)
 	{
 		//W and A
 		if(keys[0] && keys[2])

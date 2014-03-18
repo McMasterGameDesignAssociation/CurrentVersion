@@ -1,4 +1,4 @@
-#ifndef _NPC_METHODS
+yj _NPC_METHODS
 #define _NPC_METHODS
 
 #include "NPCHandler.h"
@@ -62,6 +62,11 @@ void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 			else aCharacter.setMoving(false);
 		}
 }
+void clerkAI(actor &aCharacter, world *map, player *pCharacter) 
+{
+		 
+}
+
 #endif
 
 ///ACTOR METHODS

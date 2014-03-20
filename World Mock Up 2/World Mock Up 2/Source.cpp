@@ -213,6 +213,11 @@ void main(int argc, char* argv[])
 			actor newActor(7*64,13*64, 4, "Charactersforreal.png",  randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
+		for (int i = 0; i < 10; i++)
+		{	
+			actor newActor(64*6,5*64, 8, "test_subject_3.png", randomMovement, &DAN);
+			DAN.addActor(newActor);
+		}
 		//(-) NPC stuff //
 
         tile block;

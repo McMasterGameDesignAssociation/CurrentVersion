@@ -44,6 +44,8 @@ player::player(world* map)
 	animationStep = 0;
 	face = Up;
 	updatePosition();
+	temp = NULL;
+	delete temp;
 }
 
 unsigned int player::getPositionX(void) {return position[0];}
@@ -53,20 +55,20 @@ int player::getSpeed(void) {return speed;}
 
 string player::getBitMap(void) {return bitMapName;}
 string player::getDescription(void) {return description;}
-void player::setSpeed(int movement) {this->speed = movement;}
-void player::changeSize(int newSize) {this->size = newSize;}
+void player::setSpeed(int movement) {speed = movement;}
+void player::changeSize(int newSize) {size = newSize;}
 void player::changeDescription(string newDescription) {description = newDescription;}
 
 void player::updatePosition(void) 
 {
-	this->vertices[0]  = position[0] - (size/2), this->vertices[1]  = position[1] - (size/2),
-	this->vertices[2]  = position[0] + (size/2), this->vertices[3]  = position[1] - (size/2),
-	this->vertices[4]  = position[0] - (size/2), this->vertices[5]  = position[1] + (size/2),
-	this->vertices[6]  = position[0] - (size/2), this->vertices[7]  = position[1] + (size/2),
-	this->vertices[8]  = position[0] + (size/2), this->vertices[9]  = position[1] + (size/2),
-	this->vertices[10] = position[0] + (size/2), this->vertices[11] = position[1] - (size/2);
+	vertices[0]  = position[0] - (size/2), vertices[1]  = position[1] - (size/2),
+	vertices[2]  = position[0] + (size/2), vertices[3]  = position[1] - (size/2),
+	vertices[4]  = position[0] - (size/2), vertices[5]  = position[1] + (size/2),
+	vertices[6]  = position[0] - (size/2), vertices[7]  = position[1] + (size/2),
+	vertices[8]  = position[0] + (size/2), vertices[9]  = position[1] + (size/2),
+	vertices[10] = position[0] + (size/2), vertices[11] = position[1] - (size/2);
 
-	for(int i = 0; i < 18; i++) this-> shadeVertices[i] = 1;
+	for(int i = 0; i < 18; i++) shadeVertices[i] = 1;
 }
 void player::changeBitMap(string newBitMap) {bitMapName = newBitMap;}
 

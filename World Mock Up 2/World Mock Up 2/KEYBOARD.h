@@ -203,7 +203,11 @@ namespace kyb
 		//Action or E key
 		//else if(keys[4]) ;
 		//Menu or Q key
-		else if(keys[5]) exit(0);
+		else if(keys[5]) 
+		{
+		_CrtDumpMemoryLeaks();
+		exit(0);
+		}
 	}
 }
 #endif

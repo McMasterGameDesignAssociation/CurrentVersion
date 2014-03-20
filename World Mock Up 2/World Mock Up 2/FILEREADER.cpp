@@ -29,13 +29,12 @@ FileReader::FileReader(string fn)
 
 	infile.open(fileName);
 	getline(infile,line);
-	//cout<<line<<endl;
 
 	while(line !="*") 
 	{
 		getline(infile, line);
-		if (line == "*") continue;
-		currentMap.push_back(FileReader::removeSlashAndParse(line));
+		if (line != "*") 
+			currentMap.push_back(removeSlashAndParse(line));
 	}
 
 	infile.close();
@@ -50,6 +49,7 @@ int FileReader::getY(void) {return currentMap.size();}
 void FileReader::print2dIntVector(vector<vector<int>> vec2d)
 {
 	//(+) debugging
+	cout << endl;
 	for (unsigned int i = 0; i<vec2d.size(); i++)
 	{
 		for(unsigned int j = 0; j<vec2d.at(0).size(); j++)
@@ -77,6 +77,7 @@ vector<int> FileReader::removeSlashAndParse(string line)
 		cout<<temp;
 	}
 
+	slashLoc.clear();
 	return IDs;
 }
 

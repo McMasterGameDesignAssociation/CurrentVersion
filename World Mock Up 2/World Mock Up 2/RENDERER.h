@@ -51,6 +51,7 @@ public:
 
 private:
 	
+	int number_of_tiles;
 	int ** playerArray;
 	double ** playerColors;
 

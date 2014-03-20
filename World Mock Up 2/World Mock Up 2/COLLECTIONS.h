@@ -32,6 +32,10 @@ class item;
 class inventory;
 
 using namespace std;
+//This is for enabling memory leak detection
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 #ifndef PI
 #define PI 2*tan(4)

@@ -23,8 +23,6 @@ image::image(const char* startImage)
 image::~image(void)
 {
 	glDeleteTextures(1, &texture);
-	//imageName = NULL;
-	//delete[] imageName;
 	delete[] textureBinary;
 	textureVector.clear();
 }
@@ -36,11 +34,7 @@ void image::changeName(const char* name)
 
 void image::addTexture(double* textCoords)
 {
-	double* holdOver;
-	holdOver = new double[2];
-	holdOver[0] = textCoords[0];
-	holdOver[1] = textCoords[1];
-	textureVector.push_back(holdOver);
+	textureVector.push_back(textCoords);
 	buildOkay = true;
 }
 
@@ -50,18 +44,25 @@ void image::addTile(int ID)
 	if(imageSize[0] > 0) step = double(imageSize[1])/double(imageSize[0]);
 	else return;
 
-	double temp[2];
+	double* temp;
+	temp = new double[2];
 	temp[0] = ID*step, temp[1] = 0;
 	addTexture(temp);
+	temp = new double[2];
 	temp[0] = ID*step + step, temp[1] = 0;
 	addTexture(temp);
+	temp = new double[2];
 	temp[0] = ID*step, temp[1] = 1;
 	addTexture(temp);
 	addTexture(temp);
+	temp = new double[2];
 	temp[0] = ID*step + step, temp[1] = 1;
 	addTexture(temp);
+	temp = new double[2];
 	temp[0] = ID*step + step, temp[1] = 0;
 	addTexture(temp);
+	temp = NULL;
+	delete temp;
 }
 
 void image::buildTextureArray(void)
@@ -151,6 +152,8 @@ void image::checkIfAvailable(void)
  
 	/* Close the file */
 	fclose(fp);
+	fp = NULL;
+	delete fp;
  
 	/* That's it */
 	imageAvailable = true;
@@ -190,8 +193,7 @@ void image::disableSetUp(void)
 void image::setupTexture(void)
 {
  	if(!imageAvailable) checkIfAvailable();
-	if(buildOkay)
-		buildTextureArray();
+	if(buildOkay) buildTextureArray();
 }
 
 double* image::getTextureArray(void) {return textureArray;}
@@ -208,20 +210,27 @@ void image::writeReport(void)
 
 void image::addCharacter(void)
 {
-	double temp[2];
+	double* temp;
 	textureArray = new double[12];
 
+	temp = new double[2];
 	temp[0] = 0, temp[1] = 0;
 	addTexture(temp);
+	temp = new double[2];
 	temp[0] = .125, temp[1] = 0;
 	addTexture(temp);
+	temp = new double[2];
 	temp[0] = 0, temp[1] = .25;
 	addTexture(temp);
 	addTexture(temp);
+	temp = new double[2];
 	temp[0] = .125, temp[1] = .25;
 	addTexture(temp);
+	temp = new double[2];
 	temp[0] = .125, temp[1] = 0;
 	addTexture(temp);
+	temp = NULL;
+	delete temp;
 }
 
 void image::moveActorCoords(double pos[2])
@@ -238,5 +247,7 @@ void image::moveActorCoords(double pos[2])
 	textureArray[9]  = pos[1] + .25;
 	textureArray[10] = .125 + pos[0];
 	textureArray[11] = pos[1];
+	pos = new double[0];
+	delete pos;
 }
 #endif

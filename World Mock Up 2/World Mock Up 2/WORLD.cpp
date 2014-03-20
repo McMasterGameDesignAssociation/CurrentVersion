@@ -360,7 +360,7 @@ void world::updateWorldClock(void)
 	frameCounter++;
 	if(frameCounter > frameStop) frameCounter = 0;
 	if((time(0)) > timingFunction -> getTiming()) 
-		frameStop = (timingFunction -> getInc()/45) + 1;
+		frameStop = (timingFunction -> getInc()/30) + 1;
 	timingFunction -> updateSystem();
 }
 

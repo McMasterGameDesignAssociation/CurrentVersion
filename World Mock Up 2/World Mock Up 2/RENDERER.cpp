@@ -58,6 +58,7 @@ updates required
 */
 renderer::renderer(void)
 {
+	number_of_tiles = 0;
 	//This clears the arrays
 	clearArrays();
 	
@@ -82,8 +83,8 @@ renderer::renderer(void)
 	revision will be needed to handle an array of player
 	arrays*/
 	playerArray = new int*[12];
+	playerColors = new double*[18];
 	int temp = 1;
-	double dTemp = 1;
 	for(int i = 0; i < 18; i++) playerArray[i] = &temp;
 	//for(int i = 0; i < 18; i++) playerColors[i] = &dTemp;
 
@@ -121,6 +122,9 @@ void renderer::buildArrays(void)
 		//up-to-date and is not needed to be recalculated
 		buildOk = false;
 	}
+	number_of_tiles = tempVertices.size();
+	tempColors.clear();
+	tempVertices.clear();
 }
 
 /*
@@ -213,7 +217,7 @@ void renderer::render(void)
 	glVertexPointer(2, GL_INT, 0, tileArray);
 	glColorPointer(3, GL_DOUBLE, 0, tileColors);
 	glTexCoordPointer(2, GL_DOUBLE, 0, tileData -> textureArray);
-	glDrawArrays(GL_TRIANGLES, 0, tempVertices.size());
+	glDrawArrays(GL_TRIANGLES, 0, number_of_tiles);
 	tileData -> disableSetUp();
 
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -266,15 +270,11 @@ void renderer::printPoint(unsigned int pos)
 
 void renderer::setupActorArrays(world* map)
 {
-	int **temp;
-	double **tempDouble;
 	characterData = new image[map -> actorSet.size()];
 	for(unsigned int i = 0; i < map -> actorSet.size(); i++)
 	{
-		temp = new int*[12];
-		tempDouble = new double*[18];
-		actorArrays.push_back(temp);
-		actorColors.push_back(tempDouble);
+		actorArrays.push_back(new int*[12]);
+		actorColors.push_back(new double*[18]);
 		setUpActor(map -> actorSet.at(i).getBitMapName(), &(map -> actorSet.at(i)));
 	}
 }
@@ -312,10 +312,6 @@ void renderer::setUpPlayer(const char* startImage, player &character, world* map
 {
 	playerData -> changeName(startImage);
 	playerData -> addCharacter();
-	//This is a very strange bug, I can't initiate playerColors in the constructor
-	//This will need to be repaired for later purposes, however this is fine for
-	//now
-	playerColors = new double*[18];
 	for(int i = 0; i < 12; i++) playerArray[i]  = &character.vertices[i];
 	for(int i = 0; i < 18; i++)  playerColors[i] = &character.shadeVertices[i];
 }

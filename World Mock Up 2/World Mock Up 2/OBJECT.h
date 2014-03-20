@@ -48,7 +48,10 @@ class object
 		direction face;
 		bool passThrough;
 		string description;
-	
+		string bitMapName;
+		unsigned int position[2];
+		unsigned int size[2];
+
 	public:
 
 		//Modifiers

@@ -5,18 +5,18 @@
 
 item::item(void)
 {
-	this -> value = 0;
-	this -> whieght  = 0;
-	this -> ID = 0;
-	this -> itemClass = food;
+	value = 0;
+	whieght  = 0;
+	ID = 0;
+	itemClass = food;
 }
 
 item::item(unsigned int initValue, unsigned int initCost, itemType newType)
 {
-	this -> ID = 0;
-	this -> value = initValue;
-	this -> whieght  = initCost;
-	this -> itemClass = newType;
+	 ID = 0;
+	 value = initValue;
+	 whieght  = initCost;
+	 itemClass = newType;
 }
 
 #endif

@@ -175,11 +175,6 @@ actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* new
 	animationStep = 0;
 	updatePosition();
 	AI = newAI;
-	#if (defined(_WIN32) || defined(_WIN64))
-		frameCounter = randomNumberGenerator(GetTickCount());
-	#else 
-		frameCounter = randomNumberGenerator(time(NULL));
-	#endif
 }
 
 void actor::setFrameCount(int newFrameCount) {frameCounter = newFrameCount;}
@@ -204,20 +199,20 @@ This version of the changeDirection function changes the
 direction that the actor is facing by directly adding
 in the new face direction
 */
-void actor::changeDirection(direction newFace) {this->face = newFace;}
+void actor::changeDirection(direction newFace) {face = newFace;}
 direction actor::getFace(void) {return face;}
 
 void actor::increaseAlert(void)
 {
-        this->alert = 1;
-        this->visionRange = maxVision;
-        this->speed = 8;
+	alert = 1;
+	visionRange = maxVision;
+	speed = 8;
 }
 void actor::decreaseAlert(void)
 {
-        this->alert=0;
-        this->visionRange=5*64;
-        this->speed = 4;
+	alert=0;
+	visionRange=5*64;
+	speed = 4;
 }
 
 int actor::getAlert(void) {return alert;}
@@ -268,45 +263,38 @@ void actor::checkMovement(world *map, int x, int y)
 		{
                 posOne[0] = x + getPosition().x, posOne[1] = y + getPosition().y;
                 setPosition(posOne[0], posOne[1]);
-				this->isHittingWall = false;
+				isHittingWall = false;
         }
-		else this->isHittingWall = true;
+		else isHittingWall = true;
 		updatePosition();
 }
 
 void actor::updatePosition(void)
 {
-	this -> vertices[0]  = vPosition.x - (size/2), this -> vertices[1]  = vPosition.y - (size/2),
-	this -> vertices[2]  = vPosition.x + (size/2), this -> vertices[3]  = vPosition.y - (size/2),
-	this -> vertices[4]  = vPosition.x - (size/2), this -> vertices[5]  = vPosition.y + (size/2),
-	this -> vertices[6]  = vPosition.x - (size/2), this -> vertices[7]  = vPosition.y + (size/2),
-	this -> vertices[8]  = vPosition.x + (size/2), this -> vertices[9]  = vPosition.y + (size/2),
-	this -> vertices[10] = vPosition.x + (size/2), this -> vertices[11] = vPosition.y - (size/2);
-
-	for(int i = 0; i < 18; i++) this-> shadeVertices[i] = 1;
+	vertices[0]  = vPosition.x - (size/2), vertices[1]  = vPosition.y - (size/2),
+	vertices[2]  = vPosition.x + (size/2), vertices[3]  = vPosition.y - (size/2),
+	vertices[4]  = vPosition.x - (size/2), vertices[5]  = vPosition.y + (size/2),
+	vertices[6]  = vPosition.x - (size/2), vertices[7]  = vPosition.y + (size/2),
+	vertices[8]  = vPosition.x + (size/2), vertices[9]  = vPosition.y + (size/2),
+	vertices[10] = vPosition.x + (size/2), vertices[11] = vPosition.y - (size/2);
+	for(int i = 0; i < 18; i++) shadeVertices[i] = 1;
 }
 //Optimized to pointers for speed boost
 //By Ryan Davis
 void actor::updateMovement(world *map, renderer *act)
 {
-    if (this->getMoving() == true)
+    if (getMoving() == true)
     {
-        if(frameCounter > 10 - speed)
-		{
-             if (face == Up) 
-                 checkMovement(map, 0, 1);
-             else if (face == Right)
-                  checkMovement(map, 1, 0);
-             else if (face == Left)  
-				  checkMovement(map, -1, 0);                      
-             else if (face == Down)
-                  checkMovement(map, 0, -1);
-
-             frameCounter = 0;
-         }
-         frameCounter ++;
+		if (face == Up) 
+			checkMovement(map, 0, 1);
+		else if (face == Right)
+			checkMovement(map, 1, 0);
+		else if (face == Left)  
+			checkMovement(map, -1, 0);                      
+        else if (face == Down)
+            checkMovement(map, 0, -1);
     }
-	if(this -> getMoving()) act -> animateActor(*this, true);
+	if(getMoving()) act -> animateActor(*this, true);
 }
 
 bool actor::getIsHittingWall(void) {return isHittingWall;}

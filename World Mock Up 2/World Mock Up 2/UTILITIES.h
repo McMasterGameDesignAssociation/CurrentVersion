@@ -6,36 +6,36 @@
 namespace utilities
 {
 	static queue<int> numberSeries;
-	static int randomNumberGenerator(double newSeed)
+	static int randomNumberGenerator(double &newSeed)
 	{
-		int* seed;
 		int temp;
-		seed = (int*)malloc(sizeof(int));
 		#if (defined(_WIN32) || defined(_WIN64))
 			temp = GetTickCount();
-			temp += (int)((int)time(NULL) - (int)&seed*cos((double)newSeed/((2*PI)*sin(temp)+1)));
+			if(numberSeries.size() > 0) newSeed += (int)&numberSeries.back();
+			temp += (int)((int)time(NULL) - (int)&newSeed*cos((double)newSeed/((2*PI)*sin(temp)+1)));
 			srand(temp);
-			return rand();//abs((int)(rand()*cos((double)GetTickCount()/1000)));
+			return rand();
 		#else
 			temp = (int)time(NULL);
-			temp += (int)((int)&seed*cos(newSeed));
+			temp += (int)((int)&newSeed*cos(newSeed));
 			srand(temp);
 			return rand();
 		#endif
 
 	}
 
-	static void makeRandomNumber(int newSeed) {numberSeries.push(randomNumberGenerator(newSeed));}
+	static void makeRandomNumber(double newSeed) {numberSeries.push(randomNumberGenerator(newSeed));}
 
 	static int getRandomNumber(void)
 	{
+		double newSeed = (double)time(NULL);
 		if(!numberSeries.empty())
 		{
 			int check = numberSeries.front();
 			numberSeries.pop();
 			return check;
 		}
-		else return randomNumberGenerator((int)time(NULL));
+		else return randomNumberGenerator(newSeed);
 	}
 }
 

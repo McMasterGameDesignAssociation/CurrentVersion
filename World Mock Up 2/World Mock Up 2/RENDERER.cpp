@@ -67,7 +67,7 @@ renderer::renderer(void)
 	//This needs to be user selected, or an agreed upon
 	//null image needs to be made
 	tileData = new image[1];
-	tileData -> changeName("rough_tiles.png");
+	tileData -> changeName("tile_set_1.png");
 	
 	playerData = new image[1];
 	playerData -> addCharacter();
@@ -160,7 +160,7 @@ void renderer::addColor(double color[3])
 {
 	buildOk = true;
 	double* newColor;
-	newColor = new double[2];
+	newColor = new double[3];
 	newColor[0] = color[0], newColor[1] = color[1], newColor[2] = color[2];
 	tempColors.push_back(newColor);
 }

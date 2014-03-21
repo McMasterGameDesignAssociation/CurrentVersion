@@ -93,13 +93,13 @@ void updateViewPort(player* character)
 	//Therefore when the chracter position reaches 25%> and <75%
 	//The view port moves at the same speed as the character
 	if((character -> getPositionX() - viewPortCenter[0]) > 0.75*WIDTH)
-		viewPortCenter[0] += character -> getSpeed(); 
+		viewPortCenter[0] += character -> getSpeed()*2; 
 	else if((character -> getPositionX() - viewPortCenter[0]) < 0.25*WIDTH)
 		viewPortCenter[0]-= character -> getSpeed(); 
 	if((character -> getPositionY() - viewPortCenter[1]) > 0.75*HEIGHT)
-		viewPortCenter[1]+= character -> getSpeed(); 
+		viewPortCenter[1]+= character -> getSpeed()*2; 
 	else if((character -> getPositionY() - viewPortCenter[1]) < 0.25*HEIGHT)
-		viewPortCenter[1]-= character -> getSpeed(); 
+		viewPortCenter[1]-= character -> getSpeed()*2; 
 }
 
 /*
@@ -157,7 +157,7 @@ void idle(void)
 {
 	if(!pause && (DAN.getFrameCounter() == DAN.getFrameStop()))
 	{
-		PLAYER_ONE.setSpeed(4);
+		PLAYER_ONE.setSpeed(8);
 		menuStates(PLAYER_ONE, &DAN, &scene);
 		//Added by Ryan
 		DAN.updateNPCSet(&PLAYER_ONE, &scene); // This is the NPC idler (it works :D)
@@ -205,7 +205,7 @@ void main(int argc, char* argv[])
 		*/
 		for (int i = 0; i < 40; i++)
 		{	
-			actor newActor(64,5*64, 8, "test_subject_2.png", randomMovement, &DAN);
+			actor newActor(64*5,5*64, 8, "test_subject_2.png", randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
 		for (int i = 0; i < 1; i++)
@@ -230,12 +230,67 @@ void main(int argc, char* argv[])
         PLAYER_ONE = greg;
 
         block.changeDescription("HOORAY");
-
 		DAN.addTile(block);
-		block.changePassThrough(true);
 		block.changeDescription("NOT HOORAY");
 		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		block.changePassThrough(true);
+		DAN.addTile(block);
 		block.changePassThrough(false);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
+		DAN.addTile(block);
 		DAN.addTile(block);
 		DAN.addTile(block);
 		DAN.addTile(block);

@@ -93,6 +93,7 @@ inline direction operator ++(direction &rhs)
 	}
 }
 
+
 inline direction operator--(direction &rhs)
 {
 	switch(rhs)

@@ -41,28 +41,40 @@ void image::addTexture(double* textCoords)
 void image::addTile(int ID)
 {
 	double step;
-	if(imageSize[0] > 0) step = double(imageSize[1])/double(imageSize[0]);
+	int  rowLength = 0, columnLength = 0;
+	if(imageSize[0] > 0)
+	{
+		//These are hard coded at the moment, but they will
+		//be based on the image size when we are finished
+		rowLength = imageSize[0]/64;
+		columnLength = imageSize[1]/64;
+	}
 	else return;
 
 	double* temp;
 	temp = new double[2];
-	temp[0] = ID*step, temp[1] = 0;
+	temp[0] = double(ID%rowLength)/rowLength, 
+		temp[1] = double(columnLength - (ID + rowLength)/rowLength)/columnLength;
 	addTexture(temp);
 	temp = new double[2];
-	temp[0] = ID*step + step, temp[1] = 0;
+	temp[0] = double(ID%rowLength + 1)/rowLength, 
+		temp[1] = double(columnLength - (ID + rowLength)/rowLength)/columnLength;
 	addTexture(temp);
 	temp = new double[2];
-	temp[0] = ID*step, temp[1] = 1;
+	temp[0] = double(ID%rowLength)/rowLength, 
+		temp[1] =  double(columnLength - ID/rowLength)/columnLength;
 	addTexture(temp);
 	addTexture(temp);
 	temp = new double[2];
-	temp[0] = ID*step + step, temp[1] = 1;
+	temp[0] = double(ID%rowLength + 1)/rowLength, 
+		temp[1] = double(columnLength - ID /rowLength)/columnLength;
 	addTexture(temp);
 	temp = new double[2];
-	temp[0] = ID*step + step, temp[1] = 0;
+	temp[0] = double(ID%rowLength + 1)/rowLength, 
+		temp[1] = double(columnLength - (ID + rowLength)/rowLength)/columnLength;
 	addTexture(temp);
 	temp = NULL;
-	delete temp;
+	delete[] temp;
 }
 
 void image::buildTextureArray(void)
@@ -125,7 +137,6 @@ void image::checkIfAvailable(void)
 	* read some of the signature */
 	png_set_sig_bytes(png_ptr, sig_read);
 	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, NULL);
-
 	png_uint_32 width, height;
 	int bit_depth;
 	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
@@ -230,7 +241,7 @@ void image::addCharacter(void)
 	temp[0] = .125, temp[1] = 0;
 	addTexture(temp);
 	temp = NULL;
-	delete temp;
+	delete[] temp;
 }
 
 void image::moveActorCoords(double pos[2])
@@ -248,6 +259,6 @@ void image::moveActorCoords(double pos[2])
 	textureArray[10] = .125 + pos[0];
 	textureArray[11] = pos[1];
 	pos = new double[0];
-	delete pos;
+	delete[] pos;
 }
 #endif

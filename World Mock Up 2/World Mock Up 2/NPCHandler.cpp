@@ -71,7 +71,7 @@ void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 	else if(aCharacter.getAlert() > 0) aCharacter.decreaseAlert();
  
 	aCharacter.setMoving(true);
-	srand((unsigned int)&probabilities*time(NULL));
+	srand((int)&probabilities*(int)time(NULL));
 	int randomNum = (getRandomNumber())%1000;
 	if(aCharacter.getAlert() == 0 && aCharacter.getIsHittingWall() || (randomNum > 953 || randomNum < 31)) aCharacter.changeDirection(probabilities);
     
@@ -349,7 +349,7 @@ void actor::changeDirection(double probabilities[4])
 	direction directions[] = {Up, Left, Down, Right};
 	direction tempHeading;
 
-	srand((unsigned int)&tempHeading+((int)&probabilities%100+0.00001));
+	srand((int)&tempHeading+((int)&probabilities%100+1));
 	int randomNum = (getRandomNumber()%100);
 	//if(randomNum < 30) AI = turnAI;
 
@@ -387,8 +387,6 @@ void actor::incrementDirection(void) {face++;}
 
 void actor::incrementFrameCounter(int frameStop) 
 {
-	if(frameCounter > frameStop) frameCounter = 0;
-	else frameCounter++;
 }
 
 int actor::getFrameCounter(void) {return frameCounter;}

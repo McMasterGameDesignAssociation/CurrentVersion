@@ -1,5 +1,5 @@
 /*
-COPYRIGHT BENJAMIN ISHERWOOD 25/02/2014
+COPYRIGHT BENJAMIN ISHERWOOD 21/03/2014
 THIS SOFTWARE IS INTENDED FOR OPEN SOURCE USE, REDISTRIBUTION
 IS ENCOURAGE
 
@@ -12,28 +12,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.
 */
-#ifndef _PLAYER
-#define _PLAYER
+#ifndef SPRITE_METHODS
+#define SPRITE_METHODS
 
-#include "COLLECTIONS.h"
+#include "SPRITE.h"
+	
+unsigned int sprite::getSpeed(void) const {return speed;}
+unsigned int sprite::getAnimationStep(void) const {return animationStep;}
 
-class player : public entity, public gamepiece, public sprite
-{
-
-private:
-	int playerResolution;
-	bool suspicious;
-
-public:
-	player(void);
-	player(world* map);
-	//Base
-	//void followMouse(int pos[2], int worldDim[2]);
-	void changeSize(int newSize);
-	void checkMovement(world *map, int x, int y);
-	//added by ryan davis for suspicion
-	bool getSuspicious(void);
-	void setSuspicous(bool newSuspicion);
-};
-
+void sprite::incAnimationStep(void) {animationStep++;}
+void sprite::setSpeed(unsigned int newSpeed) {speed = newSpeed;}
+void sprite::setAnimationStep(unsigned int frame) {animationStep = frame;}
 #endif

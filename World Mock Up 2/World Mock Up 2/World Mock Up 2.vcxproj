@@ -115,13 +115,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ENTITIES.h" />
     <ClInclude Include="FILEREADER.h" />
+    <ClInclude Include="GAMEPIECES.h" />
     <ClInclude Include="IMAGE.h" />
     <ClInclude Include="INVENTORY.h" />
     <ClInclude Include="ITEM.h" />
     <ClInclude Include="KEYBOARD.h" />
     <ClCompile Include="DTDMacros.cpp" />
+    <ClCompile Include="ENTITIES.cpp" />
     <ClCompile Include="FILEREADER.cpp" />
+    <ClCompile Include="GAMEPIECES.cpp" />
     <ClCompile Include="IMAGE.cpp" />
     <ClCompile Include="ITEM.cpp" />
     <ClCompile Include="NPCHandler.cpp" />
@@ -129,6 +133,7 @@
     <ClCompile Include="PLAYER.cpp" />
     <ClCompile Include="RENDERER.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="SPRITE.cpp" />
     <ClCompile Include="TILE.cpp" />
     <ClCompile Include="TIMER.cpp" />
     <ClCompile Include="WORLD.cpp" />
@@ -139,6 +144,8 @@
     <ClInclude Include="OBJECT.h" />
     <ClInclude Include="PLAYER.h" />
     <ClInclude Include="RENDERER.h" />
+    <ClInclude Include="SPRITE.h" />
+    <ClInclude Include="SYSTEMCOLLECTIONS.h" />
     <ClInclude Include="TILE.h" />
     <ClInclude Include="TIMER.h" />
     <ClInclude Include="UTILITIES.h" />

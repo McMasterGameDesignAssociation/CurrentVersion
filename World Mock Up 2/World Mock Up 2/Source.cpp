@@ -92,14 +92,14 @@ void updateViewPort(player* character)
 	//The viewport encompasses 75% of the the center of the scene
 	//Therefore when the chracter position reaches 25%> and <75%
 	//The view port moves at the same speed as the character
-	if((character -> getPositionX() - viewPortCenter[0]) > 0.75*WIDTH)
-		viewPortCenter[0] += character -> getSpeed()*2; 
-	else if((character -> getPositionX() - viewPortCenter[0]) < 0.25*WIDTH)
+	if((character -> getPosition()[0] - viewPortCenter[0]) > 0.75*WIDTH)
+		viewPortCenter[0] += character -> getSpeed(); 
+	else if((character -> getPosition()[0] - viewPortCenter[0]) < 0.25*WIDTH)
 		viewPortCenter[0]-= character -> getSpeed(); 
-	if((character -> getPositionY() - viewPortCenter[1]) > 0.75*HEIGHT)
-		viewPortCenter[1]+= character -> getSpeed()*2; 
-	else if((character -> getPositionY() - viewPortCenter[1]) < 0.25*HEIGHT)
-		viewPortCenter[1]-= character -> getSpeed()*2; 
+	if((character -> getPosition()[1] - viewPortCenter[1]) > 0.75*HEIGHT)
+		viewPortCenter[1]+= character -> getSpeed(); 
+	else if((character -> getPosition()[1] - viewPortCenter[1]) < 0.25*HEIGHT)
+		viewPortCenter[1]-= character -> getSpeed(); 
 }
 
 /*
@@ -110,7 +110,7 @@ void passiveMouse(int x, int y)
 {
 	int pos[] = {x, y};
 	int dimensions[] = {WIDTH, HEIGHT};
-	PLAYER_ONE.changeDirection(pos, dimensions);
+	//PLAYER_ONE.followMouse(pos, dimensions);
 	scene.animatePlayer(PLAYER_ONE, false);
 }
 

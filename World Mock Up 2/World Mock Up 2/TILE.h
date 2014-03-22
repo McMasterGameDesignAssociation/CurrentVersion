@@ -36,29 +36,13 @@ variables
 	string description - This will be used a documenting
 						 tool, and will be used in the change logs
 */
-class tile
+
+class tile: public entity
 {
-private:
-
-	unsigned int ID;
-	bool passThrough;
-	string description;
-
 public:
-
 	//Modifiers
 	tile(void);
 	void setTile(bool passable, string bitMap, string newDescription);
-	void changeID(unsigned int newID);
-	void changePassThrough(bool passable);
-	void changeDescription(string newDescription);
-
-	//Accessors
-	int getID(void);
-	bool getPassThrough(void);
-	string getBitMapName(void);
-	string getDescription(void);
-
 	//Logging functions
 	void printLog(void);
 

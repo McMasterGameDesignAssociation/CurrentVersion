@@ -21,6 +21,7 @@ player::player(void)
 {
 	//Added by Ryan Davis
 	//Player variable initializations
+	position = new unsigned int[2];
 	suspicious = false;
 
 }
@@ -30,7 +31,7 @@ player::player(world* map)
 	//Added by Ryan Davis
 	//Player variable initializations
 	suspicious = false;
-
+	position = new unsigned int[2];
 	unsigned int* temp;
 	temp = map -> getPlayerStart();
 	position[0] = temp[0]*map -> getResolution(), 
@@ -42,35 +43,13 @@ player::player(world* map)
 	description = "This is an empty player";
 	speed = 0;
 	animationStep = 0;
-	face = Up;
+	setDirection(Up);
 	updatePosition();
 	temp = NULL;
 	delete temp;
 }
 
-unsigned int player::getPositionX(void) {return position[0];}
-unsigned int player::getPositionY(void) {return position[1];}
-int player::getSpeed(void) {return speed;}
-
-
-string player::getBitMap(void) {return bitMapName;}
-string player::getDescription(void) {return description;}
-void player::setSpeed(int movement) {speed = movement;}
 void player::changeSize(int newSize) {size = newSize;}
-void player::changeDescription(string newDescription) {description = newDescription;}
-
-void player::updatePosition(void) 
-{
-	vertices[0]  = position[0] - (size/2), vertices[1]  = position[1] - (size/2),
-	vertices[2]  = position[0] + (size/2), vertices[3]  = position[1] - (size/2),
-	vertices[4]  = position[0] - (size/2), vertices[5]  = position[1] + (size/2),
-	vertices[6]  = position[0] - (size/2), vertices[7]  = position[1] + (size/2),
-	vertices[8]  = position[0] + (size/2), vertices[9]  = position[1] + (size/2),
-	vertices[10] = position[0] + (size/2), vertices[11] = position[1] - (size/2);
-
-	for(int i = 0; i < 18; i++) shadeVertices[i] = 1;
-}
-void player::changeBitMap(string newBitMap) {bitMapName = newBitMap;}
 
 /*
 inputs
@@ -117,22 +96,22 @@ void player::checkMovement(world *map, int x, int y)
 	}
 }
 
-void player::changeDirection(int pos[2], int screenDim[2])
-{
-	pos[0] -= screenDim[0]/2, pos[1] -= screenDim[1]/2;
-	if((pos[0] > 0 && pos[1] > 0 && pos[0] > pos[1]) ||
-		(pos[0] > 0 && pos[1] < 0 && pos[0] > abs(pos[1])))
-		face = Right;
-	else if((pos[0] > 0 && pos[1] < 0 && pos[0] < abs(pos[1])) || 
-		(pos[0] < 0 && pos[1] < 0 && abs(pos[0]) < abs(pos[1])))
-		face = Up;
-	else if((pos[0] < 0 && pos[1] < 0 && abs(pos[0]) > abs(pos[1])) ||
-		(pos[0] < 0 && pos[1] > 0 && abs(pos[0]) > pos[1]))
-		face = Left;
-	else if((pos[0] < 0 && pos[1] > 0 && abs(pos[0]) < pos[1]) ||
-		(pos[0] > 0 && pos[1] > 0 && pos[0] < pos[1]))
-		face = Down;
-}
+//void player::followMouse(int pos[2], int screenDim[2])
+//{
+//	pos[0] -= screenDim[0]/2, pos[1] -= screenDim[1]/2;
+//	if((pos[0] > 0 && pos[1] > 0 && pos[0] > pos[1]) ||
+//		(pos[0] > 0 && pos[1] < 0 && pos[0] > abs(pos[1])))
+//		setDirection(Right);
+//	else if((pos[0] > 0 && pos[1] < 0 && pos[0] < abs(pos[1])) || 
+//		(pos[0] < 0 && pos[1] < 0 && abs(pos[0]) < abs(pos[1])))
+//		setDirection(Up);
+//	else if((pos[0] < 0 && pos[1] < 0 && abs(pos[0]) > abs(pos[1])) ||
+//		(pos[0] < 0 && pos[1] > 0 && abs(pos[0]) > pos[1]))
+//		setDirection(Left);
+//	else if((pos[0] < 0 && pos[1] > 0 && abs(pos[0]) < pos[1]) ||
+//		(pos[0] > 0 && pos[1] > 0 && pos[0] < pos[1]))
+//		setDirection(Down);
+//}
 
 //Added by ryan davis for suspicion
 bool player::getSuspicious(void){return suspicious;}

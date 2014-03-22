@@ -40,7 +40,6 @@ void image::addTexture(double* textCoords)
 
 void image::addTile(int ID)
 {
-	double step;
 	int  rowLength = 0, columnLength = 0;
 	if(imageSize[0] > 0)
 	{

@@ -40,34 +40,14 @@ variables
 	string description - This will be used to describe the object in the
 						 logs
 */
-class object
+class object : public entity, public gamepiece
 {
 	private:
-		
-		unsigned int ID;
-		direction face;
-		bool passThrough;
-		string description;
-		string bitMapName;
-		unsigned int position[2];
 		unsigned int size[2];
 
 	public:
-
-		//Modifiers
 		object(void);
 		void setObject(direction newFace, bool passable, string newBitMapName, string newDescription);
-		void changeID(unsigned int newID);
-		void changePassThrough(bool passable);
-		void changeFace(direction face);
-
-		//Accessors
-		int getID(void);
-		direction getFace(void);
-		bool getPassThrough(void);
-		string getBitMapName(void);
-		string getDescription(void);
-
 		//Logging function
 		void printLog(void);
 

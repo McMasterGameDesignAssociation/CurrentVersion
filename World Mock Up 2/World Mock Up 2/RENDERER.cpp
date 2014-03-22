@@ -319,8 +319,8 @@ void renderer::setUpPlayer(const char* startImage, player &character, world* map
 void renderer::animatePlayer(player &character, bool isMoving)
 {
 	double temp[2];
-	(character.animationStep > 6) ? character.animationStep = 0 : 0;
-	switch(character.face)
+	(character.getAnimationStep() > 6) ? character.setAnimationStep(0) : 0;
+	switch(character.getFace())
 	{
 		case Up: 
 		case UpRight: 
@@ -338,17 +338,16 @@ void renderer::animatePlayer(player &character, bool isMoving)
 		default:
 			break;
 	}
-	temp[0] = double(character.animationStep)*.125;
-	if(isMoving) character.animationStep++;
+	temp[0] = double(character.getAnimationStep())*.125;
+	if(isMoving) character.incAnimationStep();
 	playerData -> moveActorCoords(temp);
 }
 
 void renderer::animateActor(actor &character, bool isMoving)
 {
 	double temp[2];
-		(character.animationStep > 6) ? character.animationStep = 0 : 0;
-	
-	switch(character.face)
+	(character.getAnimationStep() > 6) ? character.setAnimationStep(0) : 0;
+	switch(character.getFace())
 	{
 		case Up: 
 		case UpRight: 
@@ -366,8 +365,8 @@ void renderer::animateActor(actor &character, bool isMoving)
 		default:
 			break;
 	}
-	temp[0] = double(character.animationStep)*.125;
-	character.animationStep++;
+	temp[0] = double(character.getAnimationStep())*.125;
+		if(isMoving) character.incAnimationStep();
 	characterData[character.getID()].moveActorCoords(temp);
 }
 #endif

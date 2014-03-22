@@ -28,106 +28,50 @@ void stopAI(actor &aCharacter, world *map, player *pCharacter);
 void randomMovement(actor &aCharacter, world *map, player *pCharacter);
 #endif
 /*
-contains
-	enum direction - direction will be used to determine the direction 
-					 that the actor is facing
-	unsigned unsigned int ID - ID provides a unique ID for each actor so 
-		    		  they can be tracked through the system
-	direction face - face determines the standing direction the actor
-					 is facing
-	string bitMapName - bitMapName is the current name of the bitMap
-						that the actor uses as a costume
-
 The actor class is used to make instances of NPCs to be used in the world
 */
-class actor
+class actor : public entity, public gamepiece, public sprite
 {
-        private:
-                
-                unsigned int ID;
-                const char* bitMapName;
-                string description;
-                ActorVector vPosition;
-                unsigned int speed;
-                bool isMovingToSpot;
-                double visionRange; //after being spotted the NPC vision increases
-                unsigned int alert;
-                double maxVision;
-                bool playerWithinRange;
-                bool isHittingWall;
-                int initialXPos;
-                int initialYPos;
-                int framCounterSpawn;
-				bool movementHistory[4];
-				//Placing the frame stop into the characters themselves will 
-				//make them independant and therefore more random
-                unsigned int frameCounter; //the NPC will move after a set number of frames
-				unsigned int frameStop;
-				int size;
-
-        public:
+	private:
+		double visionRange; //after being spotted the NPC vision increases
+		unsigned int alert;
+		double maxVision;
+		bool playerWithinRange;
+		bool isHittingWall;
+		bool isMoving;
+	public:
 
 				actorCallback AI;
                 //Modifiers
+				void checkMovement(world *map, int x, int y);
                 actor(unsigned int posX, unsigned int posY, 
 				int newSpeed, const char* newBitmap, 
 				actorCallback newAI, world* map);
                 actor(void);
-				int animationStep;
-				/*This tracks the direction the actor is facing
-                entities up, left, down, right*/
-                direction face;
-				void incrementDirection(void);
                 void setActor(direction newFace, string newBitMapName, string newDescription);
-                void moveto(unsigned int x, unsigned int y);
-                void changeID(unsigned int newID);
-                void changeDirection(direction newFace);
-                void changeBitMapName(string newbitMapName);
-                void setPosition(unsigned int x, unsigned int y);
-                void setSpeed(int newSpeed);
                 void setMoving(bool isMoving);
                 void setVisionRange(void);
                 void increaseAlert(void);
                 void decreaseAlert(void);
                 void setSeesPlayer(bool);
                 void setIsHittingWall(bool);
-                void setFrameCount(int);
 
 				void changeDirection(double probabilities[4]);
-
 				bool isFacingPlayer(player* currentPlayer);
 
                 //Accessor
-                int getID(void);
-                direction getFace(void);
-                const char* getBitMapName(void);
-                string getDescription(void);
-                int getSpeed();
-                ActorVector getPosition();
-                bool getMoving();
-                void checkMovement(world *map, int x, int y);
+				bool getMoving(void);
                 double getVisionRange(void);
                 int getAlert(void);
                 bool getSeesPlayer(void);
                 bool getIsHittingWall(void);
-                int getInitialXPos(void);
-                int getInitialYPos(void);
-				
 
-				int vertices[12];
-				double shadeVertices[18];
-                //Logging function
-                void printLog(void);
                 //Update Function
                 void updateMovement(world *map, renderer *act);
-                //moveToPlayer, currently unused
-                void moveToPlayer();
-				void updatePosition(void);
 				void runAI(world *map, player *currentPlayer);
 
-				int getFrameCounter(void);
-				void incrementFrameCounter(int worldFrameCounter);
-
+				//Logging function
+                void printLog(void);
 };
 
 #endif

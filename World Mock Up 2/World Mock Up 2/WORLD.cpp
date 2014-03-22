@@ -63,7 +63,12 @@ actor world::getCharacter(unsigned int ID) {return actorSet.at(ID);}
 vector<tile> world::getTileSet(void) {return tileSet;}
 vector<object> world::getObjectSet(void) {return objectSet;}
 vector<actor> world::getActorSet(void) {return actorSet;}
-bool world::getTileCollision(unsigned int ID) {return tileSet.at(ID).getPassThrough();}
+bool world::getTileCollision(unsigned int ID)
+{
+	if(ID < 0) return false;
+	else if(ID > tileSet.size()) return false;
+	else return tileSet.at(ID).getPassThrough();
+}
 bool world::getObjectCollision(unsigned int ID) {return objectSet.at(ID).getPassThrough();}
 int world::getResolution(void) {return resolution;}
 

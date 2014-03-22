@@ -44,13 +44,4 @@ void tile::printLog(void)
 	cout << "ID: "<< ID << endl;
 	cout << "Pass through: " << passThrough << endl;
 }
-
-//Please do not use this function it is designed to be private
-void tile::changeID(unsigned int newID) {ID = newID;}
-void tile::changePassThrough(bool passable) {passThrough = passable;}
-void tile::changeDescription(string newDescription) {description = newDescription;}
-int tile::getID(void) {return ID;}
-bool tile::getPassThrough(void) {return passThrough;}
-string tile::getDescription(void) {return description;}
-
 #endif

@@ -1,5 +1,5 @@
 /*
-COPYRIGHT BENJAMIN ISHERWOOD 25/02/2014
+COPYRIGHT BENJAMIN ISHERWOOD 21/03/2014
 THIS SOFTWARE IS INTENDED FOR OPEN SOURCE USE, REDISTRIBUTION
 IS ENCOURAGE
 
@@ -12,28 +12,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.
 */
-#ifndef _PLAYER
-#define _PLAYER
+#ifndef ENTITIES_METHODS
+#define ENTITIES_METHODS
 
-#include "COLLECTIONS.h"
+#include "ENTITIES.h"
 
-class player : public entity, public gamepiece, public sprite
-{
+unsigned int entity::getID(void) const {return ID;}
+string entity::getDescription(void) const {return description;}
+bool entity::getPassThrough(void) const{return passThrough;}
 
-private:
-	int playerResolution;
-	bool suspicious;
-
-public:
-	player(void);
-	player(world* map);
-	//Base
-	//void followMouse(int pos[2], int worldDim[2]);
-	void changeSize(int newSize);
-	void checkMovement(world *map, int x, int y);
-	//added by ryan davis for suspicion
-	bool getSuspicious(void);
-	void setSuspicous(bool newSuspicion);
-};
+void entity::changePassThrough(bool passable) {passThrough = passable;}
+void entity::changeID(unsigned int newID) {ID = newID;}
+void entity::changeDescription(string newDescription) {description = newDescription;}
 
 #endif

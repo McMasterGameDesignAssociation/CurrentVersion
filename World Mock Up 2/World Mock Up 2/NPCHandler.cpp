@@ -27,17 +27,17 @@ void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 	//up
 	unsigned int upTile[2], rightTile[2], downTile[2], leftTile[2];
 	double temp[4];
-	upTile[0]= (aCharacter.getPosition().x/map -> getResolution());
-	upTile[1] = (aCharacter.getPosition().y/map -> getResolution()) + 1;
+	upTile[0]= (aCharacter.getPosition()[0]/map -> getResolution());
+	upTile[1] = (aCharacter.getPosition()[1]/map -> getResolution()) + 1;
 	//right
-	rightTile[0]= (aCharacter.getPosition().x/map -> getResolution()) + 1;
-	rightTile[1] = (aCharacter.getPosition().y/map -> getResolution());
+	rightTile[0]= (aCharacter.getPosition()[0]/map -> getResolution()) + 1;
+	rightTile[1] = (aCharacter.getPosition()[1]/map -> getResolution());
 	//down
-	downTile[0]= (aCharacter.getPosition().x/map -> getResolution());
-	downTile[1] = (aCharacter.getPosition().y/map -> getResolution()) - 1;
+	downTile[0]= (aCharacter.getPosition()[0]/map -> getResolution());
+	downTile[1] = (aCharacter.getPosition()[1]/map -> getResolution()) - 1;
 	//left
-	leftTile[0]= (aCharacter.getPosition().x/map -> getResolution()) - 1;
-	leftTile[1] = (aCharacter.getPosition().y/map -> getResolution());
+	leftTile[0]= (aCharacter.getPosition()[0]/map -> getResolution()) - 1;
+	leftTile[1] = (aCharacter.getPosition()[1]/map -> getResolution());
 	if(map -> getTileCollision(map -> checkTileMap(upTile))) temp[0] = 1;
 	else temp[0] = 0;
 	if(map -> getTileCollision(map -> checkTileMap(leftTile))) temp[1] = 1;
@@ -80,21 +80,21 @@ void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 		if(aCharacter.isFacingPlayer(pCharacter) && aCharacter.getAlert() > 0)
         { //if actor can see vector
 			aCharacter.setMoving(true);
-			if(abs( (double) pCharacter-> getPositionX() - aCharacter.getPosition().x) > 32 || abs( (double) pCharacter -> getPositionY() - aCharacter.getPosition().y) > 32)
+			if(abs( (double) pCharacter-> getPosition()[0] - aCharacter.getPosition()[0]) > 32 || abs( (double) pCharacter -> getPosition()[1] - aCharacter.getPosition()[1]) > 32)
 			{ //if the actor is greater than 32 pixels away from the player (if it isn't, there is no need to move)
-				if( (abs( (double) pCharacter -> getPositionX() - aCharacter.getPosition().x) > abs( (double) pCharacter -> getPositionY() - aCharacter.getPosition().y)))
+				if( (abs( (double) pCharacter -> getPosition()[0] - aCharacter.getPosition()[0]) > abs( (double) pCharacter -> getPosition()[1] - aCharacter.getPosition()[1])))
 				{ //if the x is further away than the y then move x. otherwise move in y.
-					if (aCharacter.getPosition().x < pCharacter -> getPositionX() + 32 )
-						aCharacter.changeDirection(Right);
-					else if (aCharacter.getPosition().x > pCharacter -> getPositionX() - 32)
-						aCharacter.changeDirection(Left);
+					if (aCharacter.getPosition()[0] < pCharacter -> getPosition()[0] + 32 )
+						aCharacter.setDirection(Right);
+					else if (aCharacter.getPosition()[0] > pCharacter -> getPosition()[0] - 32)
+						aCharacter.setDirection(Left);
 				}
 				else
 				{
-					if (aCharacter.getPosition().y < pCharacter -> getPositionY() + 32)
-						aCharacter.changeDirection(Up);
-					else if (aCharacter.getPosition().y > pCharacter -> getPositionY() - 32)
-						aCharacter.changeDirection(Down);
+					if (aCharacter.getPosition()[1] < pCharacter -> getPosition()[1] + 32)
+						aCharacter.setDirection(Up);
+					else if (aCharacter.getPosition()[1] > pCharacter -> getPosition()[1] - 32)
+						aCharacter.setDirection(Down);
 				}
 			}
 			else aCharacter.setMoving(false);
@@ -105,8 +105,10 @@ void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 ///ACTOR METHODS
 actor::actor(void)
 {
+	position = new unsigned int[2];
+	position[0] = 0, position[1] = 0;
 	ID = 0;
-	face = Up;
+	setDirection(Up);
 	animationStep = 0;
 	bitMapName = "None";
 	description = "This is an empty character";
@@ -148,27 +150,21 @@ void actor::printLog(void)
 void actor::runAI(world *map, player *currentPlayer) 
 {AI(*this, map, currentPlayer);}
 
-//
-////This function should be private
-void actor::changeID(unsigned int newID) {ID = newID;}
 //void actor::changeDirection(direction newFace) {face = newFace;}
 //string actor::getDescription(void) {return description;}
 //int actor::getID(void) {return ID;}
 //actor::direction actor::getFace(void) {return face;}
-//string actor::getBitMapName(void) {return bitMapName;}
-const char* actor::getBitMapName(void) {return bitMapName;}
 
 //Beginning of ryan
 actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* newBitmap,  actorCallback newAI, world *map)
 {
-	vPosition.x = posX, initialXPos = posX;
-	vPosition.y = posY, initialYPos = posY;
+	position = new unsigned int[2];
+	position[0] = posX, position[1] = posY;
     speed = newSpeed;
-    face = Up;
+    setDirection(Up);
 	size = map -> getResolution();
 	bitMapName = newBitmap;
     description = "This is an empty character";
-    frameCounter = 0;
     visionRange = 5*64;
     alert = 0;
     maxVision = visionRange + 4*64;
@@ -176,31 +172,6 @@ actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* new
 	updatePosition();
 	AI = newAI;
 }
-
-void actor::setFrameCount(int newFrameCount) {frameCounter = newFrameCount;}
-bool actor::getMoving() {return isMovingToSpot;}
-void actor::setMoving(bool isMoving) {this->isMovingToSpot = isMoving;}
-int actor::getSpeed() {return speed;}
-void actor::setSpeed(int newSpeed) {this->speed = newSpeed;}
-ActorVector actor::getPosition() {return vPosition;}
-
-void actor::setPosition(unsigned int x, unsigned int y)
-{
-        this->vPosition.x = x;
-        this->vPosition.y = y;
-}
-
-void actor::moveto(unsigned int x, unsigned int y)
-{        
-}
-
-/*
-This version of the changeDirection function changes the
-direction that the actor is facing by directly adding
-in the new face direction
-*/
-void actor::changeDirection(direction newFace) {face = newFace;}
-direction actor::getFace(void) {return face;}
 
 void actor::increaseAlert(void)
 {
@@ -220,18 +191,12 @@ void actor::setSeesPlayer(bool canSeePlayer) {this->playerWithinRange = canSeePl
 bool actor::getSeesPlayer(void) {return playerWithinRange;}
 void actor::setVisionRange(void){}
 double actor::getVisionRange(void) {return visionRange;}
-int actor::getInitialXPos(void) {return initialXPos;}
-int actor::getInitialYPos(void) {return initialYPos;}
-int actor::getID(void) {return ID;}
 
 /* checkMovement
 * this function checks to make sure there is no block preventing movement
 * same as the function for the player 
 * made by ben
 */
-
-//Optimized to pointers for speed boost by Ryan Davis
-
 void actor::checkMovement(world *map, int x, int y)
 {
         unsigned int posOne[2];
@@ -239,70 +204,57 @@ void actor::checkMovement(world *map, int x, int y)
         unsigned int posThree[2];
         unsigned int posFour[2];
         int speed  = getSpeed();
-        x = (x >= 1) ? speed : x;
+        x = (x >= 1)  ?  speed : x;
         x = (x <= -1) ? -speed : x;
-        y = (y >= 1) ? speed : y;
+        y = (y >= 1)  ?  speed : y;
         y = (y <= -1) ? -speed : y;
         
         speed = 64 - speed;
 
         //This is a check of the lower bound of movement
-        posOne[0] = (x + getPosition().x)/64, posOne[1] = (y + getPosition().y)/64;
+        posOne[0] = (x + getPosition()[0])/64, posOne[1] = (y + getPosition()[1])/64;
         //This is a check of the upper bound of movement
-        posTwo[0] = (x + speed + getPosition().x)/64, posTwo[1] = (y + speed + getPosition().y)/64;
+        posTwo[0] = (x + speed + getPosition()[0])/64, posTwo[1] = (y + speed + getPosition()[1])/64;
 
         //This is a check of the lower bound of movement
-        posThree[0] = (x + getPosition().x)/64, posThree[1] = (y + speed + getPosition().y)/64;
+        posThree[0] = (x + getPosition()[0])/64, posThree[1] = (y + speed + getPosition()[1])/64;
         //This is a check of the upper bound of movement
-        posFour[0] = (x + speed + getPosition().x)/64, posFour[1] = (y + getPosition().y)/64;
+        posFour[0] = (x + speed + getPosition()[0])/64, posFour[1] = (y + getPosition()[1])/64;
 
 	    if(map -> getTileCollision(map ->checkTileMap(posOne)) 
 		&& map -> getTileCollision(map -> checkTileMap(posTwo))
 		&& map -> getTileCollision(map -> checkTileMap(posThree)) 
 		&& map -> getTileCollision(map -> checkTileMap(posFour)))        
 		{
-                posOne[0] = x + getPosition().x, posOne[1] = y + getPosition().y;
-                setPosition(posOne[0], posOne[1]);
+			//position[0] = x + position[0], position[1] = y + position[1];
+                posOne[0] = x + getPosition()[0], posOne[1] = y + getPosition()[1];
+                changePosition(posOne);
 				isHittingWall = false;
         }
 		else isHittingWall = true;
 		updatePosition();
 }
 
-void actor::updatePosition(void)
-{
-	vertices[0]  = vPosition.x - (size/2), vertices[1]  = vPosition.y - (size/2),
-	vertices[2]  = vPosition.x + (size/2), vertices[3]  = vPosition.y - (size/2),
-	vertices[4]  = vPosition.x - (size/2), vertices[5]  = vPosition.y + (size/2),
-	vertices[6]  = vPosition.x - (size/2), vertices[7]  = vPosition.y + (size/2),
-	vertices[8]  = vPosition.x + (size/2), vertices[9]  = vPosition.y + (size/2),
-	vertices[10] = vPosition.x + (size/2), vertices[11] = vPosition.y - (size/2);
-	for(int i = 0; i < 18; i++) shadeVertices[i] = 1;
-}
 //Optimized to pointers for speed boost
 //By Ryan Davis
 void actor::updateMovement(world *map, renderer *act)
 {
     if (getMoving() == true)
     {
-		if (face == Up) 
+		if (getFace() == Up) 
 			checkMovement(map, 0, 1);
-		else if (face == Right)
+		else if (getFace() == Right)
 			checkMovement(map, 1, 0);
-		else if (face == Left)  
+		else if (getFace() == Left)  
 			checkMovement(map, -1, 0);                      
-        else if (face == Down)
+        else if (getFace() == Down)
             checkMovement(map, 0, -1);
     }
 	if(getMoving()) act -> animateActor(*this, true);
 }
 
 bool actor::getIsHittingWall(void) {return isHittingWall;}
-void actor::setIsHittingWall(bool hitWall){this->isHittingWall = hitWall;}
-void actor::moveToPlayer()
-{
-        
-}
+void actor::setIsHittingWall(bool hitWall){isHittingWall = hitWall;}
 
 /*
 isFacingPlayer checks if the actor is able to see the player by
@@ -320,13 +272,13 @@ actor, if there is an object in the way the actor should not be triggered
 bool actor::isFacingPlayer(player* currentPlayer)
 {
 	//This statement will be simplified the check does more than it should be doing
-	if( (abs( (double) vPosition.x - currentPlayer -> getPositionX() ) < visionRange) 
-		&& (abs((double) vPosition.y - currentPlayer -> getPositionY()) < visionRange))
+	if( (abs( (double) position[0] - currentPlayer -> getPosition()[0] ) < visionRange) 
+		&& (abs((double) position[1] - currentPlayer -> getPosition()[1]) < visionRange))
 	{
-		if(face == Up && currentPlayer -> getPositionY() > vPosition.y
-			|| face == Right && currentPlayer -> getPositionX() > vPosition.x
-			|| face == Down && currentPlayer -> getPositionY() <  vPosition.y
-			|| face == Left && currentPlayer -> getPositionX() < vPosition.x)
+		if(getFace() == Up && currentPlayer -> getPosition()[1] > position[1]
+			|| getFace() == Right && currentPlayer -> getPosition()[0] > position[0]
+			|| getFace() == Down && currentPlayer -> getPosition()[1] <  position[1]
+			|| getFace() == Left && currentPlayer -> getPosition()[0] < position[0])
 			return true;
     } 
 	return false;
@@ -373,22 +325,16 @@ void actor::changeDirection(double probabilities[4])
 			}
 		}
 	}
-	if(randomNum < probabilities[0]*100)  face = directions[0];
+	if(randomNum < probabilities[0]*100) setDirection(directions[0]);
 	else if(randomNum >= probabilities[0]*100 
 		&& randomNum < (probabilities[1] + probabilities[0])*100) 
-		face = directions[1];
+		setDirection(directions[1]);
 	else if(randomNum >= (probabilities[1] + probabilities[0])*100 
 		&& randomNum < (probabilities[0] + probabilities[1] + probabilities[2])*100)
-		face = directions[2];
-	else  face = directions[3];
+		setDirection(directions[2]);
+	else  setDirection(directions[3]);
 }
-
-void actor::incrementDirection(void) {face++;}
-
-void actor::incrementFrameCounter(int frameStop) 
-{
-}
-
-int actor::getFrameCounter(void) {return frameCounter;}
+void actor::setMoving(bool moving) {isMoving = moving;}
+bool actor::getMoving(void) {return isMoving;}
 ////////////end of new ryan
 #endif

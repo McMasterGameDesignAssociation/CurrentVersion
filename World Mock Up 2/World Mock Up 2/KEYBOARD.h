@@ -122,6 +122,7 @@ namespace kyb
 			{
 				character.checkMovement(map, 0, 1);
 				character.checkMovement(map, -1, 0);
+				character.setDirection(Left);
 				currentScene -> animatePlayer(character, true);
 			}
 		}
@@ -133,6 +134,7 @@ namespace kyb
 			{
 				character.checkMovement(map, 0, 1);
 				character.checkMovement(map, 1, 0);
+				character.setDirection(Right);
 				currentScene -> animatePlayer(character, true);
 			}
 		}
@@ -144,6 +146,7 @@ namespace kyb
 			{
 				character.checkMovement(map, -1, 0);
 				character.checkMovement(map, 0, -1);
+				character.setDirection(Left);
 				currentScene -> animatePlayer(character, true);
 			}
 
@@ -156,6 +159,7 @@ namespace kyb
 			{
 				character.checkMovement(map, 1, 0);
 				character.checkMovement(map, 0, -1);
+				character.setDirection(Right);
 				currentScene -> animatePlayer(character, true);
 			}
 
@@ -167,6 +171,7 @@ namespace kyb
 			else 
 			{
 				character.checkMovement(map, 0, 1);
+				character.setDirection(Up);
 				currentScene -> animatePlayer(character, true);
 			}
 		}
@@ -177,6 +182,7 @@ namespace kyb
 			else 
 			{ 
 				character.checkMovement(map, 0, -1);
+				character.setDirection(Down);
 				currentScene -> animatePlayer(character, true);
 			}
 		}
@@ -187,6 +193,7 @@ namespace kyb
 			else 
 			{
 				character.checkMovement(map, -1, 0);
+				character.setDirection(Left);
 				currentScene -> animatePlayer(character, true);
 			}
 		}
@@ -197,6 +204,7 @@ namespace kyb
 			else 
 			{
 				character.checkMovement(map, 1, 0);
+				character.setDirection(Right);
 				currentScene -> animatePlayer(character, true);
 			}
 		}

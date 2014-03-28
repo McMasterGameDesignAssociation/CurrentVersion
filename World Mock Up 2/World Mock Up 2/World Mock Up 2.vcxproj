@@ -26,7 +26,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -130,6 +130,7 @@
     <ClCompile Include="ITEM.cpp" />
     <ClCompile Include="NPCHandler.cpp" />
     <ClCompile Include="OBJECT.cpp" />
+    <ClCompile Include="PathFinding.cpp" />
     <ClCompile Include="PLAYER.cpp" />
     <ClCompile Include="RENDERER.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="COLLECTIONS.h" />
     <ClInclude Include="NPCHandler.h" />
     <ClInclude Include="OBJECT.h" />
+    <ClInclude Include="PathFinding.h" />
     <ClInclude Include="PLAYER.h" />
     <ClInclude Include="RENDERER.h" />
     <ClInclude Include="SPRITE.h" />

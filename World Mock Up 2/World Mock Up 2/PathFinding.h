@@ -79,15 +79,15 @@ template<
 class node
 {
 public:
-	int tileID = 9999;
+	int tileID;
 	int location[2];
-	int h = 9999; // heuristic / estimated movement cost
-	int g = 9999; // movement cost / actual distance cost
-	int f = 9999; // f = g + h score
+	int h; // heuristic / estimated movement cost
+	int g; // movement cost / actual distance cost
+	int f; // f = g + h score
 	node* parent[1];
 	vector<node*> adjacent;
-	bool visited = false;
-	bool closed = false;
+	bool visited;
+	bool closed;
 
 public:
 	node(int id, int locations[2]) // constructor
@@ -95,6 +95,11 @@ public:
 		tileID = id;
 		location[0] = locations[0];
 		location[1] = locations[1];
+		h = 9999;
+		g = 9999;
+		f = 9999;
+		visited = false;
+		closed = false;
 	}
 
 	friend bool operator<(node &a, node &b) { return a.f < b.f ? true : false; }

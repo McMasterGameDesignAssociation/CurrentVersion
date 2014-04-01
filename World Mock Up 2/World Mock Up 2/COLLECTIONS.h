@@ -61,5 +61,6 @@ using namespace utilities;
 #include "ITEM.h"
 #include "INVENTORY.h"
 #include "RENDERER.h"
+#include "PathFinding.h"
 
 #endif

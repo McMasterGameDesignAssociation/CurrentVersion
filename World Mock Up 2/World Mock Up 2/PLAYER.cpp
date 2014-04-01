@@ -78,22 +78,24 @@ void player::checkMovement(world *map, int x, int y)
 	speed = map -> getResolution() - speed;
 
 	//This is a check of the lower bound of movement
-	posOne[0] = (x + position[0])/map -> getResolution(), posOne[1] = (y + position[1])/map -> getResolution();
+	posOne[0] = (x + position[0] + 16)/map -> getResolution(), posOne[1] = (y + position[1] + 14)/map -> getResolution();
 	//This is a check of the upper bound of movement
-	posTwo[0] = (x + speed + position[0])/map -> getResolution(), posTwo[1] = (y + speed + position[1])/map -> getResolution();
+	posTwo[0] = (x + speed + position[0] - 16)/map -> getResolution(), posTwo[1] = (y + speed + position[1] - 32)/map -> getResolution();
 	//This is a check of the lower bound of movement
-	posThree[0] = (x + position[0])/map -> getResolution(), posThree[1] = (y + speed + position[1])/map -> getResolution();
+	posThree[0] = (x + position[0] + 16)/map -> getResolution(), posThree[1] = (y + speed + position[1] - 32)/map -> getResolution();
 	//This is a check of the upper bound of movement
-	posFour[0] = (x + speed + position[0])/map -> getResolution(), posFour[1] = (y + position[1])/map -> getResolution();
+	posFour[0] = (x + speed + position[0] - 16)/map -> getResolution(), posFour[1] = (y + position[1] + 14)/map -> getResolution();
 
 	if(map -> getTileCollision(map -> checkTileMap(posOne)) 
 		&& map -> getTileCollision(map -> checkTileMap(posTwo))
 		&& map -> getTileCollision(map -> checkTileMap(posThree)) 
 		&& map -> getTileCollision(map -> checkTileMap(posFour))) 
 	{
-		position[0] = x + position[0], position[1] = y + position[1];
-		updatePosition();
+		//position[0] = x + position[0], position[1] = y + position[1];
+		 posOne[0] = x + getPosition()[0], posOne[1] = y + getPosition()[1];
+		changePosition(posOne);
 	}
+	updatePosition();
 }
 
 //void player::followMouse(int pos[2], int screenDim[2])

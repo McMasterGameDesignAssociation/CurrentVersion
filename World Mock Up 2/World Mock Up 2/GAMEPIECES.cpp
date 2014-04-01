@@ -24,18 +24,16 @@ const char* gamepiece::getBitMapName(void) const{return bitMapName;}
 void gamepiece::changePosition(unsigned int pos[2]) {position[0] = pos[0], position[1] = pos[1];}
 void gamepiece::changeBitMap(const char* newBitMap) {bitMapName = newBitMap;}
 void gamepiece::setDirection(direction newFace) {face = newFace;}
-void gamepiece::incrementDirection(void) {face++;}
-void gamepiece::decrementDirection(void) {face--;}
+void gamepiece::incrementDirection(void) {++face;}
+void gamepiece::decrementDirection(void) {--face;}
 void gamepiece::updatePosition(void) 
 {
-	vertices[0]  = position[0] - (size/2), vertices[1]  = position[1] - (size/2),
-	vertices[2]  = position[0] + (size/2), vertices[3]  = position[1] - (size/2),
-	vertices[4]  = position[0] - (size/2), vertices[5]  = position[1] + (size/2),
-	vertices[6]  = position[0] - (size/2), vertices[7]  = position[1] + (size/2),
-	vertices[8]  = position[0] + (size/2), vertices[9]  = position[1] + (size/2),
-	vertices[10] = position[0] + (size/2), vertices[11] = position[1] - (size/2);
-
-	for(int i = 0; i < 18; i++) shadeVertices[i] = 1;
+	vertices[0]  = position[0] - (size*0.5), vertices[1]  = position[1] - (size*0.5),
+	vertices[2]  = position[0] + (size*0.5), vertices[3]  = position[1] - (size*0.5),
+	vertices[4]  = position[0] - (size*0.5), vertices[5]  = position[1] + (size*0.5),
+	vertices[6]  = position[0] - (size*0.5), vertices[7]  = position[1] + (size*0.5),
+	vertices[8]  = position[0] + (size*0.5), vertices[9]  = position[1] + (size*0.5),
+	vertices[10] = position[0] + (size*0.5), vertices[11] = position[1] - (size*0.5);
 }
 
 #endif

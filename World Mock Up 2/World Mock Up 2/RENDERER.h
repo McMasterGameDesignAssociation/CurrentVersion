@@ -34,17 +34,18 @@ class renderer
 public:
 	renderer(void);
 	void addTile(int center[2], double color[3], int size);
-	void render(void);
+	void render(int windowWidth, int windowHeight, int* viewPortPosition);
 	void worldToArray(world* gameSpace);
 	void testRender(void);
-	image getTileData(void);
+	image getTileData(void) const;
 	void changeTextureInfo(image newTextureData);
 	void animateActor(actor &character, bool isMoving);
 	void animatePlayer(player &character, bool isMoving);
 
 	void setUpActor(const char* startImage, actor* character);
-	void setUpPlayer(const char* startImage, player &character, world* map);
+	void setUpPlayer(const char* startImage, player &character);
 
+	void setUpGUI(gui* GUI);
 	void setupActorArrays(world* map);
 	
 	~renderer(void);
@@ -63,6 +64,7 @@ private:
 	image *tileData;
 	image *objectData;
 	image *playerData;
+	image *GUIData;
 
 	vector<int*> tempVertices;
 	vector<double*> tempColors;
@@ -81,7 +83,6 @@ private:
 	void buildArrays();
 	void addPoint(int point[2]);
 	void addColor(double color[3]);
-
 };
 
 #endif

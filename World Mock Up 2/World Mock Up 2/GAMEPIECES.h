@@ -21,6 +21,7 @@ gamepiece is a class that is used for all of the bits needed for
 game pieces, i.e. everything that the player can interact with
 this applies to the actors, player, and objects
 */
+class inventory;
 class gamepiece
 {
 private:
@@ -33,6 +34,7 @@ protected:
 	const char* bitMapName;
 	void updatePosition(void);
 	unsigned int size;
+	inventory* currentInventory;
 
 public:
 	direction getFace(void) const;

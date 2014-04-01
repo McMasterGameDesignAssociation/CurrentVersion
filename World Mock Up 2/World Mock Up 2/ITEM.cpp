@@ -11,12 +11,18 @@ item::item(void)
 	itemClass = food;
 }
 
-item::item(unsigned int initValue, unsigned int initCost, itemType newType)
+item::item(unsigned int newID, unsigned int initValue, unsigned int initCost, itemType newType)
 {
-	 ID = 0;
+	 ID = newID;
 	 value = initValue;
 	 whieght  = initCost;
 	 itemClass = newType;
 }
+
+unsigned int item::getID(void) const{return ID;}
+unsigned int item::getValue(void) const{return value;}
+unsigned int item::getWhieght(void) const{return whieght;}
+int item::decreaseQuantity(void) {return quantity--;}
+void item::increaseQuantity(void) {quantity++;}
 
 #endif

@@ -21,9 +21,9 @@ class FileReader
 {
 public:
 	FileReader(string fileName);
-	vector<vector<int>> getMap(void);
-	int getX(void);
-	int getY(void);
+	vector<vector<int>> getMap(void) const;
+	int getX(void) const;
+	int getY(void) const;
 	void print2dIntVector(vector<vector<int>> vec2d);
 
 private:

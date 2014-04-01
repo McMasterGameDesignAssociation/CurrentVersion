@@ -71,6 +71,8 @@ renderer::renderer(void)
 	
 	playerData = new image[1];
 	playerData -> addCharacter();
+
+	GUIData = new image[1];
 	//playerData.setupTexture();
 	//Initialize the image binary to a 0
 	//dimensional array to avoid memory issues
@@ -112,8 +114,10 @@ void renderer::buildArrays(void)
 		tileColors = new double[tempColors.size()*3];
 		for(unsigned int i = 0; i < tempVertices.size(); i++)
 		{
+			#pragma warning(suppress: 6386)
 			tileArray[i*2] = tempVertices.at(i)[0];
 			tileArray[i*2 + 1] = tempVertices.at(i)[1];
+			#pragma warning(suppress: 6386)
 			tileColors[i*3] = tempColors.at(i)[0];
 			tileColors[i*3 + 1] = tempColors.at(i)[1];
 			tileColors[i*3 + 2] = tempColors.at(i)[2];
@@ -172,17 +176,17 @@ void renderer::addTile(int center[2], double color[3], int size)
 {
 	for(int i = 0; i < 6; i++) addColor(color);
 	int point[2];
-	point[0] = center[0] - size/2, point[1] = center[1] - size/2;
+	point[0] = center[0] - int(size*0.5), point[1] = center[1] - int(size*0.5);
 	addPoint(point);
-	point[0] = center[0] + size/2, point[1] = center[1] - size/2;
+	point[0] = center[0] + int(size*0.5), point[1] = center[1] - int(size*0.5);
 	addPoint(point);
-	point[0] = center[0] - size/2, point[1] = center[1] + size/2;
+	point[0] = center[0] - int(size*0.5), point[1] = center[1] + int(size*0.5);
 	addPoint(point);
-	point[0] = center[0] - size/2, point[1] = center[1] + size/2;
+	point[0] = center[0] - int(size*0.5), point[1] = center[1] + int(size*0.5);
 	addPoint(point);
-	point[0] = center[0] + size/2, point[1] = center[1] + size/2;
+	point[0] = center[0] + int(size*0.5), point[1] = center[1] + int(size*0.5);
 	addPoint(point);
-	point[0] = center[0] + size/2, point[1] = center[1] - size/2;
+	point[0] = center[0] + int(size*0.5), point[1] = center[1] - int(size*0.5);
 	addPoint(point);
 }
 
@@ -191,7 +195,7 @@ void renderer::addTile(int center[2], double color[3], int size)
 	and builds the draw arrays that will be used to manage all of the
 	graphics on the screen
 */
-void renderer::render(void)
+void renderer::render(int windowWidth, int windowHeight, int* viewPortPosition)
 {
 	bool check = false;
 	if(buildOk) buildArrays();
@@ -252,13 +256,21 @@ void renderer::render(void)
 	}
 
 	glDisable(GL_TEXTURE_2D);
+	int testPoints[] = {viewPortPosition[0] + windowWidth - 425, viewPortPosition[1], 
+						viewPortPosition[0] + windowWidth - 425,viewPortPosition[1] + 108, 
+						viewPortPosition[0] + windowWidth,viewPortPosition[1], 
+						viewPortPosition[0] + windowWidth,viewPortPosition[1] + 108};
+	double testColor[] = {1,1,1, 1,1,1, 1,1,1, 1,1,1};
+	glColorPointer(3, GL_DOUBLE, 0, testColor);
+	glVertexPointer(2, GL_INT, 0, testPoints);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-image renderer::getTileData(void) {return *tileData;}
+image renderer::getTileData(void) const {return *tileData;}
 void renderer::changeTextureInfo(image newTextureData) {tileData = &newTextureData;}
 
 void renderer::printPoint(unsigned int pos)
@@ -278,6 +290,7 @@ void renderer::setupActorArrays(world* map)
 		setUpActor(map -> actorSet.at(i).getBitMapName(), &(map -> actorSet.at(i)));
 	}
 }
+
 
 void renderer::worldToArray(world* gameSpace)
 {
@@ -308,7 +321,7 @@ void renderer::setUpActor(const char* startImage, actor* character)
 	for(int i = 0; i < 18; i++)  actorColors.at(character -> getID())[i] = &character -> shadeVertices[i];
 }
 
-void renderer::setUpPlayer(const char* startImage, player &character, world* map)
+void renderer::setUpPlayer(const char* startImage, player &character)
 {
 	playerData -> changeName(startImage);
 	playerData -> addCharacter();

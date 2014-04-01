@@ -15,27 +15,30 @@ OTHER DEALINGS IN THE SOFTWARE.
 #ifndef _ITEMS
 #define _ITEMS
 
-#include "COLLECTIONS.h"
+#include "SYSTEMCOLLECTIONS.h"
 
 class item
 {
-
 private:
 	unsigned int ID;
 	unsigned int value;
 	unsigned int whieght;
+	unsigned int quantity;
 	string bitMapName;
 	itemType itemClass;
 
 public:
 	item(void);
-	item(unsigned int initValue, unsigned int initCost, itemType newType);
+	item(unsigned int newID, unsigned int initValue, unsigned int initCost, itemType newType);
 
-	unsigned int getValue(void);
-	unsigned int getWhieght(void);
-	unsigned int getID(void);
+	unsigned int getValue(void) const;
+	unsigned int getWhieght(void) const;
+	unsigned int getID(void) const;
+	int decreaseQuantity(void);
 	itemType getClass(void);
 	string getBitmapName(void);
+
+	void increaseQuantity(void);
 };
 
 #endif

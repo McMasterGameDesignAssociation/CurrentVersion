@@ -16,11 +16,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 #define SPRITE_CLASS
 
 #include "SYSTEMCOLLECTIONS.h"
-class world;
+
 class sprite{
 protected:
 	unsigned int speed;
 	unsigned int animationStep;
+	inventory characterInventory;
 
 public:
 	unsigned int getSpeed(void) const;
@@ -29,7 +30,6 @@ public:
 	void incAnimationStep(void);
 	void setSpeed(unsigned int newSpeed);
 	void setAnimationStep(unsigned int frame);
-
 };
 
 #endif

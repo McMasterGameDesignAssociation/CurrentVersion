@@ -26,7 +26,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -117,20 +117,32 @@
   <ItemGroup>
     <ClInclude Include="ENTITIES.h" />
     <ClInclude Include="FILEREADER.h" />
+    <ClInclude Include="FLOATING_POINT_INDICATOR.h" />
     <ClInclude Include="GAMEPIECES.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="IMAGE.h" />
+    <ClInclude Include="INDICATOR.h" />
+    <ClInclude Include="LONG_INDICATOR.h" />
+    <ClInclude Include="PathFinding.h" />
+    <ClInclude Include="STRING_INDICATOR.h" />
     <ClInclude Include="INVENTORY.h" />
     <ClInclude Include="ITEM.h" />
     <ClInclude Include="KEYBOARD.h" />
     <ClCompile Include="DTDMacros.cpp" />
     <ClCompile Include="ENTITIES.cpp" />
     <ClCompile Include="FILEREADER.cpp" />
+    <ClCompile Include="FLOATING_POINT_INDICATOR.cpp" />
     <ClCompile Include="GAMEPIECES.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="IMAGE.cpp" />
+    <ClCompile Include="INDICATOR.cpp" />
+    <ClCompile Include="LONG_INDICATOR.cpp" />
+    <ClCompile Include="PathFinding.cpp" />
+    <ClCompile Include="STRING_INDICATOR.cpp" />
+    <ClCompile Include="INVENTORY.cpp" />
     <ClCompile Include="ITEM.cpp" />
     <ClCompile Include="NPCHandler.cpp" />
     <ClCompile Include="OBJECT.cpp" />
-    <ClCompile Include="PathFinding.cpp" />
     <ClCompile Include="PLAYER.cpp" />
     <ClCompile Include="RENDERER.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -143,7 +155,6 @@
     <ClInclude Include="COLLECTIONS.h" />
     <ClInclude Include="NPCHandler.h" />
     <ClInclude Include="OBJECT.h" />
-    <ClInclude Include="PathFinding.h" />
     <ClInclude Include="PLAYER.h" />
     <ClInclude Include="RENDERER.h" />
     <ClInclude Include="SPRITE.h" />

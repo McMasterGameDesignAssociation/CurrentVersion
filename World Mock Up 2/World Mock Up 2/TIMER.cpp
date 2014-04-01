@@ -15,7 +15,7 @@ void counter::updateCount(countChoice update) {update == inc ? count++ : count =
 bool counter::checkTiming(void) {return (timing != time(0)) ? true : false;}
 void counter::updateInc(int newInc) {increment = newInc;}
 void counter::updateSystem(void) {checkTiming() ? (updateTiming(), updateInc(count), updateCount(reset)) : updateCount(inc);}
-int counter::getInc(void) {return increment;}
-int counter::getTiming(void) {return timing;}
+int counter::getInc(void) const {return increment;}
+int counter::getTiming(void) const {return timing;}
 
 #endif

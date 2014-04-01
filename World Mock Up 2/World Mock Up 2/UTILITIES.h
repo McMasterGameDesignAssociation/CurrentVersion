@@ -24,6 +24,7 @@ namespace utilities
 	{
 		int temp;
 		#if (defined(_WIN32) || defined(_WIN64))
+#pragma warning(suppress: 28159)
 			temp = GetTickCount();
 			if(numberSeries.size() > 0) newSeed += (int)&numberSeries.back();
 			temp += (int)((int)time(NULL) - (int)&newSeed*cos((double)newSeed/((2*PI)*sin(temp)+1)));

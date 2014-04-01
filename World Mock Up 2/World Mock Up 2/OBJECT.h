@@ -48,8 +48,6 @@ class object : public entity, public gamepiece
 	public:
 		object(void);
 		void setObject(direction newFace, bool passable, string newBitMapName, string newDescription);
-		//Logging function
 		void printLog(void);
-
 };
 #endif

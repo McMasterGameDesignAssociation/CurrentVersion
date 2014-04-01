@@ -45,7 +45,6 @@ public:
 	void setTile(bool passable, string bitMap, string newDescription);
 	//Logging functions
 	void printLog(void);
-
 };
 
 #endif

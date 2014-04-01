@@ -26,7 +26,15 @@ class FileReader;
 class counter;
 class item;
 class inventory;
+class indicator;
+class gui;
+class longIndicator;
+class stringIndicator;
+class doubleIndicator;
+class node;
+class pathfinding;
 
+#define QUIT_BUTTON		0x80000000
 #ifndef _COLLECTIONS
 #define _COLLECTIONS
 
@@ -46,7 +54,11 @@ typedef void(*actorCallback)(actor &aCharacter, world *map, player *pCharacter);
 #include "SYSTEMCOLLECTIONS.h"
 #include "UTILITIES.h"
 using namespace utilities;
-
+#include "PathFinding.h"
+#include "INDICATOR.h"
+#include "FLOATING_POINT_INDICATOR.h"
+#include "LONG_INDICATOR.h"
+#include "STRING_INDICATOR.h"
 #include "SPRITE.h"
 #include "ENTITIES.h"
 #include "GAMEPIECES.h"
@@ -58,9 +70,10 @@ using namespace utilities;
 #include "FILEREADER.h"
 #include "TIMER.h"
 #include "WORLD.h"
-#include "ITEM.h"
-#include "INVENTORY.h"
 #include "RENDERER.h"
-#include "PathFinding.h"
+#include "GUI.h"
+#include "FLOATING_POINT_INDICATOR.h"
+#include "LONG_INDICATOR.h"
+#include "STRING_INDICATOR.h"
 
 #endif

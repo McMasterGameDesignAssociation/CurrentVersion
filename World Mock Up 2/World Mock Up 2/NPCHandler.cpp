@@ -99,6 +99,7 @@ void goToPlayerAI(actor &aCharacter, world *map, player *pCharacter)
 		}
 	}
 }
+
 void turnAI(actor &aCharacter, world *map, player *pCharacter){
 	int * seedy;
 	seedy = new int[0];
@@ -113,7 +114,8 @@ void turnAI(actor &aCharacter, world *map, player *pCharacter){
 	else if(randomNumNPC < 2) aCharacter.AI = randomMovement;
 	else aCharacter.setMoving(false);
 }
-void stopAI(actor &aCharacter, world *map, player *pCharacter){aCharacter.setMoving(false);}
+void stopAI(actor &aCharacter, world *map, player *pCharacter)
+{aCharacter.setMoving(false);}
 void randomMovement(actor &aCharacter, world *map, player *pCharacter)
 {
 	// Logic
@@ -262,6 +264,7 @@ actor::actor(unsigned int posX, unsigned int posY, int newSpeed, const char* new
     visionRange = 5*64;
     alert = 0;
     maxVision = visionRange + 4*64;
+	for(int i = 0; i < 18; i++) shadeVertices[i] = 1;
 	animationStep = 0;
 	updatePosition();
 	AI = newAI;
@@ -306,14 +309,14 @@ void actor::checkMovement(world *map, int x, int y)
         speed = 64 - speed;
 
         //This is a check of the lower bound of movement
-        posOne[0] = (x + getPosition()[0])/64, posOne[1] = (y + getPosition()[1])/64;
+		posOne[0] = (x + getPosition()[0] + 16)/map->getResolution(), posOne[1] = (y + getPosition()[1] + 14)/map->getResolution();
         //This is a check of the upper bound of movement
-        posTwo[0] = (x + speed + getPosition()[0])/64, posTwo[1] = (y + speed + getPosition()[1])/64;
+        posTwo[0] = (x + speed + getPosition()[0] - 16)/map->getResolution(), posTwo[1] = (y + speed + getPosition()[1] - 32)/map->getResolution();
 
         //This is a check of the lower bound of movement
-        posThree[0] = (x + getPosition()[0])/64, posThree[1] = (y + speed + getPosition()[1])/64;
+        posThree[0] = (x + getPosition()[0] + 16)/map->getResolution(), posThree[1] = (y + speed + getPosition()[1] - 32)/map->getResolution();
         //This is a check of the upper bound of movement
-        posFour[0] = (x + speed + getPosition()[0])/64, posFour[1] = (y + getPosition()[1])/64;
+        posFour[0] = (x + speed + getPosition()[0] - 16)/map->getResolution(), posFour[1] = (y + getPosition()[1] + 14)/map->getResolution();
 
 	    if(map -> getTileCollision(map ->checkTileMap(posOne)) 
 		&& map -> getTileCollision(map -> checkTileMap(posTwo))
@@ -321,9 +324,9 @@ void actor::checkMovement(world *map, int x, int y)
 		&& map -> getTileCollision(map -> checkTileMap(posFour)))        
 		{
 			//position[0] = x + position[0], position[1] = y + position[1];
-                posOne[0] = x + getPosition()[0], posOne[1] = y + getPosition()[1];
-                changePosition(posOne);
-				isHittingWall = false;
+            posOne[0] = x + getPosition()[0], posOne[1] = y + getPosition()[1];
+            changePosition(posOne);
+			isHittingWall = false;
         }
 		else isHittingWall = true;
 		updatePosition();
@@ -404,9 +407,9 @@ void actor::changeDirection(double probabilities[4])
 	probabilities[2] = probabilities[2]/total;
 	probabilities[3] = probabilities[3]/total;
 
-	for(int i = 0; i < 4; i++)
+	for(int i = 4; i--;)
 	{
-		for(int j = 0; j < 4; j++)
+		for(int j = 4; j--;)
 		{
 			if(probabilities[i] <= probabilities[j]) 
 			{

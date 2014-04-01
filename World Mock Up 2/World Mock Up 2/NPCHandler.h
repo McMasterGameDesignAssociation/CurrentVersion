@@ -23,10 +23,11 @@ AI callback structure developed by Benjamin Isherwood
 */
 #ifndef AI_PROTO_TYPES
 #define AI_PROTO_TYPES
-void goToPlayerAI(actor &aCharacter, world *map, player *pCharacter);
 void turnAI(actor &aCharacter, world *map, player *pCharacter);
 void stopAI(actor &aCharacter, world *map, player *pCharacter);
 void randomMovement(actor &aCharacter, world *map, player *pCharacter);
+void goToPlayerAI(actor &aCharacter, world *map, player *pCharacter);
+
 #endif
 /*
 The actor class is used to make instances of NPCs to be used in the world
@@ -40,6 +41,7 @@ class actor : public entity, public gamepiece, public sprite
 		bool playerWithinRange;
 		bool isHittingWall;
 		bool isMoving;
+		unsigned int detectionRange;
 	public:
 
 				actorCallback AI;

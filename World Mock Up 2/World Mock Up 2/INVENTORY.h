@@ -14,20 +14,33 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 #ifndef INVENTORY_H
 #define INVENTORY_H
-#include "COLLECTIONS.h"
+class item;
 
+#include "SYSTEMCOLLECTIONS.h"
+
+/*
+The inventory class is used to store vectors of items so that the
+player maybe able to carry items and NPCs and objects can aswell
+inventories will be used to define the win condition
+*/
 class inventory
 {
 private:
-	vector<item> currentInventory;
-	int totalValue;
+	vector<item*> currentInventory;
+	unsigned int totalValue;
+	unsigned int totalWhieght;
 
 public:
 	inventory(void);
-	item checkItem(int ID);
-	item removeItem(int ID);
-	int getTotalSize(void);
-	int getTotalValue(void);
+	~inventory(void);
+	//Check if the item is in the inventory
+	bool checkItem(unsigned int ID);
+	item removeItem(unsigned int ID);
+	
+	unsigned int getTotalWhieght(void) const;
+	unsigned int getTotalValue(void) const;
+
+	void addItem(item *newItem);
 };
 
 #endif

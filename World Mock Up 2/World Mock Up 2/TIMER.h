@@ -35,8 +35,8 @@ public:
 	counter(void);
 	/*This will check the timing value*/
 	void updateSystem(void);
-	int getInc(void);
-	int getTiming(void);
+	int getInc(void) const;
+	int getTiming(void) const;
 
 };
 

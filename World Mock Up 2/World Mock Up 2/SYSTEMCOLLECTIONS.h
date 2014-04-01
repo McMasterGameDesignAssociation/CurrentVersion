@@ -88,4 +88,8 @@ inline direction operator--(direction &rhs)
 	#inlcude <unistd.h>
 #endif
 
+#include "ITEM.h"
+#include "INVENTORY.h"
+#include "INDICATOR.h"
+
 #endif

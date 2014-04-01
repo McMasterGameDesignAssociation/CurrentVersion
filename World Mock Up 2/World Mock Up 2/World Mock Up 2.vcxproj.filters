@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Indicators">
+      <UniqueIdentifier>{f50b6431-9445-4d12-9b6b-5049c12d0f44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities">
+      <UniqueIdentifier>{0251decf-1977-47de-b562-6c173365165f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Namespaces">
+      <UniqueIdentifier>{74819370-c359-4e93-8a96-d3defcdee535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Collections">
+      <UniqueIdentifier>{df8aabe5-7bf1-48c5-b18d-b8478d9eabde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Indicators">
+      <UniqueIdentifier>{6c22e450-c863-415f-a4a7-9c5bdc233567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Entities">
+      <UniqueIdentifier>{f047af4d-dad8-4837-8869-fe756e750e8e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="WORLD.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RENDERER.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TIMER.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IMAGE.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ITEM.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FILEREADER.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DTDMacros.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="INVENTORY.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FLOATING_POINT_INDICATOR.cpp">
+      <Filter>Resource Files\Indicators</Filter>
+    </ClCompile>
+    <ClCompile Include="LONG_INDICATOR.cpp">
+      <Filter>Resource Files\Indicators</Filter>
+    </ClCompile>
+    <ClCompile Include="STRING_INDICATOR.cpp">
+      <Filter>Resource Files\Indicators</Filter>
+    </ClCompile>
+    <ClCompile Include="INDICATOR.cpp">
+      <Filter>Resource Files\Indicators</Filter>
+    </ClCompile>
+    <ClCompile Include="GAMEPIECES.cpp">
+      <Filter>Resource Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCHandler.cpp">
+      <Filter>Resource Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="OBJECT.cpp">
+      <Filter>Resource Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="PLAYER.cpp">
+      <Filter>Resource Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="SPRITE.cpp">
+      <Filter>Resource Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="TILE.cpp">
+      <Filter>Resource Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ENTITIES.cpp">
+      <Filter>Resource Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding.cpp">
+      <Filter>Resource Files\Entities</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WORLD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TIMER.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RENDERER.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IMAGE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ITEM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FILEREADER.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INVENTORY.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FLOATING_POINT_INDICATOR.h">
+      <Filter>Header Files\Indicators</Filter>
+    </ClInclude>
+    <ClInclude Include="STRING_INDICATOR.h">
+      <Filter>Header Files\Indicators</Filter>
+    </ClInclude>
+    <ClInclude Include="LONG_INDICATOR.h">
+      <Filter>Header Files\Indicators</Filter>
+    </ClInclude>
+    <ClInclude Include="INDICATOR.h">
+      <Filter>Header Files\Indicators</Filter>
+    </ClInclude>
+    <ClInclude Include="ENTITIES.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="OBJECT.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="PLAYER.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="SPRITE.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="TILE.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCHandler.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="GAMEPIECES.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="UTILITIES.h">
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="KEYBOARD.h">
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="COLLECTIONS.h">
+      <Filter>Header Files\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEMCOLLECTIONS.h">
+      <Filter>Header Files\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

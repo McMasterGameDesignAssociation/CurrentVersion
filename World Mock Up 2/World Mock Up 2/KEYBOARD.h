@@ -212,10 +212,8 @@ namespace kyb
 		//else if(keys[4]) ;
 		//Menu or Q key
 		else if(keys[5]) 
-		{
-		_CrtDumpMemoryLeaks();
-		exit(0);
-		}
+			exit(QUIT_BUTTON);
+		else character.setAnimationStep(0);
 	}
 }
 #endif

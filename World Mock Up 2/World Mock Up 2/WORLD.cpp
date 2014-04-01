@@ -16,14 +16,14 @@ world::world(string worldFile)
 {
 	gameFile = new FileReader(worldFile);
 	timingFunction = new counter();
+	dimensions = new unsigned int[2];
+	playerStartLocation = new unsigned int[2];
 	dimensions[0] = gameFile -> getX();
 	dimensions[1] = gameFile -> getY();
-	//Added by Ryan Davis. 
 	//NPC variable initializations
-	detectionRange = resolution * 100;
 	frameCounter = 0;
 	frameStop = 0;
-
+	frameRate = (1.0f/20.0f);
 	tileSet.clear();
 	objectSet.clear();
 	actorSet.clear();
@@ -31,7 +31,6 @@ world::world(string worldFile)
 	
 	delete[] tileLocations;
 	delete[] objectLocations;
-	delete[] actorLocations;
 
 	tileLocations = new int[dimensions[0]*dimensions[1]];
 	objectLocations = new int[dimensions[0]*dimensions[1]];
@@ -44,9 +43,9 @@ world::world(string worldFile)
 
 	unsigned int temp[2];
 	
-	for(unsigned int i = 0; i < dimensions[0]; i++)
+	for(unsigned int i = dimensions[0]; i--;)
 	{
-		for(unsigned int j =0; j < dimensions[1]; j++) 
+		for(unsigned int j = dimensions[1]; j--;) 
 		{
 			temp[0] = i, temp[1] = j;
 			setTileLocation(temp, 0);
@@ -57,20 +56,19 @@ world::world(string worldFile)
 	playerStartLocation[1] = dimensions[1] - 1;
 }
 
-tile world::getTile(unsigned int ID) {return tileSet.at(ID);}
-object world::getObject(unsigned int ID) {return objectSet.at(ID);}
-actor world::getCharacter(unsigned int ID) {return actorSet.at(ID);}
-vector<tile> world::getTileSet(void) {return tileSet;}
-vector<object> world::getObjectSet(void) {return objectSet;}
-vector<actor> world::getActorSet(void) {return actorSet;}
-bool world::getTileCollision(unsigned int ID)
+tile world::getTile(unsigned int ID) const {return tileSet.at(ID);}
+object world::getObject(unsigned int ID) const {return objectSet.at(ID);}
+actor world::getCharacter(unsigned int ID) const {return actorSet.at(ID);}
+vector<tile> world::getTileSet(void) const {return tileSet;}
+vector<object> world::getObjectSet(void) const {return objectSet;}
+vector<actor> world::getActorSet(void) const {return actorSet;}
+bool world::getTileCollision(unsigned int ID) const
 {
-	if(ID < 0) return false;
-	else if(ID > tileSet.size()) return false;
+	if(ID < 0 || ID > tileSet.size()) return false;
 	else return tileSet.at(ID).getPassThrough();
 }
-bool world::getObjectCollision(unsigned int ID) {return objectSet.at(ID).getPassThrough();}
-int world::getResolution(void) {return resolution;}
+bool world::getObjectCollision(unsigned int ID) const {return objectSet.at(ID).getPassThrough();}
+int world::getResolution(void) const {return resolution;}
 
 void world::changeResolution(int newResolution) {resolution = newResolution;}
 /*
@@ -89,19 +87,17 @@ void world::changeDimension(unsigned int size[2])
 
 	delete[] tileLocations;
 	delete[] objectLocations;
-	delete[] actorLocations;
 
 	tileLocations = new int[size[0]*size[1]];
 	objectLocations = new int[size[0]*size[1]];
-	actorLocations = new int[size[0]*size[1]];
 	unsigned int temp[2];
 	/*
 	This will be updated later so that the existing 
 	map will be maintained in the new map
 	*/
-	for(unsigned int i = 0; i < dimensions[0]; i++)
+	for(unsigned int i = dimensions[0]; i--;)
 	{
-		for(unsigned int j = 0; j < dimensions[1]; j++) 
+		for(unsigned int j = dimensions[1]; j--;) 
 		{
 			temp[0] = i, temp[1] = j;
 			setTileLocation(temp, 0);
@@ -294,9 +290,9 @@ void world::setObjectLocation(unsigned int pos[2], unsigned int ID)
 }
 
 //getX returns the world's x dimension size
-int world::getX(void) {return dimensions[0];}
+int world::getX(void) const {return dimensions[0];}
 //getY returns the world's y dimension size
-int world::getY(void) {return dimensions[1];}
+int world::getY(void) const {return dimensions[1];}
 
 /*
 inputs
@@ -310,15 +306,15 @@ void world::printLog(void)
 {
 	cout << "Current world" << endl;
 	cout << "Sizes " << dimensions[0] << " " << dimensions[1] << endl << endl;
-	for(unsigned int i = 0; i < tileSet.size(); i++) tileSet.at(i).printLog();
-	for(unsigned int i = 0; i < objectSet.size(); i++) objectSet.at(i).printLog();
-	for(unsigned int i = 0; i < actorSet.size(); i++) actorSet.at(i).printLog();
+	for(unsigned int i = tileSet.size(); i--;) tileSet.at(i).printLog();
+	for(unsigned int i = objectSet.size(); i--;) objectSet.at(i).printLog();
+	for(unsigned int i = actorSet.size(); i--;) actorSet.at(i).printLog();
 }
 
-void world::changePlayerStart(unsigned int playerLocation[2]) {playerStartLocation[0] = playerLocation[0], playerStartLocation[1] = playerLocation[1];}
-unsigned int* world::getPlayerStart(void) {return playerStartLocation;}
-int world::getTileSetSize(void) {return tileSet.size();}
-int world::getObjectSetSize(void) {return objectSet.size();}
+void world::changePlayerStart(unsigned int playerLocation[2]) {playerStartLocation = playerLocation;}
+unsigned int* world::getPlayerStart(void) const {return playerStartLocation;}
+int world::getTileSetSize (void) const  {return tileSet.size();}
+int world::getObjectSetSize (void) const {return objectSet.size();}
 
 void world::populateWorld(void)
 {
@@ -329,17 +325,17 @@ void world::populateWorld(void)
 	//Quick modification this starts at 0, and the top runs down
 	//cause the reads in top to bottom and not bottom to top
 	//and the -1 is because the array goes from 0 to size -1
-	unsigned int mapLocation[2] = {0,currentMap.size()-1};
-	for(unsigned int i = 0; i < currentMap.size(); i++)
+	unsigned int mapLocation[2] = {currentMap.at(0).size() - 1, 0};
+	for(unsigned int i = currentMap.size(); i--;)
 	{
-		for(unsigned int j = 0; j < currentMap.at(0).size(); j++)
+		for(unsigned int j = currentMap.at(0).size(); j--;)
 		{	
 			setTileLocation(mapLocation, currentMap.at(i).at(j));
-			mapLocation[0]++;
+			mapLocation[0]--;
 		}
 		//The map reads in from the top to the bottom
-		mapLocation[1]--;
-		mapLocation[0] = 0;
+		mapLocation[1]++;
+		mapLocation[0] = currentMap.at(0).size() - 1;
 	}
 }
 
@@ -353,7 +349,7 @@ void world::populateWorld(void)
 //Added by ryan davis 
 void world::updateNPCSet(player* currentPlayer, renderer* act)
 {
-	for(unsigned int i = 0; i < actorSet.size(); i++)
+	for(unsigned int i = actorSet.size();  i--;)
 	{
 		actorSet.at(i).runAI(this, currentPlayer);
 		actorSet.at(i).updateMovement(this, act);
@@ -365,11 +361,11 @@ void world::updateWorldClock(void)
 	frameCounter++;
 	if(frameCounter > frameStop) frameCounter = 0;
 	if((time(0)) > timingFunction -> getTiming()) 
-		frameStop = (timingFunction -> getInc()/30) + 1;
+		frameStop = (timingFunction -> getInc()*frameRate) + 1;
 	timingFunction -> updateSystem();
 }
 
-int world::getFrameStop(void) {return frameStop;}
-int world::getFrameCounter(void) {return frameCounter;}
+int world::getFrameStop(void) const {return frameStop;}
+int world::getFrameCounter(void) const {return frameCounter;}
 
 #endif

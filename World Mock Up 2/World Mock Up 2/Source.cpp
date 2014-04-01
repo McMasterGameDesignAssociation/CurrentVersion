@@ -136,11 +136,8 @@ void display(void)
 	gluOrtho2D(viewPortCenter[0], WIDTH + viewPortCenter[0], viewPortCenter[1], HEIGHT + viewPortCenter[1]);
 	glViewport(0,0,WIDTH, HEIGHT);
 
-	//Update the view port to maintain the camera on the player
-	updateViewPort(&PLAYER_ONE);
-
 	//Never Forget the teture initialization
-	scene.render();
+	scene.render(WIDTH, HEIGHT, viewPortCenter);
 
 	glutPostRedisplay();
 	glutSwapBuffers();
@@ -157,7 +154,9 @@ void idle(void)
 {
 	if(!pause && (DAN.getFrameCounter() == DAN.getFrameStop()))
 	{
-		PLAYER_ONE.setSpeed(8);
+		PLAYER_ONE.setSpeed(16);
+		//Update the view port to maintain the camera on the player
+		updateViewPort(&PLAYER_ONE);
 		menuStates(PLAYER_ONE, &DAN, &scene);
 		//Added by Ryan
 		DAN.updateNPCSet(&PLAYER_ONE, &scene); // This is the NPC idler (it works :D)
@@ -166,11 +165,7 @@ void idle(void)
 	else for(int i = 0; i < getRandomNumber()%1000; i++) numberSeries.pop();
 	DAN.updateWorldClock();
 }
-
 /*
-Populate world reads in unformatted files and populates the current
-game world
-
 Required Updates:
 -The file reader should be able to handle structured
 file types, specifically in 
@@ -203,21 +198,23 @@ void main(int argc, char* argv[])
 		/*(+) NPC stuff 
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
-		for (int i = 0; i < 40; i++)
+		for (int i = 0; i < 0; i++)
 		{	
 			actor newActor(64*5,5*64, 8, "test_subject_2.png", randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 0; i++)
 		{	
 			actor newActor(7*64,13*64, 4, "Charactersforreal.png",  randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 0; i++)
 		{	
-			actor newActor(64*6,5*64, 8, "test_subject_3.png", goToPlayerAI, &DAN);
+			actor newActor(64*6,5*64, 8, "test_subject_3.png", randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
+		actor newActor(64*4,5*64, 2, "test_subject_3.png", goToPlayerAI, &DAN);
+		DAN.addActor(newActor);
 		//(-) NPC stuff //
 
         tile block;
@@ -299,18 +296,15 @@ void main(int argc, char* argv[])
 		DAN.addTile(block);
 		DAN.addTile(block);
 		DAN.addTile(block);
-        //DAN.printLog();
 
         DAN.populateWorld();
-		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE, &DAN);
+		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE);
 		scene.worldToArray(&DAN);	
 		scene.setupActorArrays(&DAN);
 
         glutInit(&argc, argv);
         glutInitWindowSize(600,600);
 		glutCreateWindow(_PURE_KLEPTOMANIA);
-		//Glew has to be initialized on a window for window basiss
-		//glewInit();
         
 		glutDisplayFunc(display);
         glutIdleFunc(idle);

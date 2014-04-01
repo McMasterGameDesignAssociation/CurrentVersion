@@ -52,16 +52,17 @@ class world //: actor, player, object, tile
 
 		vector<tile> tileSet;
 		vector<object> objectSet;
+		vector<item> itemSet;
 
 		int* tileLocations;
 		int* objectLocations;
-		int* actorLocations;
 		int resolution;
-		unsigned int dimensions[2];
-		unsigned int playerStartLocation[2];
+		unsigned int* dimensions;
+		unsigned int* playerStartLocation;
 		counter* timingFunction;
 		int frameCounter;
 		int frameStop; 
+		double frameRate;
 
 	public:
 
@@ -73,6 +74,7 @@ class world //: actor, player, object, tile
 		void setTiles(vector<tile> newTileSet);
 		void setObjects(vector<object> newObjectSet);
 		void setActor(vector<actor> newActorSet);
+
 		void changeDimension(unsigned int size[2]);
 		void addTile(tile block);
 		void addObject(object block);
@@ -83,7 +85,6 @@ class world //: actor, player, object, tile
 		void removeActor(unsigned int ID);
 		void setTileLocation(unsigned int pos[2], unsigned int ID);
 		void setObjectLocation(unsigned int pos[2], unsigned int ID);
-		//void setActorLocation(unsigned int pos[2], unsigned int ID);
 		void swapTile(tile newTile, unsigned int ID);
 		void swapObject(object newObject, unsigned int ID);
 		void swapActor(actor newCharacter, unsigned int ID);
@@ -93,16 +94,16 @@ class world //: actor, player, object, tile
 
 		void printLog(void);
 		
-		tile getTile(unsigned int ID);
-		object getObject(unsigned int ID);
-		actor getCharacter(unsigned int ID);
-		vector<tile> getTileSet(void);
-		vector<object> getObjectSet(void);
-		vector<actor> getActorSet(void);
+		tile getTile(unsigned int ID) const;
+		object getObject(unsigned int ID) const;
+		actor getCharacter(unsigned int ID) const;
+		vector<tile> getTileSet(void) const;
+		vector<object> getObjectSet(void) const;
+		vector<actor> getActorSet(void) const;
 
-		bool getTileCollision(unsigned int ID);
-		bool getObjectCollision(unsigned int ID);
-		unsigned int* getPlayerStart(void);
+		bool getTileCollision(unsigned int ID) const;
+		bool getObjectCollision(unsigned int ID) const;
+		unsigned int* getPlayerStart(void) const;
 
 		void changeTilePassthrough(unsigned int ID, bool passable);
 		void changeObjectPassthrough(unsigned int ID, bool passable);
@@ -111,20 +112,19 @@ class world //: actor, player, object, tile
 		int checkTileMap(unsigned int pos[2]);
 		int checkObjectMap(unsigned int pos[2]);
 		
-		int getX(void);
-		int getY(void);
-		int getResolution(void);
+		int getX(void) const;
+		int getY(void) const;
+		int getResolution(void) const;
 
-		int getTileSetSize(void);
-		int getObjectSetSize(void);
+		int getTileSetSize(void) const;
+		int getObjectSetSize(void) const;
 
 		//Created by Ryan for the NPC 
 		void updateNPCSet(player* currentPlayer, renderer* act);
 		//Added by ryan davis
 		//Temporary variables until timer is finished
-		int detectionRange;
-		int getFrameStop(void);
-		int getFrameCounter(void);
+		int getFrameStop(void) const;
+		int getFrameCounter(void) const;
 
 		void updateWorldClock(void);
 };

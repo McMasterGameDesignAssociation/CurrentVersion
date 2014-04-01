@@ -2,6 +2,7 @@
 #define _IMAGE_METHODS
 
 #include "IMAGE.h"
+
 image::image(void)
 {
 	imageAvailable = false;
@@ -79,8 +80,9 @@ void image::addTile(int ID)
 void image::buildTextureArray(void)
 {
 	textureArray = new double[textureVector.size()*2];
-	for(unsigned int i = 0; i < textureVector.size(); i++)
+	for(unsigned int i = textureVector.size(); i--;)
 	{
+		#pragma warning(suppress: 6386)
 		textureArray[i*2] = textureVector.at(i)[0];
 		textureArray[i*2 + 1] = textureVector.at(i)[1];
 	}
@@ -148,7 +150,7 @@ void image::checkIfAvailable(void)
  
 	png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
  
-	for(unsigned int i = 0; i < height; i++) 
+	for(unsigned int i = height; i--;) 
 	{
 		// note that png is ordered top to
 		// bottom, but OpenGL expect it bottom to top
@@ -206,11 +208,11 @@ void image::setupTexture(void)
 	if(buildOkay) buildTextureArray();
 }
 
-double* image::getTextureArray(void) {return textureArray;}
+double* image::getTextureArray(void) const {return textureArray;}
 
-GLuint image::getTexture(void) {return texture;}
-GLubyte* image::getTextureBinary(void) {return textureBinary;}
-char* image::getImageName(void) {return (char*)imageName;}
+GLuint image::getTexture(void) const {return texture;}
+GLubyte* image::getTextureBinary(void) const {return textureBinary;}
+char* image::getImageName(void) const {return (char*)imageName;}
 void image::writeReport(void)
 {
 	cout << "X size: " << imageSize[0] << " Y size: " << imageSize[1] << endl;

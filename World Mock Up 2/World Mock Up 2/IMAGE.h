@@ -45,18 +45,18 @@ class image
 		image(void);
 		image(const char* startImage);
 		~image(void);
-		double* getTextureArray(void);
+		double* getTextureArray(void) const;
 		void setupTexture(void);
 		void changeName(const char* name);
 		void addTile(int ID);
 		void writeReport(void);
-		GLubyte* getTextureBinary(void);
-		GLuint getTexture(void);
+		GLubyte* getTextureBinary(void) const;
+		GLuint getTexture(void) const;
 		double *textureArray;
 		void addCharacter(void);
 		void moveActorCoords(double pos[2]);
 		void enableSetUp(void);
 		void disableSetUp(void);
-		char* getImageName(void);
+		char* getImageName(void) const;
 };
 #endif

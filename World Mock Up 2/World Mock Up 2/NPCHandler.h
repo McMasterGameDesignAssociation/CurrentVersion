@@ -23,6 +23,7 @@ AI callback structure developed by Benjamin Isherwood
 */
 #ifndef AI_PROTO_TYPES
 #define AI_PROTO_TYPES
+void goToPlayerAI(actor &aCharacter, world *map, player *pCharacter);
 void turnAI(actor &aCharacter, world *map, player *pCharacter);
 void stopAI(actor &aCharacter, world *map, player *pCharacter);
 void randomMovement(actor &aCharacter, world *map, player *pCharacter);

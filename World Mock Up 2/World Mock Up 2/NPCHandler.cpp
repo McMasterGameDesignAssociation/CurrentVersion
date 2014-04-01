@@ -5,6 +5,100 @@
 
 #ifndef _NPC_AI
 #define _NPC_AI
+
+pathfinding theWholePathfindingClass = pathfinding();
+vector<node*> thePath;
+bool readyToPathfind = true;
+bool foundPlayer = false;
+bool absolutelyDoOnce = true; // create map for all npcs
+bool inMiddleOfPathfinding = false;
+int aCharacterPosition[2];
+int pCharacterPosition[2];
+
+vector<node*> findPlayer(actor &aCharacter, world *map, player *pCharacter)
+{
+
+	aCharacterPosition[0] = aCharacter.getPosition()[0];
+	aCharacterPosition[1] = aCharacter.getPosition()[1];
+
+	pCharacterPosition[0] = pCharacter->getPosition()[0];
+	pCharacterPosition[1] = pCharacter->getPosition()[1];
+
+	vector<node*> thePath = theWholePathfindingClass.findPath(aCharacterPosition, pCharacterPosition);
+	return thePath;
+}
+
+void goToPlayerAI(actor &aCharacter, world *map, player *pCharacter)
+{
+
+	if (absolutelyDoOnce)
+	{
+		theWholePathfindingClass.generateMap(map);
+		absolutelyDoOnce = false;
+	}
+
+	if (readyToPathfind) {
+		readyToPathfind = false;
+		thePath = findPlayer(aCharacter, map, pCharacter); // create path to target
+	}
+
+	//// Pick one of the two below:
+	//inMiddleOfPathfinding = (thePath.size() > 1) ? true : false; // If the actor more than one tile away, start a new a path to find
+	inMiddleOfPathfinding = false; 	// always update path
+
+
+	if (thePath.empty() == false)
+	{
+//		inMiddleOfPathfinding = true;
+		node* nextNode = thePath.back();
+		//thePath.pop();
+
+		///	If we're not at the node yet
+		if (floor(aCharacter.getPosition()[0]/64) != nextNode->location[0] ||
+			floor(aCharacter.getPosition()[1]/64) != nextNode->location[1]) 
+		{
+			double probabilities[4] = { 0, 0, 0, 0 }; // up left down right
+			
+			if (aCharacter.getPosition()[0] > nextNode->location[0] * 64) // if actor is right of target , go left
+				//aCharacter.setDirection(Left);
+				probabilities[1] = 0.5;
+			else if (aCharacter.getPosition()[0] < nextNode->location[0]*64)
+				//aCharacter.setDirection(Right);
+				probabilities[3] = 0.5;
+			if (aCharacter.getPosition()[1] > nextNode->location[1]*64) // if actor is above target, go down
+				//aCharacter.setDirection(Down);
+				probabilities[2] = 0.5;
+			else if (aCharacter.getPosition()[1] < nextNode->location[1]*64)
+				//aCharacter.setDirection(Up);
+				probabilities[0] = 0.5;
+
+			aCharacter.changeDirection(probabilities);
+			aCharacter.setMoving(true);
+		}
+		else  /// We're at the node, so pop it
+		{ 
+			thePath.erase(thePath.end()-1);
+			aCharacter.setMoving(false);
+		}
+	}
+	else // path empty
+	{
+		/// if we've reached the end of the path, wait
+		if (!foundPlayer && !readyToPathfind && aCharacter.getPosition()[0] - pCharacterPosition[0] == 0 && aCharacter.getPosition()[1] - pCharacterPosition[1] == 0)
+		{
+			pCharacterPosition[0] = -1000;
+			pCharacterPosition[1] = -1000;
+			foundPlayer = true;
+		}
+		/// if target is more than 2 tiles away, pathfind
+		if (!inMiddleOfPathfinding && abs((int)aCharacter.getPosition()[0] - (int)pCharacter->getPosition()[0]) + abs((int)aCharacter.getPosition()[1] - (int)pCharacter->getPosition()[1]) > 2*64) //5 * 64)
+		{
+			readyToPathfind = true;
+			inMiddleOfPathfinding = true;
+			foundPlayer = false;
+		}
+	}
+}
 void turnAI(actor &aCharacter, world *map, player *pCharacter){
 	int * seedy;
 	seedy = new int[0];

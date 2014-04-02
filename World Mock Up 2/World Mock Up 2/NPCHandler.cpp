@@ -5,97 +5,126 @@
 
 #ifndef _NPC_AI
 #define _NPC_AI
+#include <map>
 
+// Generate the node map once based on the world map for all NPCS to copy
 pathfinding theWholePathfindingClass = pathfinding();
-vector<node*> thePath;
-bool readyToPathfind = true;
-bool foundPlayer = false;
-bool absolutelyDoOnce = true; // create map for all npcs
-bool inMiddleOfPathfinding = false;
-int aCharacterPosition[2];
-int pCharacterPosition[2];
+bool createdMapOnce = false;
 
-vector<node*> findPlayer(actor &aCharacter, world *map, player *pCharacter)
+class PathfindingNPC
 {
+public:
+	//int actorID; // Not used; indexed by the data structure instead
+	pathfinding pathfinder;
+	bool readyToPathfind;
+	bool foundPlayer;
+	bool inMiddleOfPathfinding;
+	int startCoords[2];
+	int endCoords[2];
+	vector<node*> thePath;
+	bool setting_RepathWhenClose;
+	bool setting_KeepFollowing;
+public:
+	PathfindingNPC(actor* aCharacter) // constructor
+	{
+		//actorID = aCharacter->getID();
+		pathfinder = theWholePathfindingClass; // creates copy of the pregenerated node map
+		readyToPathfind = true;
+		foundPlayer = false;
+		inMiddleOfPathfinding = false;
+		setting_RepathWhenClose = true;	// setting_RepathWhenClose: If the actor is within 3 tiles of the target, reset pathfinding incase target moved.
+		setting_KeepFollowing = true; // setting_KeepFollowing: If NPC reaches destination and the target has moved more than two tiles away, pathfind again.
+	}
+};
 
-	aCharacterPosition[0] = aCharacter.getPosition()[0];
-	aCharacterPosition[1] = aCharacter.getPosition()[1];
+std::map<int, PathfindingNPC> PathfindingNPCList; // Holds information for each pathfinding actor.
 
-	pCharacterPosition[0] = pCharacter->getPosition()[0];
-	pCharacterPosition[1] = pCharacter->getPosition()[1];
-
-	vector<node*> thePath = theWholePathfindingClass.findPath(aCharacterPosition, pCharacterPosition);
-	return thePath;
-}
 
 void goToPlayerAI(actor &aCharacter, world *map, player *pCharacter)
 {
-
-	if (absolutelyDoOnce)
+	if (!createdMapOnce)
 	{
 		theWholePathfindingClass.generateMap(map);
-		absolutelyDoOnce = false;
+		createdMapOnce = true;
 	}
 
-	if (readyToPathfind) {
-		readyToPathfind = false;
-		thePath = findPlayer(aCharacter, map, pCharacter); // create path to target
+	// If the PathfindingNPCList doesn't contain the actor ID already, insert it.
+	std::pair<std::map<int, PathfindingNPC>::iterator, bool> iterInserted;
+	iterInserted = PathfindingNPCList.insert(std::pair<int, PathfindingNPC>(aCharacter.getID(), PathfindingNPC(&aCharacter)));
+	
+	PathfindingNPC* pathfindingnpc = &iterInserted.first->second;
+	//if (iterInserted.second == true) // A new element was inserted, so we initalize starting values // nothing needed to initalize
+	
+	if (pathfindingnpc->readyToPathfind) {
+		pathfindingnpc->readyToPathfind = false;
+
+		pathfindingnpc->startCoords[0] = aCharacter.getPosition()[0];
+		pathfindingnpc->startCoords[1] = aCharacter.getPosition()[1];
+		pathfindingnpc->endCoords[0] = pCharacter->getPosition()[0];
+		pathfindingnpc->endCoords[1] = pCharacter->getPosition()[1];
+
+		pathfindingnpc->thePath = pathfindingnpc->pathfinder.findPath(pathfindingnpc->startCoords, pathfindingnpc->endCoords); // create path to target
 	}
+	
+	// setting_RepathWhenClose.
+	pathfindingnpc->inMiddleOfPathfinding = (pathfindingnpc->setting_RepathWhenClose && (pathfindingnpc->thePath.size() > 3) ? true : false);
 
-	//// Pick one of the two below:
-	//inMiddleOfPathfinding = (thePath.size() > 1) ? true : false; // If the actor more than one tile away, start a new a path to find
-	inMiddleOfPathfinding = false; 	// always update path
-
-
-	if (thePath.empty() == false)
+	if (pathfindingnpc->thePath.empty() == false)
 	{
 //		inMiddleOfPathfinding = true;
-		node* nextNode = thePath.back();
+		node* nextNode = pathfindingnpc->thePath.back();
 		//thePath.pop();
 
 		///	If we're not at the node yet
-		if (floor(aCharacter.getPosition()[0]/64) != nextNode->location[0] ||
-			floor(aCharacter.getPosition()[1]/64) != nextNode->location[1]) 
+		if (floor(aCharacter.getPosition()[0] / map->getResolution()) != nextNode->location[0] ||
+			floor(aCharacter.getPosition()[1] / map->getResolution()) != nextNode->location[1])
 		{
 			double probabilities[4] = { 0, 0, 0, 0 }; // up left down right
 			
-			if (aCharacter.getPosition()[0] > nextNode->location[0] * 64) // if actor is right of target , go left
+			if (aCharacter.getPosition()[0] > nextNode->location[0] * map->getResolution()) // if actor is right of target, go left
 				//aCharacter.setDirection(Left);
 				probabilities[1] = 0.5;
-			else if (aCharacter.getPosition()[0] < nextNode->location[0]*64)
+			else if (aCharacter.getPosition()[0] < nextNode->location[0] * map->getResolution())
 				//aCharacter.setDirection(Right);
 				probabilities[3] = 0.5;
-			if (aCharacter.getPosition()[1] > nextNode->location[1]*64) // if actor is above target, go down
+			else probabilities[1] = probabilities[3] = 0;
+
+			if (aCharacter.getPosition()[1] > nextNode->location[1] * map->getResolution()) // if actor is above target, go down
 				//aCharacter.setDirection(Down);
 				probabilities[2] = 0.5;
-			else if (aCharacter.getPosition()[1] < nextNode->location[1]*64)
+			else if (aCharacter.getPosition()[1] < nextNode->location[1] * map->getResolution())
 				//aCharacter.setDirection(Up);
 				probabilities[0] = 0.5;
+			else probabilities[2] = probabilities[0] = 0;
 
 			aCharacter.changeDirection(probabilities);
 			aCharacter.setMoving(true);
 		}
 		else  /// We're at the node, so pop it
 		{ 
-			thePath.erase(thePath.end()-1);
+			pathfindingnpc->thePath.erase(pathfindingnpc->thePath.end() - 1);
 			aCharacter.setMoving(false);
 		}
 	}
 	else // path empty
 	{
-		/// if we've reached the end of the path, wait
-		if (!foundPlayer && !readyToPathfind && aCharacter.getPosition()[0] - pCharacterPosition[0] == 0 && aCharacter.getPosition()[1] - pCharacterPosition[1] == 0)
+		/// if we've reached the end of the path, stop
+		if (!pathfindingnpc->foundPlayer && !pathfindingnpc->readyToPathfind && aCharacter.getPosition()[0] - pathfindingnpc->endCoords[0] == 0 && aCharacter.getPosition()[1] - pathfindingnpc->endCoords[1] == 0)
 		{
-			pCharacterPosition[0] = -1000;
-			pCharacterPosition[1] = -1000;
-			foundPlayer = true;
+			pathfindingnpc->endCoords[0] = -1000;
+			pathfindingnpc->endCoords[1] = -1000;
+			pathfindingnpc->foundPlayer = true;
 		}
-		/// if target is more than 2 tiles away, pathfind
-		if (!inMiddleOfPathfinding && abs((int)aCharacter.getPosition()[0] - (int)pCharacter->getPosition()[0]) + abs((int)aCharacter.getPosition()[1] - (int)pCharacter->getPosition()[1]) > 2*64) //5 * 64)
+
+		// setting_KeepFollowing
+		if (pathfindingnpc->setting_KeepFollowing)
 		{
-			readyToPathfind = true;
-			inMiddleOfPathfinding = true;
-			foundPlayer = false;
+			if (!pathfindingnpc->inMiddleOfPathfinding && abs((int)aCharacter.getPosition()[0] - (int)pCharacter->getPosition()[0]) + abs((int)aCharacter.getPosition()[1] - (int)pCharacter->getPosition()[1]) > 1 * map->getResolution())
+			{
+				pathfindingnpc->readyToPathfind = true;
+				pathfindingnpc->inMiddleOfPathfinding = true;
+				pathfindingnpc->foundPlayer = false;
+			}
 		}
 	}
 }

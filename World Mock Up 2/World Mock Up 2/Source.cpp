@@ -213,8 +213,16 @@ void main(int argc, char* argv[])
 			actor newActor(64*6,5*64, 8, "test_subject_3.png", randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
-		actor newActor(64*4,5*64, 2, "test_subject_3.png", goToPlayerAI, &DAN);
-		DAN.addActor(newActor);
+		for (int i = 0; i < 4; i++)
+		{
+			actor newActor(4 * 64, 5 * 64, 2, "test_subject_3.png", goToPlayerAI, &DAN);
+			DAN.addActor(newActor);
+			actor newActor2(10 * 64, 8 * 64, 2, "test_subject_3.png", goToPlayerAI, &DAN);
+			DAN.addActor(newActor2);
+			actor newActor3(18 * 64, 16 * 64, 2, "test_subject_3.png", goToPlayerAI, &DAN);
+			newActor3.setSpeed(8);
+			DAN.addActor(newActor3);
+		}
 		//(-) NPC stuff //
 
         tile block;

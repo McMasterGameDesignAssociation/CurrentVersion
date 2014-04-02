@@ -45,6 +45,7 @@ public:
 	double shadeVertices[18];
 	void changePosition(unsigned int pos[2]);
 	void changeBitMap(const char* newBitMap);
+	void changeDirection(direction newFace);
 	void setDirection(direction newFace);
 	void incrementDirection(void);
 	void decrementDirection(void);

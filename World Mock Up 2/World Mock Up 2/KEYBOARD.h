@@ -17,6 +17,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #define _KEYBOARD_MACHINE
 
 #include "COLLECTIONS.h"
+#define GLUT_SPACEBAR 32
 
 namespace kyb
 {
@@ -52,7 +53,6 @@ namespace kyb
 		case GLUT_KEY_LEFT: keys[2] = true;
 			keys[3] = false;
 			break;
-
 		case GLUT_KEY_RIGHT: keys[2] = false;
 			keys[3] = true;
 			break;
@@ -83,7 +83,8 @@ namespace kyb
 		switch(keyStroke)
 		{
 		case 'e': 
-		case 'q': 
+		case 'q':
+		case ' ': keys[6] = false;
 		default:
 			break;
 		}
@@ -105,6 +106,8 @@ namespace kyb
 
 		case 'q': resetKeys();
 			keys[5] = true;
+			break;
+		case ' ': keys[6] = true;
 			break;
 		case 'p': pause = !pause;
 		default: break;
@@ -208,9 +211,6 @@ namespace kyb
 				currentScene -> animatePlayer(character, true);
 			}
 		}
-		//Action or E key
-		//else if(keys[4]) ;
-		//Menu or Q key
 		else if(keys[5]) 
 			exit(QUIT_BUTTON);
 		else character.setAnimationStep(0);

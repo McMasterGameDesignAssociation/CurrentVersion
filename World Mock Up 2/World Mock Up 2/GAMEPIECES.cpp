@@ -21,6 +21,7 @@ direction gamepiece::getFace(void) const{return face;}
 unsigned int* gamepiece::getPosition(void) const{return position;}
 const char* gamepiece::getBitMapName(void) const{return bitMapName;}
 
+void gamepiece::changeDirection(direction newFace) {face = newFace;}
 void gamepiece::changePosition(unsigned int pos[2]) {position[0] = pos[0], position[1] = pos[1];}
 void gamepiece::changeBitMap(const char* newBitMap) {bitMapName = newBitMap;}
 void gamepiece::setDirection(direction newFace) {face = newFace;}

@@ -127,6 +127,7 @@ class world //: actor, player, object, tile
 		int getFrameCounter(void) const;
 
 		void updateWorldClock(void);
+		FileReader getFileReader(void) const;
 };
 
 #endif // !_WORLD

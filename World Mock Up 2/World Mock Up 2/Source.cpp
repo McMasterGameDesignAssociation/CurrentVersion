@@ -158,6 +158,7 @@ void idle(void)
 		//Update the view port to maintain the camera on the player
 		updateViewPort(&PLAYER_ONE);
 		menuStates(PLAYER_ONE, &DAN, &scene);
+		if(keys[6]) DAN.actorSet.at(1).AI = goToPlayerAI;
 		//Added by Ryan
 		DAN.updateNPCSet(&PLAYER_ONE, &scene); // This is the NPC idler (it works :D)
 	}
@@ -198,22 +199,22 @@ void main(int argc, char* argv[])
 		/*(+) NPC stuff 
 		*This will initialize all the actors and push them into DAN.actorSet
 		*/
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 1; i++)
 		{	
-			actor newActor(64*5,5*64, 8, "test_subject_2.png", randomMovement, &DAN);
+			actor newActor(64*5,5*64, 16, "test_subject_2.png", randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 1; i++)
 		{	
-			actor newActor(7*64,13*64, 4, "Charactersforreal.png",  randomMovement, &DAN);
+			actor newActor(7*64,13*64, 16, "Charactersforreal.png",  randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 1; i++)
 		{	
 			actor newActor(64*6,5*64, 8, "test_subject_3.png", randomMovement, &DAN);
 			DAN.addActor(newActor);
 		}
-		actor newActor(64*4,5*64, 2, "test_subject_3.png", goToPlayerAI, &DAN);
+		actor newActor(64*19,15*64, 8, "test_subject_3.png", turnAI, &DAN);
 		DAN.addActor(newActor);
 		//(-) NPC stuff //
 
@@ -225,83 +226,22 @@ void main(int argc, char* argv[])
         DAN.changePlayerStart(size);
         player greg(&DAN);
         PLAYER_ONE = greg;
-
-        block.changeDescription("HOORAY");
-		DAN.addTile(block);
-		block.changeDescription("NOT HOORAY");
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		block.changePassThrough(true);
-		DAN.addTile(block);
 		block.changePassThrough(false);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
-		DAN.addTile(block);
+		for(int i = 0; i < 61; i++)
+		{
+			if(i == 11 || i == 40)
+			{
+				block.changePassThrough(true);
+				DAN.addTile(block);
+				block.changePassThrough(false);
+			}
+			else DAN.addTile(block);
+		}
 
         DAN.populateWorld();
 		scene.setUpPlayer("Charactersforreal.png", PLAYER_ONE);
 		scene.worldToArray(&DAN);	
 		scene.setupActorArrays(&DAN);
-
         glutInit(&argc, argv);
         glutInitWindowSize(600,600);
 		glutCreateWindow(_PURE_KLEPTOMANIA);

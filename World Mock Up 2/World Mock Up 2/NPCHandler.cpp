@@ -111,7 +111,7 @@ void turnAI(actor &aCharacter, world *map, player *pCharacter){
 		aCharacter.setMoving(true);
 		aCharacter.incrementDirection();
 	}
-	else if(randomNumNPC < 2) aCharacter.AI = randomMovement;
+	//else if(randomNumNPC < 2) aCharacter.AI = randomMovement;
 	else aCharacter.setMoving(false);
 }
 void stopAI(actor &aCharacter, world *map, player *pCharacter)

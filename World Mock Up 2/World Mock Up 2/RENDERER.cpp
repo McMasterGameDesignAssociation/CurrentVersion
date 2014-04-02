@@ -256,14 +256,14 @@ void renderer::render(int windowWidth, int windowHeight, int* viewPortPosition)
 	}
 
 	glDisable(GL_TEXTURE_2D);
-	int testPoints[] = {viewPortPosition[0] + windowWidth - 425, viewPortPosition[1], 
-						viewPortPosition[0] + windowWidth - 425,viewPortPosition[1] + 108, 
-						viewPortPosition[0] + windowWidth,viewPortPosition[1], 
-						viewPortPosition[0] + windowWidth,viewPortPosition[1] + 108};
-	double testColor[] = {1,1,1, 1,1,1, 1,1,1, 1,1,1};
-	glColorPointer(3, GL_DOUBLE, 0, testColor);
-	glVertexPointer(2, GL_INT, 0, testPoints);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	//int testPoints[] = {viewPortPosition[0] + windowWidth - 425, viewPortPosition[1], 
+	//					viewPortPosition[0] + windowWidth - 425,viewPortPosition[1] + 108, 
+	//					viewPortPosition[0] + windowWidth,viewPortPosition[1], 
+	//					viewPortPosition[0] + windowWidth,viewPortPosition[1] + 108};
+	//double testColor[] = {1,1,1, 1,1,1, 1,1,1, 1,1,1};
+	//glColorPointer(3, GL_DOUBLE, 0, testColor);
+	//glVertexPointer(2, GL_INT, 0, testPoints);
+	//glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);

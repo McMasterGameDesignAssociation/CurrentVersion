@@ -5,6 +5,8 @@
 #include "PathFinding.h"
 #include <list>
 
+bool setting_AllowDiagonals = true;
+
 int mapX;
 int mapY;
 std::vector<vector<node>> nodeList;
@@ -30,15 +32,13 @@ pathfinding::pathfinding()
 
 void pathfinding::generateMap(world* world)
 {
-	theworld = world; // temp
+	theworld = world;
 	FileReader* gameFile = new FileReader("world.txt"); 
 	std::vector<vector<int>> currentMap = gameFile->getMap(); //// !!!! currentMap doesnt read the first line of world.txt
 
 	mapX = world->getX();
 	mapY = world->getY();
 	
-	cout << "test pathfinding";
-
 	nodeList.clear();
 
 	/// Creating a node list
@@ -56,14 +56,11 @@ void pathfinding::generateMap(world* world)
 			else 
 			{
 				tempvector.push_back(node(currentMap.at(y).at(x), location)); // passing tileID and tileLocation
-				//cout << tempvector.at(j).f;
 			}
 		}
 		nodeList.push_back(tempvector);
 		tempvector.clear();
 	}
-
-	cout << "test pathfinding";
 }
 
 
@@ -78,10 +75,7 @@ void pathfinding::getAdjacentNodes(node* currentNode)
 
 	int x = currentNode->location[0];
 	int y = currentNode->location[1];
-	//cout << x;
-	//cout << y; 
 
-	////////!!!!!!!!!!!!!!!!!!! THESE ARE WRONG I THINK
 	currentNode->adjacent.push_back( &nodeList.at(y + 1).at(x - 1)); // diagonal
 	currentNode->adjacent.push_back(&nodeList.at(y + 1).at(x)); // north
 	currentNode->adjacent.push_back(&nodeList.at(y + 1).at(x + 1)); // diagonal
@@ -97,11 +91,10 @@ void pathfinding::getAdjacentNodes(node* currentNode)
 std::vector<node*> pathfinding::findPath(int startLocation[2], int targetLocation[2]) // returns a node* path
 {
 	// pixels to coordinates
- 
-	int startX = floor(startLocation[0] / 64);
-	int startY = floor(startLocation[1] / 64);
-	int targetX = floor(targetLocation[0] / 64);
-	int targetY = floor(targetLocation[1] / 64);
+	int startX = floor(startLocation[0] / theworld->getResolution());
+	int startY = floor(startLocation[1] / theworld->getResolution());
+	int targetX = floor(targetLocation[0] / theworld->getResolution());
+	int targetY = floor(targetLocation[1] / theworld->getResolution());
 
 	node* startNode = &nodeList.at(startY).at(startX);
 
@@ -126,18 +119,15 @@ std::vector<node*> pathfinding::findPath(int startLocation[2], int targetLocatio
 	closedList.clear();
 
 
-	// calculate starting node G score = 0
+	// calculate starting node scores
 	startNode->g = 0;
-	// calculate starting node h 
 	startNode->h = abs(targetX - startX) + abs(targetY - startY);
-	// calculate starting node f
 	startNode->f = startNode->g+startNode->h;
-	// reset parent value
-	*startNode->parent = nullptr;
+	*startNode->parent = nullptr; // reset parent value
+	startNode->visited = true;
 	
 	openList.push_back(startNode);
-	startNode->visited = true;
-
+	
 	// move curr node to closed list.
 
 	// 1. push all unvisited adj to open list (min heap)
@@ -188,15 +178,7 @@ std::vector<node*> pathfinding::findPath(int startLocation[2], int targetLocatio
 			// For each adjacent node, push to openList while calculating G
 			for (int i = 0; i < 8; i++)
 			{
-				
-			//	int test = (adj + 1)->location[0];
-			//	test = adj[3].location[0];
-			//	test = (adj + 3)->location[0];
-				vector<node*> blah = greedyPick->adjacent;
-				node* blah2 = blah.at(3);
-			//	test =  (adj + 4)->location[0];
-			//	test = (adj + 6)->location[0];
-				// if in closed"List"
+				// if in closed List
 				if (adj.at(i)->closed == true)
 				{
 					continue;
@@ -211,22 +193,17 @@ std::vector<node*> pathfinding::findPath(int startLocation[2], int targetLocatio
 				{
 					continue;
 				}
-				else if (i == 0 || i == 2 || i == 5 || i == 7) // !!! Can ignore DIAGONALS for speed
+				// if disallow diagonal movements
+				else if (!setting_AllowDiagonals && (i == 0 || i == 2 || i == 5 || i == 7))
 				{
 					continue;
-				}/**/
-				else /// if walkable
+				}
+				/// if walkable
+				else 
 				{
-					// Calculate G score: (based off tile: ex/ mud tile = higher cost)
-					int addedGCost = 0;
-					if (abs(adj.at(i)->location[0] - greedyPick->location[0]) == 1 && abs(adj.at(i)->location[1] - greedyPick->location[1]) == 1)
-					{
-						addedGCost = 14;//cost of going to diagonal squares	
-					}
-					else
-					{
-						addedGCost = 10;//cost of going to non-diagonal squares	
-					}
+					// Calculate G score: (diagonal tiles cost "14", otherwise 10)
+					int addedGCost = (abs(adj.at(i)->location[0] - greedyPick->location[0]) == 1 && abs(adj.at(i)->location[1] - greedyPick->location[1]) == 1) ? 14 : 10;
+					// Later on we can add more costs for walking through different objects (like traps and other NPCs)
 					int newG = greedyPick->g + addedGCost;
 
 					// if not visited before or new score is better
@@ -248,7 +225,7 @@ std::vector<node*> pathfinding::findPath(int startLocation[2], int targetLocatio
 						// 1. remove element
 						// 2. insert element in place
 
-						// no correct place in a unsorted list
+						// Our current openList implementation is unsorted...
 						continue;
 					}
 				}				
@@ -256,10 +233,9 @@ std::vector<node*> pathfinding::findPath(int startLocation[2], int targetLocatio
 		}
 	} // while end
 
+	// If no path exists: return parital path instead.
 
-	// return closest Node instead if no path exists
-
-	// temporary 
+	// temporary, return just the starting node.
 	vector<node*> justStartNode;
 	justStartNode.push_back(startNode);
 	return justStartNode;
@@ -268,17 +244,15 @@ std::vector<node*> pathfinding::findPath(int startLocation[2], int targetLocatio
 std::vector<node*> pathfinding::createPath(node* end, node* start) // type array
 {
 	/// Using endNode.parent, we build the path backwards.
-
 	node* curr = end;
 	vector<node*> path; // path array
-	int pathLength = 0;
+	//int pathLength = 0;
 	while (curr->parent != nullptr) {
 		if (curr == nullptr) break;
 		path.push_back(curr);
-		pathLength++;
+		//pathLength++;
 		curr = curr->parent[0];
 	}
-	cout << "pathLength:" + pathLength;
 	return path;
 }
 #endif

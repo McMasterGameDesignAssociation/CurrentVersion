@@ -48,7 +48,6 @@ typedef void(*genericCallback)(void* arg);
 typedef void(*actorCallback)(actor &aCharacter, world *map, player *pCharacter);
 #endif
 
-#pragma comment(lib, "glew32.lib")
 #pragma comment(lib, "libpng16.lib")
 
 #include "SYSTEMCOLLECTIONS.h"

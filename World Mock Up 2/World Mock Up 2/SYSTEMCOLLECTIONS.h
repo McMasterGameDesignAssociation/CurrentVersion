@@ -69,15 +69,14 @@ inline direction operator--(direction &rhs)
 }
 #endif
 
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+#include "freeglut.h"
 #include <iostream>
 #include <ctime>
 #include <stdlib.h>
 #include <string>
 #include <vector>
 #include <fstream>
-#include <png.h>
+#include "png.h"
 #include <queue>
 #include <math.h>
 //Call windows.h only if the system is a windows system
